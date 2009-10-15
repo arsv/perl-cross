@@ -14,7 +14,7 @@ function hastype {
 	try_add "$1 foo;"
 	if not try_compile; then
 		result 'missing'
-		return -1
+		return 1
 	fi
 
 	setvar "d_${_typename}" "define"
@@ -37,19 +37,19 @@ function typesize {
 	try_add "$1 foo;"
 	if not try_compile; then
 		result 'missing'
-		return -1
+		return 1
 	fi
 
 	setvar "d_${_typename}" "define"
 	if not try_readelf -s > try.out; then
 		result 'unknown'
-		return -1
+		return 1
 	fi
 
 	result=`grep foo try.out | sed -e 's/.*: [0-9]\+ \+//' -e 's/ .*//'`
 	if [ -z "$result" -o "$result" -le 0 ]; then
 		result "unknown"
-		return -1
+		return 1
 	fi
 
 	setvar "${_typename}size" "$result"

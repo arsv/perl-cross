@@ -53,7 +53,7 @@ function hasvar {
 
 function isvoid {
 	require 'cc'
-	isset "d_$1" || return -1
+	isset "d_$1" || return 1
 	mstart "Checking whether $1 is void"
 
 	try_start

@@ -30,7 +30,7 @@ function typeselect () {
 		fi
 	done
 	result "nothing suitable found"
-	return -1
+	return 1
 }
 
 # unsigned of type -> unsigned-type
@@ -108,7 +108,7 @@ function typeorfallback {
 
 	result "none found"
 	fail "No $_dst type found"
-	return -1
+	return 1
 }
 
 typeorfallback 'fpos' 'fpos_t' 'uint64_t' 'unsigned long'

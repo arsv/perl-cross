@@ -5,7 +5,7 @@ if [ ! -f config.sh ]; then
 	exit -1
 fi
 
-. config.sh
+. ./config.sh
 echo -n > Makefile.config
 if [ "$usecrosscompile" == 'define' ]; then
 	unset cc
@@ -18,7 +18,7 @@ if [ "$usecrosscompile" == 'define' ]; then
 		exit -1
 	fi
 	
-	. xconfig.sh
+	. ./xconfig.sh
 	hostcc="$cc"
 	hostcflags="$cflags"
 	hostar="$ar"
@@ -33,7 +33,7 @@ if [ "$usecrosscompile" == 'define' ]; then
 	target_arch="$target_arch"
 	sysroot="$sysroot"
 
-	. config.sh
+	. ./config.sh
 fi
 
 cc="$cc"

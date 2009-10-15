@@ -15,7 +15,7 @@ function byteorder {
 	fi
 
 	result 'unknown'
-	return -1
+	return 1
 }
 
 check byteorder

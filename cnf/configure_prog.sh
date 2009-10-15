@@ -20,7 +20,7 @@ function whichprog {
 			if [ -n "$_fail" -a "$_fail" != "0" ]; then
 				fail "no $_what found"
 			fi
-			return -1
+			return 1
 		fi
 	fi
 	
@@ -39,7 +39,7 @@ function whichprog {
 		fail "no $_what found"
 	fi
 
-	return -1
+	return 1
 }
 
 check whichprog "C compiler" cc 1      ${pf1}gcc ${pf1}cc ${pf2}gcc

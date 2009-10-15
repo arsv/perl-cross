@@ -141,7 +141,7 @@ elif [ "$mode" == 'cross' ]; then
 	echo
 	echo "Configuration completed for cross build"
 	echo
-	. xconfig.sh
+	. ./xconfig.sh
 	echo "      build platform:  $archname"
 	echo "          C compiler:  $cc"
 	echo "              linker:  $ld"
@@ -149,7 +149,7 @@ elif [ "$mode" == 'cross' ]; then
 	echo "              ranlib:  $ranlib"
 	echo "             objdump:  $objdump"
 	echo
-	. config.sh
+	. ./config.sh
 	echo "     target platform:  $archname"
 	echo "          C compiler:  $cc"
 	echo "                  ld:  $ld"

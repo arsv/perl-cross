@@ -18,7 +18,7 @@ function hasdef {
 	else
 		setvar "d_${_defname}" "undef"
 		result 'no'
-		return -1
+		return 1
 	fi
 }
 
@@ -42,7 +42,7 @@ function hasfield {
 	else
 		setvar "$1" "undef"
 		result 'no'
-		return -1
+		return 1
 	fi
 }
 

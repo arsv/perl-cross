@@ -215,7 +215,7 @@ function ifhint {
 		result "(hinted) $h"
 		return 0
 	else
-		return -1
+		return 1
 	fi
 }
 
@@ -234,7 +234,7 @@ function ifhintdefined {
 		fi	
 		return 0
 	else
-		return -1
+		return 1
 	fi
 }
 
@@ -249,7 +249,7 @@ function resdef {
 		setvar "$3" 'undef'
 		test -n "$4" && setvar "$4" 'undef'
 		result "$2"
-		return -1
+		return 1
 	fi	
 }
 

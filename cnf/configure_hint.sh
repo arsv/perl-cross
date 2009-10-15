@@ -13,7 +13,7 @@ function usehints {
 	if [ -f "$hintfile" ]; then
 		msg "	using $hintfile"
 		sed -e '/^\([A-Za-z0-9_]\+\)=/s//hint \1 /' "$hintfile" > config.hint.tmp
-		. config.hint.tmp
+		. ./config.hint.tmp
 		rm -f config.hint.tmp
 	fi
 }
