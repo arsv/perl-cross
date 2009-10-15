@@ -175,10 +175,10 @@ default c '\c'
 default castflags 0
 default cat
 default cc cc
-default cccdlflags
-default ccdlflags
-default ccflags
-default ccflags_uselargefiles
+default cccdlflags '-fPIC'
+default ccdlflags '-Wl,-E'
+default ccflags '-fno-strict-aliasing -pipe -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64'
+default ccflags_uselargefiles '-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64'
 default ccname
 default ccsymbols
 default ccversion

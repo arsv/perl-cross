@@ -24,6 +24,7 @@ setifndef libsdirs ' '
 setifndef privlib "$prefix/lib/perl"
 setifndef archlib "$prefix/lib/perl/arch"
 setifndef perlpath "$prefix/bin/perl"
+setifndef d_archlib 'define'
 
 addhco 'prefix'
 addhco 'privlib'

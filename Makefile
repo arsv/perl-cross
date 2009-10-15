@@ -75,7 +75,7 @@ opmini.c: op.c
 # ---[ site/perl ]--------------------------------------------------------------
 
 perl$x: $& perlmain$o $(obj) libperl$a op$o
-	$(CC) -o $@ $(filter %$o,$^) $(filter %$a,$^) $(LIBS)
+	$(CC) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(LIBS)
 
 %$o: %.c config.h
 	$(CC) $(CFLAGS) -c -o $@ $<
