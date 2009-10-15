@@ -1,0 +1,179 @@
+#!/bin/sh
+
+if [ -z "$base" ]; then export base=.; else export base; fi
+#export CFLAGS='-D_POSIX_C_SOURCE -D_XOPEN_SOURCE -D_GNU_SOURCE'
+
+config='config.bad'
+cfglog='config.log'
+
+. $base/configure__f.sh
+. $base/configure_args.sh
+
+if [ "$mode" == 'help' ]; then
+	. $base/configure_help.sh
+	exit
+fi
+
+if [ -z "$mode" ]; then
+	echo -n > $cfglog
+	mstart "Guessing build platform"
+	if [ "x$build" == "x" ]; then
+		buildarch=`$base/config.guess 2>>$cfglog`
+	else
+		buildarch=`$base/config.sub "$build" 2>>$cfglog`
+	fi
+	if [ -z "$buildarch" ]; then
+		result "unknown"
+		die "Can't guess build platform"
+	else
+		result "$buildarch"
+	fi
+
+	if [ -z "$target" -o "$target" == "$build" ]; then
+		msg "Assuming native build"
+		mode='native'
+		targetarch="$buildarch"
+		target="$build"
+	else
+		msg "Assuming cross-compilation for '$target'"
+		mode='cross'
+		mstart "Guessing target architecture"	
+		targetarch=`$base/config.sub "$target" 2>>$cfglog`
+		if [ -z "$targetarch" ]; then
+			gcctarget=`$target-gcc -v 2>&1 | grep Target | sed -e 's/Target: *//'`
+			targetarch=`$base/config.sub "$gcctarget" 2>>$cfglog`
+			if [ -z "$targetarch" ]; then
+				result "unknown"
+				die "Can't determine target architecture"
+			fi
+		fi
+		result "$targetarch"
+	fi
+fi
+
+if [ "$mode" == "cross" -o "$mode" == "native" -o "$mode" == "target" ]; then
+	. $base/configure_dirs_targ.sh
+elif [ "$mode" == "buildmini" ]; then
+	. $base/configure_dirs_host.sh
+fi
+
+if [ "$mode" == "cross" ]; then
+	msg "Respawning configure for build and target platforms"
+	msg
+	run $0 $hco --mode=buildmini --targetarch="$buildarch"\
+		--target-name="$target" --target-arch="$targetarch" --sysroot="$sysroot"\
+		|| die "configure --mode=buildmini failed"
+	msg
+       	run $0 "$@" --mode=target --target="$target" --targetarch="$targetarch"\
+		|| die "configure --mode=target failed"
+	msg
+elif [ "$mode" == "buildmini" ]; then
+	targetlabel=`archlabel "$target" "$targetarch"`
+	msg "Configuring build-time miniperl for $targetlabel"
+	if [ "x$target" != "x" ]; then pf1="$target-"; else pf1=""; fi
+	pf2="$target-"
+	config='xconfig.sh'
+elif [ "$mode" == "target" ]; then
+	targetlabel=`archlabel "$target" "$targetarch"`
+	msg "Configuring primary perl executable for $targetlabel"
+	if [ "x$target" != "x" ]; then pf1="$target-"; else pf1="$targetarch-"; fi
+	pf2="$target-"
+	config='config.sh'
+elif [ "$mode" == "native" ]; then 
+	msg "Configuring for native build"
+	config='config.sh'
+fi
+
+if [ "$mode" == "target" ]; then
+	const 'usecrosscompile' 'define'
+fi
+
+if [ "$mode" == 'native' -o "$mode" == 'buildmini' -o "$mode" == "target" ]; then
+	. $base/configure_version.sh
+	. $base/configure_vars.sh
+	. $base/configure_hint.sh
+	. $base/configure_prog.sh
+	. $base/configure_hdrs.sh
+	. $base/configure_type.sh
+	. $base/configure_type_ext.sh
+	. $base/configure_type_sel.sh
+	. $base/configure_byte.sh
+	. $base/configure_sigs.sh
+	. $base/configure_func.sh
+	. $base/configure_link.sh
+	failpoint
+	. $base/configure_mods.sh
+	failpoint
+	. $base/configure_gencfg.sh
+	failpoint
+	if [ "$mode" == 'target' ]; then
+		config="tconfig.sh"
+		. $base/configure_target.sh
+		. $base/configure_gencfg.sh
+		failpoint
+	fi
+fi
+
+
+if [ "$mode" == 'native' ]; then
+	echo "Generating config.h"
+	./config_h.SH
+	echo "Generating Makefile.config"
+	./Makefile.config.SH
+
+	echo
+	echo "Configuration completed for native build"
+	echo
+	echo "            platform:  $archname"
+	echo "          c compiler:  $cc"
+	echo "                  ld:  $ld"
+	echo "                  ar:  $ar"
+	echo "              ranlib:  $ranlib"
+	echo "              prefix:  $prefix"
+	echo " installation prefix:  $installprefix"
+	echo
+elif [ "$mode" == 'cross' ]; then
+	echo "Generating config.h and xconfig.h"
+	CONFIG_SH=config.sh  CONFIG_H=config.h  ./config_h.SH
+	CONFIG_SH=xconfig.sh CONFIG_H=xconfig.h ./config_h.SH
+	echo "Generating Makefile.config"
+	./Makefile.config.SH
+	echo
+	echo "Configuration completed for cross build"
+	echo
+	. xconfig.sh
+	echo "      build platform:  $archname"
+	echo "          C compiler:  $cc"
+	echo "              linker:  $ld"
+	echo "                  ar:  $ar"
+	echo "              ranlib:  $ranlib"
+	echo "             objdump:  $objdump"
+	echo
+	. config.sh
+	echo "     target platform:  $archname"
+	echo "          C compiler:  $cc"
+	echo "                  ld:  $ld"
+	echo "                  ar:  $ar"
+	echo "              ranlib:  $ranlib"
+	echo "             objdump:  $objdump"
+	echo
+	echo "              prefix:  $prefix"
+	echo "             sysroot:  $sysroot"
+	echo " installation prefix:  $installprefix"
+	echo "         executables:  $bin"
+	echo "             scripts:  $bin"
+	echo "             privlib:  $privlib"
+	echo "             archlib:  $archlib"
+	echo " section 1 man pages:  $man1dir  (with '$man1ext' extension)"
+	echo " section 3 man pages:  $man3dir  (with '$man3ext' extension)"
+	echo
+elif [ "$mode" == "regen" ]; then
+	if [ -f config.sh ]; then
+		CONFIG_SH=config.sh  CONFIG_H=config.h  ./config_h.SH
+	fi
+	if [ -f xconfig.sh ]; then
+		CONFIG_SH=xconfig.sh CONFIG_H=xconfig.h ./config_h.SH
+	fi
+	echo "Generating Makefile.config"
+	./Makefile.config.SH
+fi
