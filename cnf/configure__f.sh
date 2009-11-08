@@ -43,8 +43,8 @@ function failpoint {
 }
 
 function mstart {
-	echo "$@" >> $cfglog
-	echo -n "$* ... " >& 2
+	echo -e "$@" >> $cfglog
+	echo -ne "$* ... " >& 2
 }
 
 # setvar name value
