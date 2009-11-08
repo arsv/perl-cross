@@ -3,15 +3,27 @@
 # Thread support
 # This is called only if $usethreads is set (which is not by default)
 
+# Both presence *and* prototype for the function are checked here,
+# with prototype encoded (almost) the same way relevant constants from
+# config.h use:
+# 	[A-Z]_[A-Z]+
+# Each letter mean one type; first, return type, then arguments
+#	I_BBW	int foo(char*, char*, size_t)
+#	V_HI	void bar(FILE*, int)
+# Here's what each letter mean:
+
 type_I='int'
 type_B='char*'
-type_D='CRYPTD*'
 type_C='const char*'
 type_V='void'
 type_H='FILE*'
 type_W='size_t'
+type_Z='double'
 
-# hasfuncr name args includes protodef1 protodef2 ...
+# There are also four special letters: T S D and R. Types for these are
+# specified for each test separately (usually that's pointer to some struct)
+
+# hasfuncr name args includes 'protodef1 protodef2 ...' 'type_T type_S ...'
 function hasfuncr {
 	w="$1"
 	D="d_$w"
@@ -34,6 +46,17 @@ function hasfuncr {
 	fi
 
 	msg "Checking which prototype $w has"
+	# The following "real" prototype checks may return false positives
+	# if none of included headers declares prototype for $w. To mend this, we
+	# first check if ostesibly incorrect prototype 'D_Z' will return false.
+	# Note: it is assumed none of the functions being tested has D_Z prototype
+	# (which is likely true, give the value of $type_Z)
+	if hasfuncr_proto "$w" "$i" 'D_Z' "$@"; then
+		msg "\toops, no function should have D_Z prototype"
+		msg "\tassuming there's none defined and the function is not usable"
+		setvar "$D" 'undef'
+		return 1;
+	fi
 	for p in $P; do
 		if hasfuncr_proto "$w" "$i" "$p" "$@"; then
 			setvar "${w}_proto" "$p"
