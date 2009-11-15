@@ -15,6 +15,8 @@ function usehints {
 		sed -e '/^\([A-Za-z0-9_]\+\)=/s//hint \1 /' "$hintfile" > config.hint.tmp
 		. ./config.hint.tmp
 		rm -f config.hint.tmp
+	else
+		msg "	no hints for $1"
 	fi
 }
 

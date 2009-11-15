@@ -222,7 +222,6 @@ function ifhint {
 function ifhintdefined {
 	h=`valueof "$1"`
 	if test -n "$h"; then
-		log "Hint for $1: $h"
 		if [ "$h" == 'define' ]; then
 			log "Hint for $1: $2 (yes, define)"
 			result "(hinted) $2"
@@ -230,7 +229,7 @@ function ifhintdefined {
 		else
 			log "Hint for $1: $2 (no, undef)"
 			result "(hinted) $3"
-			__=-1
+			__=1
 		fi	
 		return 0
 	else
