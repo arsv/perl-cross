@@ -29,7 +29,8 @@ type_u='uint32_t'
 
 # There are also four special letters: 
 free_type_letters='T S D R'
-# Types for these are specified for each test separately (usually that's a pointer to some struct)
+# Types for these are specified for each test separately (usually that's
+# a pointer to some struct)
 
 # hasfuncr func_r includes 'P_ROTO1 P_ROTO2 ...' 'T=type_T' 'S=type_S' ...
 function hasfuncr {
@@ -47,7 +48,6 @@ function hasfuncr {
 
 	if [ $__ == '13' ]; then
 		try_start
-		#try_includes $i
 		try_add "int main(void) { $w(); return 0; }"
 		try_link
 		resdef 'found' 'not found' "$D" || return $__
@@ -56,23 +56,35 @@ function hasfuncr {
 	msg "Checking which prototype $w has"
 	hasfuncr_assign_types "$@"
 	# The following "real" prototype checks may return false positives
-	# if none of included headers declares prototype for $w. To mend this, we
-	# first check if ostesibly incorrect prototype 'V_Z' will return false.
-	# Note: it is assumed none of the functions being tested has V_Z prototype
-	# (which is likely true, give the value of $type_Z)
-	if hasfuncr_proto "$w" "$i" 'V_Z'; then
-		msg "\tno function should have V_Z prototype"
-		msg "\tassuming there's none defined and the function is not usable"
-		setvar "$D" 'undef'
-		return 1;
-	fi
+	# if none of included headers declares prototype for $w. Because of
+	# this, we must make sure there was at least one negative result.
+	cz=''
 	for p in $P; do
 		if hasfuncr_proto "$w" "$i" "$p" "$@"; then
 			setvar "${w}_proto" "$p"
+			cz="${cz}y"
+		elif [ -z "$cz" -o "$cz" == 'y' ]; then
+			cz="${cz}n"
+		fi
+		if [ "$cz" == "yn" -o "$cz" == "ny" ]; then
 			return 0;
+		elif [ "$cz" == 'yy' ]; then
+			msg "\tdouble positive, $w has no declared prototype"
+			break;
 		fi
 	done
-	msg "\tfailed, assuming $w is unusable"
+	if [ "$cz" == "y" ]; then
+		# There was only one prototype to test, so we take one more
+		# to see if it will return negative result. V_Z is not among
+		# prototypes these functions can have, so it should always
+		# return negative.
+		if hasfuncr_proto "$w" "$i" "V_Z" "$@"; then
+			msg "\tdouble positive, $w has no declared prototype"
+		else
+			return 0
+		fi
+	fi
+	msg "\tassuming $w is unusable"
 	setvar "$D" 'undef'
 	return 1
 }
@@ -123,7 +135,7 @@ function hasfuncr_proto_str {
 	for cp in $ca; do
 		cT=`valueof "type_$cp"`
 		test -n "$cT" || msg -n "(BAD type letter $cp) "
-		test "$cT" = "undef" && msg -n "(UNDEFINED free type letter $cp) "
+		test "$cT" = "undef" && msg -n "(UNDEF free type letter $cp) "
 		if [ -z "$cA" ]; then
 			cA="$cT"
 		else
@@ -135,7 +147,7 @@ function hasfuncr_proto_str {
 }
 
 check hasfuncr asctime_r 'time.h' 'B_SB B_SBI I_SB I_SBI' 'S=const struct tm*'
-check hasfuncr crypt_r 'sys/types.h stdio.h crypt.h' 'B_CCS B_CCD' 'S=struct crypt_data*'
+check hasfuncr crypt_r 'sys/types.h stdio.h crypt.h' 'B_CCS B_CCD' 'S=struct crypt_data*' 'D=CRYPTD*'
 check hasfuncr ctermid_r 'sys/types.h stdio.h' 'B_B'
 check hasfuncr endpwent_r 'sys/types.h stdio.h pwd.h' 'I_H V_H'
 check hasfuncr getgrent_r 'sys/types.h stdio.h grp.h' 'I_SBWR I_SBIR S_SBW S_SBI I_SBI I_SBIH' \
