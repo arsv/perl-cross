@@ -110,7 +110,7 @@ check hasfunc fpathconf "0,0" 'unistd.h'
 check hasfunc fpclass
 check hasfunc fpclassify
 check hasfunc fpclassl
-check hasfunc frexpl
+check hasfunc frexpl '0,NULL' 'stdlib.h math.h'
 check hasfunc fseeko
 check hasfunc fsetpos
 check hasfunc fstatfs
