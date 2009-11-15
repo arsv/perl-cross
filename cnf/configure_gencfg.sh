@@ -538,7 +538,7 @@ default d_setservent_r undef
 default d_setsid undef
 default d_setvbuf undef
 default d_sfio undef
-default d_shm define
+default d_shm undef
 default d_shmat undef
 default d_shmatprototype define
 default d_shmctl undef

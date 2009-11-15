@@ -246,6 +246,9 @@ check hasfunc setservent
 check hasfunc setsid
 check hasfunc setvbuf
 check hasfunc sfreserve "" 'sfio.h'
+check hasfunc shmat
+check hasfunc shmget
+check hasfunc shmctl
 check hasfunc shmdt
 check hasfunc sigaction
 check hasfunc signbit
