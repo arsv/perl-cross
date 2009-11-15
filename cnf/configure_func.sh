@@ -260,6 +260,7 @@ check hasfunc socket "0,0,0" 'sys/types.h sys/socket.h'
 check hasfunc socketpair
 check hasfunc socks5_init
 check hasfunc sqrtl "0.0" 'math.h'
+check hasfunc statvfs
 check hasfunc strchr "NULL,0" 'stdlib.h string.h strings.h'
 check hasfunc strcoll "NULL,NULL" 'stdlib.h string.h'
 check hasfunc strerror "0" 'string.h stdlib.h'
