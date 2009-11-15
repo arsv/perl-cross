@@ -2,3 +2,7 @@
 # that's how original Configure set them, so this may not be the safest guess
 hint d_semctl_semid_ds 'define'
 hint d_semctl_semun 'undef'
+
+# probably ok to assume this for glibc (=linux-gnu)
+hint d_snprintf 'define'
+hint d_vsnprintf 'define'

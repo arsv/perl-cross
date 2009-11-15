@@ -596,7 +596,7 @@ default d_symlink undef
 default d_syscall undef
 default d_syscallproto define
 default d_sysconf undef
-default d_sysernlst undef
+default d_sysernlst ''
 default d_syserrlst undef
 default d_system undef
 default d_tcgetpgrp undef
