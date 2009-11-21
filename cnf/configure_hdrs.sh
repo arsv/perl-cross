@@ -25,15 +25,19 @@ check hashdr 'gdbm.h'
 check hashdr 'grp.h'
 check hashdr 'inttypes.h'
 check hashdr 'limits.h'
+check hashdr 'langinfo.h'
 check hashdr 'locale.h'
 check hashdr 'mach/cthreads.h'
+check hashdr 'malloc.h'
 check hashdr 'math.h'
 check hashdr 'memory.h'
+check hashdr 'mntent.h'
 check hashdr 'ndbm.h'
 check hashdr 'net/errno.h'
 check hashdr 'netdb.h'
 check hashdr 'netinet/in.h'
 check hashdr 'netinet/tcp.h'
+check hashdr 'poll.h'
 check hashdr 'pwd.h'
 check hashdr 'rpcsvc/dbm.h'
 check hashdr 'setjmp.h'
@@ -52,6 +56,8 @@ check hashdr 'sys/access.h'
 check hashdr 'sys/dir.h'
 check hashdr 'sys/file.h'
 check hashdr 'sys/filio.h'
+check hashdr 'sys/ioctl.h'
+check hashdr 'sys/mman.h'
 check hashdr 'sys/mode.h'
 check hashdr 'sys/mount.h'
 check hashdr 'sys/ndir.h'
@@ -82,5 +88,22 @@ check hashdr 'utime.h'
 check hashdr 'values.h'
 check hashdr 'varargs.h'
 check hashdr 'vfork.h'
+
+if [ "$usethreads" == 'define' ]; then
+	check hashdr 'pthread.h'
+fi
+
+# simplified approach, compared to what Configure has.
+# assume header is usable as long as it's there
+mstart "Looking which header to use for varargs"
+if [ "$i_stdarg" == 'define' ]; then
+	result '<stdarg.h>'	
+	setvar 'i_varargs' 'undef'
+elif [ "$i_varargs" == 'define' ]; then
+	result '<varargs.h>'
+	setvar 'i_stdarg' 'undef'
+else
+	result 'nothing found'
+fi
 
 const i_systimek undef

@@ -139,7 +139,6 @@ check hasfunc getpgid
 check hasfunc getpgrp "" 'unistd.h'
 check hasfunc getpgrp2
 check hasfunc getppid
-check hasfunc getpriority
 check hasfunc getpriority "0,0" 'sys/time.h sys/resource.h'
 check hasfunc getprotobyaddr
 check hasfunc getprotobyname

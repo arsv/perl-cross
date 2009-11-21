@@ -78,18 +78,11 @@ check typesize 'gid_t' sys/types.h
 check typesize 'fpos_t' stdio.h sys/types.h
 
 check hastype 'time_t' time.h
-
-check hastype 'struct msghdr' 'sys/types.h sys/socket.h sys/uio.h'
-check hastype 'struct statfs' 'sys/types.h sys/param.h sys/mount.h sys/vfs.h sys/statfs.h'
-check hastype 'union semun' 'sys/types.h sys/ipc.h sys/sem.h'
+check hastype 'fd_set' 'sys/types.h' 
 check hastype 'fpos64_t' 'stdio.h'
 check hastype 'off64_t' 'sys/types.h'
-
-check hastype 'struct msghdr' 'sys/types.h sys/socket.h sys/uio.h'
-check hastype 'union semun' 'sys/types.h sys/ipc.h sys/sem.h'
-check hastype 'struct statfs' 'sys/types.h sys/param.h sys/mount.h sys/vfs.h sys/statfs.h'
 check hastype 'struct cmsghdr' 'netinet/in.h'
 check hastype 'struct fs_data' 'sys/vfs.h'
-check hastype 'struct statfs' 'sys/vfs.h'
-check hastype 'struct msghdr' 'sys/types.h sys/socket.h'
-check hastype 'fd_set' 'sys/types.h' 
+check hastype 'struct msghdr' 'sys/types.h sys/socket.h sys/uio.h'
+check hastype 'struct statfs' 'sys/types.h sys/param.h sys/mount.h sys/vfs.h sys/statfs.h'
+check hastype 'union semun' 'sys/types.h sys/ipc.h sys/sem.h'
