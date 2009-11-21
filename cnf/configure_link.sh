@@ -58,4 +58,3 @@ linkvar d_sockpair d_socketpair
 
 linkvar ptrsize voidptrsize
 linkvar d_longdbl d_longdouble
-linkvar d_statfs_s d_structstatfs
