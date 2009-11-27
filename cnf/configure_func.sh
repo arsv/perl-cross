@@ -10,13 +10,15 @@ function haslibs {
 	try_add "int main(void) { return 0; }"
 
 	_libs=""
+	_libv="$1"
+	shift
 	for l in $*; do
 		if try_link_libs $L $l; then
 			_libs="$_libs $l"
 		fi
 	done
 
-	setvar "$1" "$_libs"
+	setvar "$_libv" "$_libs"
 	result "$_libs"
 }
 
@@ -63,7 +65,11 @@ function isvoid {
 	resdef 'yes' 'no' "d_void_$1"
 }
 
-check haslibs libs -lm -lcrypt -ldl
+if [ "$usethreads" == 'define' ]; then
+	check haslibs libs $try_libs $try_libs_thread
+else
+	check haslibs libs $try_libs
+fi
 
 check hasfunc _fwalk
 check hasfunc access "NULL,0" 'stdlib.h unistd.h'

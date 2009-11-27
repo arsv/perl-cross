@@ -6,3 +6,6 @@ useposix=define
 disable_win32=1
 disable_win32api_file=1
 disable_win32core=1
+# libraries to test
+try_libs='-lm -lcrypt -ldl'
+try_libs_thread='-lpthread'
