@@ -706,7 +706,7 @@ default getservbyport_r_proto 0
 default getservent_r_proto 0
 default getspnam_r_proto 0
 default gidformat '"lu"'
-default gidsign -1
+default gidsign 1
 required gidsize
 required gidtype
 default glibpth
@@ -717,8 +717,8 @@ default grep grep
 default groupcat 'cat /etc/group'
 default groupstype gid_t
 default gzip gzip
-default h_fcntl
-default h_sysfile
+default h_fcntl false
+default h_sysfile true
 default hint 'default'
 default hostcat 'cat /etc/hosts'
 default i_arpainet undef
@@ -876,9 +876,9 @@ default nm_opt
 default nm_so_opt
 default nonxs_ext
 default nroff nroff
-default nvEUformat '"%E"'
-default nvFUformat '"%F"'
-default nvGUformat '"%G"'
+default nvEUformat '"E"'
+default nvFUformat '"F"'
+default nvGUformat '"G"'
 default nv_preserves_uv_bits 32
 default nveformat '"e"'
 default nvfformat '"f"'
@@ -925,20 +925,20 @@ default rm rm
 default rm_try
 default rmail
 default run
-default runnm
-default sPRIEUldbl '"E"'
-default sPRIFUldbl '"F"'
-default sPRIGUldbl '"G"'
-default sPRIXU64 '"lU"'
-default sPRId64 '"ld"'
+default runnm false
+default sPRIEUldbl '"LE"'
+default sPRIFUldbl '"LF"'
+default sPRIGUldbl '"LG"'
+default sPRIXU64 '"LX"'
+default sPRId64 '"Ld"'
 default sPRIeldbl '"Le"'
 default sPRIfldbl '"Lf"'
 default sPRIgldbl '"Lg"'
-default sPRIi64 'li"'
-default sPRIo64 '"lo"'
-default sPRIu64 '"lu"'
-default sPRIx64 '"lx"'
-default sSCNfldbl '"f"'
+default sPRIi64 'Li"'
+default sPRIo64 '"Lo"'
+default sPRIu64 '"Lu"'
+default sPRIx64 '"Lx"'
+default sSCNfldbl '"Lf"'
 default sched_yield 'sched_yield()'
 default sed
 default seedfunc srand48
@@ -1043,18 +1043,18 @@ default usemorebits undef
 default usemultiplicity undef
 default usemymalloc undef
 default usenm undef
-default useopcode undef
+default useopcode false
 default useperlio define
-default useposix define
+default useposix true
 default usereentrant undef
 default userelocatableinc undef
-default usesfio undef
-default useshrplib undef
+default usesfio false
+default useshrplib false
 default usesitecustomize undef
 default usesocks undef
 default usethreads undef
 default usevendorprefix undef
-default usevfork undef
+default usevfork false
 default usrinc
 default uuname
 default uvXUformat '"lX"'
