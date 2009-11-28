@@ -1,7 +1,7 @@
 _o=.o
 _a=.a
 so=so
-useposix=define
+useposix=true
 # modules
 disable_win32=1
 disable_win32api_file=1
