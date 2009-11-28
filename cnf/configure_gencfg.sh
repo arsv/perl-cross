@@ -907,8 +907,8 @@ default pidtype pid_t
 default plibpth
 default pmake
 default pr
-default procselfexe /proc/self/exe
-default procselfpath "/proc/self/exe"
+default procselfexe '"/proc/self/exe"'
+default procselfpath
 default prototype define
 default ptrsize
 default quadkind
@@ -934,7 +934,7 @@ default sPRId64 '"Ld"'
 default sPRIeldbl '"Le"'
 default sPRIfldbl '"Lf"'
 default sPRIgldbl '"Lg"'
-default sPRIi64 'Li"'
+default sPRIi64 '"Li"'
 default sPRIo64 '"Lo"'
 default sPRIu64 '"Lu"'
 default sPRIx64 '"Lx"'
