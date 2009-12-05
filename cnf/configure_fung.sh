@@ -28,3 +28,19 @@ else
 fi
 # note: this was tested already, it's just the name that's different (?)
 setvar 'd_syserrlst' "$d_sys_errlist"
+
+mstart "Looking for a random number function"
+if [ "$d_drand48" == 'define' ]; then
+	setvar 'randfunc' 'drand48'
+	result 'good, found drand48()'
+elif [ "$d_random" == 'define' ]; then
+	setvar 'randfunc' 'random'
+	result 'ok, found random()'
+elif [ "$d_rand" == 'define' ] then
+	setvar 'randfunc' 'rand'
+	result 'yick, looks like I have to use rand()'
+else
+	result 'none found'
+	setvar 'randfunc' ''
+fi
+	
