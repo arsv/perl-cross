@@ -14,7 +14,9 @@ sigsize=1
 
 for sig in HUP INT QUIT ILL TRAP ABRT BUS FPE KILL USR1\
 	SEGV USR2 PIPE ALRM TERM STKFLT CHLD CONT STOP TSTP TTIN TTOU URG\
-	XCPU XFSZ VTALRM PROF WINCH IO PWR SYS IOT CLD POLL; do
+	XCPU XFSZ VTALRM PROF WINCH IO PWR SYS NUM32 NUM33 NUM34 NUM35 NUM36\		NUM37 NUM38 NUM39 NUM40 NUM41 NUM42 NUM43 NUM44 NUM45 NUM46 NUM47\
+	NUM48 NUM49 NUM50 NUM51 NUM52 NUM53 NUM54 NUM55 NUM56 NUM57 NUM58\
+	NUM59 NUM60 NUM61 NUM62 NUM63 RTMAX IOT CLD POLL UNUSED ; do
 	try_start
 	try_includes 'signal.h'
 
@@ -32,13 +34,14 @@ for sig in HUP INT QUIT ILL TRAP ABRT BUS FPE KILL USR1\
 		if [ -n "$num" -a "$num" != 0 ]; then
 			msg "\tgot SIG$sig = $num" >&2
 			signals="$signals SIG$sig"
-			siginit="$siginit, \"SIG$sig\""
+			siginit="$siginit, \"$sig\""
 			signums="$signums $num"
 			signumi="$signumi, $num"
 			sigsize=$[sigsize+1]
 		fi
 	fi
 done
+[ -z "$siginit" ] || siginit="$siginit, 0"
 
 setvar "sig_name" "$signals"
 setvar "sig_name_init" "$siginit"

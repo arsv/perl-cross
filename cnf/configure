@@ -68,10 +68,10 @@ if [ "$mode" == "cross" ]; then
 		|| die "configure --mode=target failed"
 	msg
 elif [ "$mode" == "buildmini" ]; then
-	targetlabel=`archlabel "$target" "$targetarch"`
+	targetlabel=`archlabel "$build" "$buildarch"`
 	msg "Configuring build-time miniperl for $targetlabel"
-	if [ "x$target" != "x" ]; then pf1="$target-"; else pf1=""; fi
-	pf2="$target-"
+	if [ "x$build" != "x" ]; then pf1="$build-"; else pf1=""; fi
+	pf2="$build-"
 	config='xconfig.sh'
 elif [ "$mode" == "target" ]; then
 	targetlabel=`archlabel "$target" "$targetarch"`

@@ -17,7 +17,7 @@ function defno  { defineyesno "$1" "$2" 'undef' 'define'; }
 
 for arg in "$@"; do
 	a=`echo "$arg" | sed -e 's/=.*//' -e 's/^--//'`
-	v=`echo "$arg" | sed -e 's/[^=]*=//'`
+	v=`echo "$arg" | sed -n -e 's/[^=]*=//p'`
 	A="$a"
 	case "$a" in 
 		with-*) a=`echo "$a" | sed -e 's/^with-//'` ;;

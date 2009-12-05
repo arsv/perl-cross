@@ -37,20 +37,22 @@ function hasfunc {
 	resdef 'found' 'not found' "$_s"
 }
 
-# hasvar name includes
+# hasvar name includes [symbol]
 # We use try_link here instead of try_compile to be sure we have the
 # variable in question not only declared but also present in libraries we use.
 function hasvar {
+	if [ -n "$4" ] ; then _s="$4"; else _s="d_$1"; fi
+
 	require 'cc'
 	mstart "Checking for $1"
-	ifhintdefined "d_$1" 'present' 'missing' && return $__
+	ifhintdefined "$_s" 'present' 'missing' && return $__
 
 	try_start
 	try_includes $2
 	try_add "void foo() { };"
 	try_add "int main() { foo($1); return 0; }"
 	try_link
-	resdef 'found' 'not found' "d_$1"
+	resdef 'found' 'not found' "$_s"
 }
 
 function isvoid {
@@ -124,6 +126,7 @@ check hasfunc fstatvfs
 check hasfunc fsync
 check hasfunc ftello
 check hasfunc futimes
+check hasfunc getaddrinfo
 check hasfunc getcwd
 check hasfunc getespwnam
 check hasfunc getfsstat
@@ -137,6 +140,7 @@ check hasfunc getitimer
 check hasfunc getlogin
 check hasfunc getmnt
 check hasfunc getmntent
+check hasfunc getnameinfo
 check hasfunc getnetbyaddr
 check hasfunc getnetbyname
 check hasfunc getnetent
@@ -161,6 +165,8 @@ check hasfunc gettimeofday
 check hasfunc hasmntopt
 check hasfunc htonl "0" 'stdio.h sys/types.h netinet/in.h arpa/inet.h'
 check hasfunc ilogbl
+check hasfunc inetntop
+check hasfunc inetpton
 check hasfunc index "NULL,0" 'stdlib.h string.h strings.h'
 check hasfunc inet_aton
 check hasfunc isascii "'A'" 'stdio.h stdlib.h ctype.h'
@@ -288,6 +294,13 @@ check hasfunc system
 check hasfunc tcgetpgrp
 check hasfunc tcsetpgrp
 check hasfunc telldir
+check hasfunc ctime64
+check hasfunc localtime64
+check hasfunc gmtime64
+check hasfunc mktime64
+check hasfunc difftime64
+check hasfunc asctime64
+chack hasfunc timegm
 check hasfunc time
 check hasfunc times
 check hasfunc truncate
@@ -308,4 +321,4 @@ check hasfunc wctomb
 check hasfunc writev
 
 check isvoid closedir "NULL" 'stdlib.h sys/types.h dirent.h'
-check hasvar sys_errlist 'stdio.h'
+check hasvar sys_errlist 'stdio.h' d_syserrlst

@@ -19,6 +19,8 @@ function setfromvar {
 
 setfromvar cc CC
 setfromvar cflags CFLAGS
+setvar ccflags "${ccflags} ${cflags}"
+setfromvar cppflags CPPFLAGS
 setfromvar ld LD
 setfromvar ldflags LDFLAGS
 setfromvar ar AR

@@ -100,7 +100,6 @@ O = .host$host_o
 X = $host_exe
 so = $dlext
 
-install: install.miniperl
 extensions: xconfig-pm
 END
 else

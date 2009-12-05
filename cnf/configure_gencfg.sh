@@ -182,9 +182,9 @@ default ccflags_uselargefiles '-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64'
 default ccname
 default ccsymbols
 default ccversion
-default cf_by 'Anonymous'
+default cf_by "${USER}"
 default cf_email nobody@nowhere.land
-default cf_time
+default cf_time "`date`"
 default chgrp chgrp
 default chmod chmod
 default chown chown
@@ -231,6 +231,7 @@ default d_archlib undef
 default d_asctime_r undef
 default d_atolf undef
 default d_atoll undef
+default d_attribute_deprecated undef
 default d_attribute_format undef
 default d_attribute_malloc undef
 default d_attribute_nonnull undef
@@ -277,6 +278,7 @@ default d_dlerror undef
 default d_dlopen undef
 default d_dlsymun undef
 default d_dosuid undef
+default usedevel undef
 default d_drand48_r undef
 default d_drand48proto define
 default d_dup2 undef
@@ -327,6 +329,7 @@ default d_fsync undef
 default d_ftello undef
 default d_ftime undef
 default d_futimes undef
+default d_getaddrinfo undef
 default d_getcwd undef
 default d_getespwnam undef
 default d_getfsstat undef
@@ -348,6 +351,7 @@ default d_getlogin undef
 default d_getlogin_r undef
 default d_getmnt undef
 default d_getmntent undef
+default d_getnameinfo undef
 default d_getnbyaddr undef
 default d_getnbyname undef
 default d_getnent undef
@@ -389,6 +393,8 @@ default d_grpasswd undef
 default d_hasmntopt undef
 default d_htonl undef
 default d_ilogbl undef
+default d_inetntop undef
+default d_inetpton undef
 default d_inc_version_list undef
 default d_index undef
 default d_inetaton undef
@@ -603,6 +609,13 @@ default d_tcgetpgrp undef
 default d_tcsetpgrp undef
 default d_telldir undef
 default d_telldirproto define
+default d_ctime64 undef
+default d_localtime64 undef
+default d_gmtime64 undef
+default d_mktime64 undef
+default d_difftime64 undef
+default d_asctime64 undef
+default d_timegm undef
 default d_time undef
 default d_times undef
 default d_tm_tm_gmtoff undef
@@ -724,6 +737,7 @@ default hostcat 'cat /etc/hosts'
 default i_arpainet undef
 default i_bsdioctl undef
 default i_crypt undef
+default i_assert undef
 default i_db undef
 default i_dbm undef
 default i_dirent undef
@@ -739,6 +753,7 @@ default i_ieeefp undef
 default i_inttypes undef
 default i_langinfo undef
 default i_libutil undef
+default i_mallocmalloc undef
 default i_limits define
 default i_locale undef
 default i_machcthr undef
@@ -747,6 +762,11 @@ default i_math undef
 default i_memory undef
 default i_mntent undef
 default i_ndbm undef
+default i_gdbmndbm undef
+default i_gdbm_ndbm undef
+default d_ndbm_h_uses_prototypes undef
+default d_gdbmndbm_h_uses_prototypes undef
+default d_gdbm_ndbm_h_uses_prototypes undef
 default i_netdb undef
 default i_neterrno undef
 default i_netinettcp undef
@@ -777,6 +797,7 @@ default i_sysmode undef
 default i_sysmount undef
 default i_sysndir undef
 default i_sysparam undef
+default i_syspoll undef
 default i_sysresrc undef
 default i_syssecrt undef
 default i_sysselct undef
@@ -864,7 +885,7 @@ default mv
 default myarchname
 default mydomain
 default myhostname
-default myuname
+default myuname ${target}
 default n -n
 default need_va_copy undef
 default netdb_hlen_type 'socklen_t'
@@ -889,9 +910,9 @@ default objdump objdump
 default old_pthread_create_joinable PTHREAD_CREATE_JOINABLE
 default optimize
 default orderlib
-default osname
-default osvers
-default package
+default osname linux
+default osvers current
+default package perl5
 default pager less
 default passcat 'cat /etc/passwd'
 default patchlevel
@@ -990,7 +1011,7 @@ default spackage
 default spitshell cat
 default srand48_r_proto 0
 default srandom_r_proto 0
-default src
+default src `cd .. >/dev/null ; pwd`
 default ssizetype
 default startperl "$sharpbang$perlpath"
 default startsh
@@ -1034,6 +1055,7 @@ default use64bitall undef
 default use64bitint undef
 default usecrosscompile undef
 default usedl define
+default usedtrace undef
 default usefaststdio undef
 default useithreads undef
 default uselargefiles define

@@ -50,7 +50,7 @@ Makefile:
 
 # ---[ host/miniperl ]----------------------------------------------------------
 
-miniperl$X: $& miniperlmain$O $(obj:$o=$O) opmini$O
+miniperl$X: git_version.h $& miniperlmain$O $(obj:$o=$O) opmini$O
 	$(HOSTCC) -o $@ $(filter %$O,$^) $(HOSTLIBS)
 
 generate_uudmap$X: generate_uudmap.c
@@ -74,7 +74,7 @@ opmini.c: op.c
 
 # ---[ site/perl ]--------------------------------------------------------------
 
-perl$x: $& perlmain$o $(obj) libperl$a op$o
+perl$x: git_version.h $& perlmain$o $(obj) libperl$a op$o
 	$(CC) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(LIBS)
 
 %$o: %.c config.h
@@ -104,13 +104,13 @@ preplibrary: miniperl$x lib/lib.pm
 		autosplit_lib_modules(@ARGV)' lib/*/*.pm
 	$(MAKE) lib/re.pm
 
-lib/lib.pm: miniperl$e $(CONFIGPM)
+lib/lib.pm: miniperl$X $(CONFIGPM)
 	./miniperl -Ilib lib/lib_pm.PL
 
-lib/Config.pod $(CONFIGPM): miniperl$e configpm config.sh
+lib/Config.pod $(CONFIGPM): miniperl$X configpm config.sh
 	./miniperl -Ilib configpm
 
-$(XCONFIGPM): tconfig.sh
+$(XCONFIGPM): miniperl$X tconfig.sh
 	@mkdir -p xlib
 	./miniperl -Ilib configpm --config-sh=tconfig.sh --config-pm=xlib/Config.pm --config-pod=xlib/Config.pod
 
@@ -152,7 +152,7 @@ uni.data: miniperl$X $(CONFIGPM) lib/unicore/mktables
 	cd lib/unicore && ../../miniperl -I../../lib mktables -w
 	touch uni.data
 
-pod/%: pod/%.PL config.sh
+pod/%: miniperl$X lib/Config.pod pod/%.PL config.sh
 	cd pod && ../miniperl$X -I../lib $*.PL
 
 # ---[ modules ]----------------------------------------------------------------
@@ -169,16 +169,16 @@ modules.list: $(CONFIGPM) $(MODLISTS) cflags
 # ---[ install ]----------------------------------------------------------------
 .PHONY: install install.perl install.pod
 
-META.yml: Porting/makemeta Porting/Maintainers.pl Porting/Maintainers.pm
+META.yml: Porting/makemeta Porting/Maintainers.pl Porting/Maintainers.pm miniperl$X
 	$(RUNPERL) $<
 
 install: install.perl install.man
 
-install.perl: installperl
+install.perl: installperl miniperl$X
 	$(RUNPERL) installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
 	-@test ! -s extras.lst || $(MAKE) extras.install
 
-install.man: installman
+install.man: installman miniperl$X
 	$(RUNPERL) installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
 
 install.miniperl: miniperl$X xlib/Config.pm xlib/Config_heavy.pl
