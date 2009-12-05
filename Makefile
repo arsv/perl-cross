@@ -50,7 +50,7 @@ Makefile:
 
 # ---[ host/miniperl ]----------------------------------------------------------
 
-miniperl$X: git_version.h $& miniperlmain$O $(obj:$o=$O) opmini$O
+miniperl$X: $& miniperlmain$O $(obj:$o=$O) opmini$O
 	$(HOSTCC) -o $@ $(filter %$O,$^) $(HOSTLIBS)
 
 generate_uudmap$X: generate_uudmap.c
@@ -74,7 +74,7 @@ opmini.c: op.c
 
 # ---[ site/perl ]--------------------------------------------------------------
 
-perl$x: git_version.h $& perlmain$o $(obj) libperl$a op$o
+perl$x: $& perlmain$o $(obj) libperl$a op$o
 	$(CC) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(LIBS)
 
 %$o: %.c config.h

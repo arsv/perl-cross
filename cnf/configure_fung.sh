@@ -36,7 +36,7 @@ if [ "$d_drand48" == 'define' ]; then
 elif [ "$d_random" == 'define' ]; then
 	setvar 'randfunc' 'random'
 	result 'ok, found random()'
-elif [ "$d_rand" == 'define' ] then
+elif [ "$d_rand" == 'define' ]; then
 	setvar 'randfunc' 'rand'
 	result 'yick, looks like I have to use rand()'
 else

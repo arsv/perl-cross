@@ -78,6 +78,7 @@ check hasfunc access "NULL,0" 'stdlib.h unistd.h'
 check hasfunc accessx
 check hasfunc aintl
 check hasfunc alarm "0" 'unistd.h'
+check hasfunc asctime64
 check hasfunc atolf
 check hasfunc atoll
 check hasfunc bcmp "NULL,NULL,0" 'stdlib.h string.h'
@@ -92,10 +93,13 @@ check hasfunc closedir
 check hasfunc copysignl "0.0,0.0" 'math.h'
 check hasfunc crypt
 check hasfunc ctermid
+check hasfunc ctime64
 check hasfunc cuserid
 check hasfunc difftime
+check hasfunc difftime64
 check hasfunc dirfd
 check hasfunc dlerror
+check hasfunc drand48
 check hasfunc dup2
 check hasfunc eaccess
 check hasfunc endgrent
@@ -162,13 +166,14 @@ check hasfunc getservbyport
 check hasfunc getservent
 check hasfunc getspnam
 check hasfunc gettimeofday
+check hasfunc gmtime64
 check hasfunc hasmntopt
 check hasfunc htonl "0" 'stdio.h sys/types.h netinet/in.h arpa/inet.h'
 check hasfunc ilogbl
-check hasfunc inetntop
-check hasfunc inetpton
 check hasfunc index "NULL,0" 'stdlib.h string.h strings.h'
 check hasfunc inet_aton
+check hasfunc inetntop
+check hasfunc inetpton
 check hasfunc isascii "'A'" 'stdio.h stdlib.h ctype.h'
 check hasfunc isfinite "0.0" 'math.h'
 check hasfunc isinf "0.0" 'math.h'
@@ -178,6 +183,7 @@ check hasfunc killpg
 check hasfunc lchown "NULL, 0, 0" 'stdlib.h unistd.h'
 check hasfunc link
 check hasfunc localeconv
+check hasfunc localtime64
 check hasfunc lockf
 check hasfunc lstat
 check hasfunc madvise
@@ -197,6 +203,7 @@ check hasfunc mkfifo
 check hasfunc mkstemp
 check hasfunc mkstemps
 check hasfunc mktime
+check hasfunc mktime64
 check hasfunc mmap
 check hasfunc modfl "0.0,NULL" 'stdlib.h math.h'
 check hasfunc mprotect
@@ -216,6 +223,8 @@ check hasfunc poll
 check hasfunc pthread_atfork
 check hasfunc pthread_attr_setscope
 check hasfunc pthread_yield
+check hasfunc rand
+check hasfunc random
 check hasfunc readdir
 check hasfunc readlink
 check hasfunc readv
@@ -258,9 +267,9 @@ check hasfunc setsid
 check hasfunc setvbuf
 check hasfunc sfreserve "" 'sfio.h'
 check hasfunc shmat
-check hasfunc shmget
 check hasfunc shmctl
 check hasfunc shmdt
+check hasfunc shmget
 check hasfunc sigaction
 check hasfunc signbit
 check hasfunc sigprocmask
@@ -294,14 +303,8 @@ check hasfunc system
 check hasfunc tcgetpgrp
 check hasfunc tcsetpgrp
 check hasfunc telldir
-check hasfunc ctime64
-check hasfunc localtime64
-check hasfunc gmtime64
-check hasfunc mktime64
-check hasfunc difftime64
-check hasfunc asctime64
-chack hasfunc timegm
 check hasfunc time
+check hasfunc timegm
 check hasfunc times
 check hasfunc truncate
 check hasfunc ualarm
