@@ -15,7 +15,7 @@ case "$d_shmctl$d_shmget$d_shmat$d_shmdt" in
 esac
 
 mstart "Looking how to get error messages"
-# Configure has quite a long piece on this, which basically means just this:
+# Configure has quite a long piece on strerror, which basically means just this:
 if [ "$d_strerror" == 'define' ]; then
 	setvar 'd_strerrm' 'strerror(e)'
 	result 'strerror()'
