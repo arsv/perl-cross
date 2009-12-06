@@ -104,9 +104,11 @@ mstart "Looking which header to use for varargs"
 if [ "$i_stdarg" == 'define' ]; then
 	result '<stdarg.h>'	
 	setvar 'i_varargs' 'undef'
+	setvar 'i_varhdr' 'stdarg.h'
 elif [ "$i_varargs" == 'define' ]; then
 	result '<varargs.h>'
 	setvar 'i_stdarg' 'undef'
+	setvar 'i_varhdr' 'varargs.h'
 else
 	result 'nothing found'
 fi

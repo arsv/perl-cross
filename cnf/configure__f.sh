@@ -121,7 +121,7 @@ function require {
 
 function symbolname {
 	echo "$1" | sed -e 's/^\(struct\|enum\|union\|unsigned\) /s_/'\
-		-e 's/\*/ptr/g' -e 's/\.h$//' -e 's/[^A-Za-z0-9_]//' -e 's/s_\(.*\)/\1_s/' |\
+		-e 's/\*/ptr/g' -e 's/\.h$//' -e 's/[^A-Za-z0-9_]//' -e 's/^s_\(.*\)/\1_s/' |\
 		tr 'A-Z' 'a-z'
 }
 
@@ -236,6 +236,10 @@ function ifhintdefined {
 		return 1
 	fi
 }
+
+# for use in if clauses
+function nothinted { ifhint "$@" && return 1 || return 0; }
+function nohintdefined { ifhintdefined "$@" && return 1 || return 0; }
 
 # resdef result-yes result-no symbol symbol2
 function resdef {

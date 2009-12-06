@@ -22,9 +22,9 @@ function haslibs {
 	result "$_libs"
 }
 
-# hasfunc name args includes [symbol]
+# hasfunc name args includes
 function hasfunc {
-	if [ -n "$4" ]; then _s="$4"; else _s="d_$1"; fi
+	if [ -n "$4" ] ; then _s="$4"; else _s="d_$1"; fi
 
 	require 'cc'
 	mstart "Checking for $1"
@@ -98,6 +98,7 @@ check hasfunc cuserid
 check hasfunc difftime
 check hasfunc difftime64
 check hasfunc dirfd
+check hasfunc dlopen
 check hasfunc dlerror
 check hasfunc drand48
 check hasfunc dup2
@@ -324,4 +325,5 @@ check hasfunc wctomb
 check hasfunc writev
 
 check isvoid closedir "NULL" 'stdlib.h sys/types.h dirent.h'
-check hasvar sys_errlist 'stdio.h' d_syserrlst
+check hasvar sys_errlist 'stdio.h'
+check hasvar tzname 'time.h'

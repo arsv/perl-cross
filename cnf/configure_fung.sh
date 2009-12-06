@@ -26,8 +26,6 @@ else
 	setvar 'd_strerrm' 'unknown'
 	result 'nothing found'
 fi
-# note: this was tested already, it's just the name that's different (?)
-setvar 'd_syserrlst' "$d_sys_errlist"
 
 mstart "Looking for a random number function"
 if [ "$d_drand48" == 'define' ]; then
@@ -44,3 +42,17 @@ else
 	setvar 'randfunc' ''
 fi
 	
+# It's a bit more complicated in original Configure, but let's
+# assume that if there's clock_t defined that's what times() return.
+if [ "$d_times" == 'define' ]; then
+	mstart "Looking what times() may return"
+	if nothinted clocktype; then
+		if [ "$d_clock_t" == 'define' ]; then
+			setvar clocktype 'clock_t'
+			result 'clock_t'
+		else
+			setvar clocktype 'long'
+			result "it's not clock_t, assuming long"
+		fi
+	fi
+fi

@@ -1,8 +1,6 @@
 #!/bin/sh
 
 if [ -z "$base" ]; then export base=.; else export base; fi
-#export CFLAGS='-D_POSIX_C_SOURCE -D_XOPEN_SOURCE -D_GNU_SOURCE'
-
 config='config.bad'
 cfglog='config.log'
 
@@ -90,8 +88,9 @@ fi
 
 if [ "$mode" == 'native' -o "$mode" == 'buildmini' -o "$mode" == "target" ]; then
 	. $base/configure_version.sh
-	. $base/configure_vars.sh
 	. $base/configure_hint.sh
+	. $base/configure_vars.sh
+	. $base/configure_cfby.sh
 	. $base/configure_prog.sh
 	. $base/configure_hdrs.sh
 	. $base/configure_type.sh

@@ -78,6 +78,7 @@ check typesize 'gid_t' sys/types.h
 check typesize 'fpos_t' stdio.h sys/types.h
 
 check hastype 'time_t' time.h
+check hastype 'clock_t' 'sys/times.h'
 check hastype 'fd_set' 'sys/types.h' 
 check hastype 'fpos64_t' 'stdio.h'
 check hastype 'off64_t' 'sys/types.h'

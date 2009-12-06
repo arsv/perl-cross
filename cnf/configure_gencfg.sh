@@ -165,15 +165,15 @@ default ar ar
 default archname64
 default archobjs
 default asctime_r_proto  0
-default awk
+default awk awk
 default baserev
 default bash
-default bison
+default bison bison
 default byacc byacc
 default byteorder
 default c '\c'
 default castflags 0
-default cat
+default cat cat
 default cc cc
 default cccdlflags '-fPIC'
 default ccdlflags '-Wl,-E'
@@ -182,18 +182,18 @@ default ccflags_uselargefiles '-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64'
 default ccname
 default ccsymbols
 default ccversion
-default cf_by "${USER}"
+default cf_by unknown
 default cf_email nobody@nowhere.land
 default cf_time "`date`"
-default chgrp chgrp
+default chgrp
 default chmod chmod
-default chown chown
+default chown
 default clocktype
 default comm comm
 default compress
 default contains grep
 default cp cp
-default cpio cpio
+default cpio
 required cpp
 default cpp_stuff 42
 default cppccsymbols
@@ -623,7 +623,7 @@ default d_tm_tm_zone undef
 default d_tmpnam_r undef
 default d_truncate undef
 default d_ttyname_r undef
-default d_tz_name undef
+default d_tz_name 
 default d_tzname undef
 default d_u32align undef
 default d_ualarm undef
@@ -642,7 +642,7 @@ default d_vendorscript undef
 default d_vfork undef
 default d_void_closedir undef
 default d_voidsig undef
-default d_voidtty undef
+default d_voidtty
 default d_volatile undef
 default d_vprintf undef
 default d_vsnprintf undef
@@ -764,7 +764,7 @@ default i_mntent undef
 default i_ndbm undef
 default i_gdbmndbm undef
 default i_gdbm_ndbm undef
-default d_ndbm_h_uses_prototypes undef
+default d_ndbm_h_uses_prototypes
 default d_gdbmndbm_h_uses_prototypes undef
 default d_gdbm_ndbm_h_uses_prototypes undef
 default i_netdb undef
@@ -830,7 +830,7 @@ default inc_version_list_init
 default incpath
 default inews
 default initialinstalllocation
-default issymlink "test -L"
+default issymlink "test -h"
 default ivdformat '"ld"'
 default known_extensions
 default ksh
@@ -961,7 +961,7 @@ default sPRIu64 '"Lu"'
 default sPRIx64 '"Lx"'
 default sSCNfldbl '"Lf"'
 default sched_yield 'sched_yield()'
-default sed
+default sed sed
 default seedfunc srand48
 default selectminbits '32'
 default selecttype 'fd_set *'
@@ -1038,8 +1038,8 @@ default timeincl
 default timetype
 default tmpnam_r_proto 0
 default to
-default touch
-default tr
+default touch touch
+default tr tr
 default trnl
 default troff
 default ttyname_r_proto 0
@@ -1047,8 +1047,8 @@ default uidformat '"lu"'
 default uidsign
 default uidsize
 default uidtype
-default uname
-default uniq
+default uname uname
+default uniq uniq
 default uquadtype
 default use5005threads undef
 default use64bitall undef
@@ -1064,7 +1064,7 @@ default usemallocwrap define
 default usemorebits undef
 default usemultiplicity undef
 default usemymalloc undef
-default usenm undef
+default usenm false
 default useopcode false
 default useperlio define
 default useposix true
@@ -1100,10 +1100,10 @@ default versiononly
 default vi
 default voidflags 15
 default xlibpth
-default yacc
+default yacc yacc
 default yaccflags
 default zcat
-default zip
+default zip zip
 
 if [ "$mode" == "buildmini" ]; then
 	required target_name
