@@ -15,7 +15,12 @@ function defineyesno {
 function defyes { defineyesno "$1" "$2" 'define' 'undef'; }
 function defno  { defineyesno "$1" "$2" 'undef' 'define'; }
 
+config_arg0="$0"
+config_argc=0
+config_args="$*"
+
 for arg in "$@"; do
+	config_argc=$[config_argc+1]
 	a=`echo "$arg" | sed -e 's/=.*//' -e 's/^--//'`
 	v=`echo "$arg" | sed -n -e 's/[^=]*=//p'`
 	A="$a"
