@@ -52,7 +52,7 @@ if [ -n "$targetarch" ]; then
 	usehints "h/$h_arch-$h_mach"
 	usehints "h/$h_arch"
 	# Once we get all this $h_*, let's set archname
-	default archname "$h_type"
+	default archname "$h_arch-$h_base"
 elif [ -n "$target" ]; then
 	usehints "z/$target"
 	default archname "$target"
