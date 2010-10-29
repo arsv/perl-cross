@@ -156,8 +156,8 @@ default PERL_PATCHLEVEL
 default _a .a
 default _exe
 default _o .o
-default afs
-default afsroot
+default afs false
+default afsroot /afs
 default alignbytes 8
 default ansi2knr
 default aphostname /bin/hostname
@@ -166,12 +166,12 @@ default archname64
 default archobjs
 default asctime_r_proto  0
 default awk awk
-default baserev
+default baserev 5.0
 default bash
 default bison bison
 default byacc byacc
 default byteorder
-default c '\c'
+default c
 default castflags 0
 default cat cat
 default cc cc
@@ -192,6 +192,9 @@ default clocktype
 default comm comm
 default compress
 default contains grep
+default config_arg0 ''
+default config_argc 0
+default config_args ''                                                        
 default cp cp
 default cpio
 required cpp
@@ -653,15 +656,15 @@ default d_wctomb undef
 default d_writev undef
 default d_xenix undef
 default date date
-default db_hashtype
-default db_prefixtype
+default db_hashtype 'unsigned int'
+default db_prefixtype 'size_t'
 default db_version_major
 default db_version_minor
 default db_version_patch
 default defvoidused 15
 default direntrytype 'struct dirent'
 default dlext 'so'
-default dlsrc dl_dlopen.xs
+default dlsrc 'dl_dlopen.xs'
 default drand01 'drand48()'
 default drand48_r_proto 0
 default dynamic_ext
@@ -1040,7 +1043,7 @@ default tmpnam_r_proto 0
 default to
 default touch touch
 default tr tr
-default trnl
+default trnl '\n'
 default troff
 default ttyname_r_proto 0
 default uidformat '"lu"'
@@ -1063,7 +1066,7 @@ default uselongdouble undef
 default usemallocwrap define
 default usemorebits undef
 default usemultiplicity undef
-default usemymalloc undef
+default usemymalloc n
 default usenm false
 default useopcode false
 default useperlio define
