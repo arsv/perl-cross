@@ -22,6 +22,25 @@ function checkattr {
 	result "yes"
 }
 
+# volatile check also here, it's quite similar to __attribute__ checks
+# check_if_compiles tag "message" << END
+#     test file goes here
+# END
+function check_if_compiles {
+	mstart "Checking $2"
+	ifhintdefined "d_$1" "yes" "no" && return 0
+
+	try_start
+	try_cat
+	if not try_compile_check_warnings; then
+		result 'no'
+		return 1
+	fi
+
+	setvar "d_$1" "define"
+	result "yes"
+}
+
 checkattr 'format' <<END
 #include <stdio.h>
 void my_special_printf(char* pat,...) __attribute__((__format__(__printf__,1,2)));
@@ -57,4 +76,22 @@ END
 checkattr 'warn_unused_result' <<END
 #include <stdio.h>
 int I_will_not_be_ignored(void) __attribute__((warn_unused_result));
+END
+
+check_if_compiles 'volatile' 'to see if your C compiler knows about "volatile"' <<END
+int main()
+{
+	typedef struct _goo_struct goo_struct;
+	goo_struct * volatile goo = ((goo_struct *)0);
+	struct _goo_struct {
+		long long_int;
+		int reg_int;
+		char char_var;
+	};
+	typedef unsigned short foo_t;
+	char *volatile foo;
+	volatile int bar;
+	volatile foo_t blech;
+	foo = foo;
+}
 END
