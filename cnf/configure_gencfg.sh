@@ -688,7 +688,6 @@ default extras
 default fflushNULL define
 default fflushall undef
 default find
-default firstmakefile
 default firstmakefile Makefile
 default flex
 required fpossize
@@ -919,7 +918,7 @@ default package perl5
 default pager less
 default passcat 'cat /etc/passwd'
 default patchlevel
-default path_sep /
+default path_sep ':'
 default perl
 default perl5
 default perl_patchlevel
@@ -932,7 +931,7 @@ default plibpth
 default pmake
 default pr
 default procselfexe '"/proc/self/exe"'
-default procselfpath
+#default procselfpath
 default prototype define
 default ptrsize
 default quadkind
@@ -1009,15 +1008,15 @@ default so so
 default sockethdr
 default socketlib
 default socksizetype socklen_t
-default sort
-default spackage
+default sort sort
+default spackage Perl5
 default spitshell cat
 default srand48_r_proto 0
 default srandom_r_proto 0
 default src `cd .. >/dev/null ; pwd`
 default ssizetype
 default startperl "$sharpbang$perlpath"
-default startsh
+default startsh '#!/bin/sh'
 default static_ext
 default stdchar char
 default stdio_base
@@ -1036,11 +1035,11 @@ default tail
 default tar
 default tbl
 default tee
-default test
+default test test
 default timeincl
 default timetype
 default tmpnam_r_proto 0
-default to
+default to :
 default touch touch
 default tr tr
 default trnl '\n'
