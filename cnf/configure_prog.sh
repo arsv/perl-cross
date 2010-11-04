@@ -52,3 +52,29 @@ check whichprog "objdump"    objdump 1 ${pf1}objdump ${pf2}objdump
 const 'cpp' "$cc -E"
 
 failpoint
+
+# some more info on the compiler
+mstart "Checking for GNU cc in disguise and/or its version number"
+if not hinted 'gccversion'; then
+	try_start
+	try_cat <<END
+#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
+#ifdef __VERSION__
+VERSION __VERSION__
+#endif
+#endif
+END
+	if not run $cc $cflags -E try.c > try.out 2>>$cfglog; then
+		result "definitely not gcc"
+	else
+		# a bit paranoid here, in case some non-gnu compiler will decide to
+		# output something unexpected
+		_r=`grep -v '^#' try.out | grep . | head -1 | grep '^VERSION' | sed -e 's/VERSION //' -e 's/"//g'`
+		if [ -n "$_r" ]; then
+			result "gcc ver. $_r"
+			setvar 'gccversion' "$_r"
+		else
+			result "probably not gcc"
+		fi
+	fi
+fi

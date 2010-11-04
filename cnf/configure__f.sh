@@ -242,6 +242,12 @@ function ifhint {
 	fi
 }
 
+# just an alias for the above functions, to avoid awkward
+# lines like "if ifhint"
+function hinted {
+	ifhint "$@"
+}
+
 function ifhintdefined {
 	h=`valueof "$1"`
 	if test -n "$h"; then
