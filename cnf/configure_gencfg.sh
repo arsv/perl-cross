@@ -151,6 +151,15 @@ required u8type
 required uvsize
 required uvtype
 
+required cpp
+required fpossize
+required fpostype
+required gidsize
+required gidtype
+required lseeksize
+required lseektype
+required shortsize
+
 default Mcc Mcc
 default PERL_PATCHLEVEL
 default _a .a
@@ -191,13 +200,12 @@ default chown
 default clocktype
 default comm comm
 default compress
-default contains grep
 default config_arg0 ''
 default config_argc 0
 default config_args ''                                                        
+default contains grep
 default cp cp
 default cpio
-required cpp
 default cpp_stuff 42
 default cppccsymbols
 default cppflags
@@ -231,6 +239,7 @@ default d_accessx undef
 default d_aintl undef
 default d_alarm undef
 default d_archlib undef
+default d_asctime64 undef
 default d_asctime_r undef
 default d_atolf undef
 default d_atoll undef
@@ -269,11 +278,13 @@ default d_crypt_r undef
 default d_csh define
 default d_ctermid undef
 default d_ctermid_r undef
+default d_ctime64 undef
 default d_ctime_r undef
 default d_cuserid undef
 default d_dbl_dig undef
 default d_dbminitproto define
 default d_difftime undef
+default d_difftime64 undef
 default d_dir_dd_fd undef
 default d_dirfd undef
 default d_dirnamlen undef
@@ -281,7 +292,6 @@ default d_dlerror undef
 default d_dlopen undef
 default d_dlsymun undef
 default d_dosuid undef
-default usedevel undef
 default d_drand48_r undef
 default d_drand48proto define
 default d_dup2 undef
@@ -332,6 +342,10 @@ default d_fsync undef
 default d_ftello undef
 default d_ftime undef
 default d_futimes undef
+default d_gdbm_ndbm_h_uses_prototypes define
+default d_gdbm_ndbm_h_uses_prototypes undef
+default d_gdbmndbm_h_uses_prototypes define
+default d_gdbmndbm_h_uses_prototypes undef
 default d_getaddrinfo undef
 default d_getcwd undef
 default d_getespwnam undef
@@ -390,17 +404,18 @@ default d_getservprotos define
 default d_getspnam undef
 default d_getspnam_r undef
 default d_gettimeod undef
+default d_gmtime64 undef
 default d_gmtime_r undef
 default d_gnulibc define
 default d_grpasswd undef
 default d_hasmntopt undef
 default d_htonl undef
 default d_ilogbl undef
-default d_inetntop undef
-default d_inetpton undef
 default d_inc_version_list undef
 default d_index undef
 default d_inetaton undef
+default d_inetntop undef
+default d_inetpton undef
 default d_int64_t undef
 default d_isascii undef
 default d_isfinite undef
@@ -412,6 +427,7 @@ default d_lchown undef
 default d_ldbl_dig undef
 default d_libm_lib_version undef
 default d_link undef
+default d_localtime64 undef
 default d_localtime_r undef
 default d_localtime_r_needs_tzset undef
 default d_locconv undef
@@ -437,6 +453,7 @@ default d_mkfifo undef
 default d_mkstemp undef
 default d_mkstemps undef
 default d_mktime undef
+default d_mktime64 undef
 default d_mmap undef
 default d_modfl undef
 default d_modfl_pow32_bug undef
@@ -456,6 +473,8 @@ default d_msgsnd undef
 default d_msync undef
 default d_munmap undef
 default d_mymalloc undef
+default d_ndbm_h_uses_prototypes
+default d_ndbm_h_uses_prototypes define
 default d_nice undef
 default d_nl_langinfo undef
 default d_nv_preserves_uv define
@@ -612,14 +631,8 @@ default d_tcgetpgrp undef
 default d_tcsetpgrp undef
 default d_telldir undef
 default d_telldirproto define
-default d_ctime64 undef
-default d_localtime64 undef
-default d_gmtime64 undef
-default d_mktime64 undef
-default d_difftime64 undef
-default d_asctime64 undef
-default d_timegm undef
 default d_time undef
+default d_timegm undef
 default d_times undef
 default d_tm_tm_gmtoff undef
 default d_tm_tm_zone undef
@@ -667,6 +680,7 @@ default dlext 'so'
 default dlsrc 'dl_dlopen.xs'
 default drand01 'drand48()'
 default drand48_r_proto 0
+default dtrace
 default dynamic_ext
 default eagain EAGAIN
 default ebcdic undef
@@ -690,8 +704,6 @@ default fflushall undef
 default find
 default firstmakefile Makefile
 default flex
-required fpossize
-required fpostype
 default freetype void
 default from :
 default full_ar ar
@@ -722,8 +734,6 @@ default getservent_r_proto 0
 default getspnam_r_proto 0
 default gidformat '"lu"'
 default gidsign 1
-required gidsize
-required gidtype
 default glibpth
 default gmake gmake
 default gmtime_r_proto 0
@@ -737,9 +747,9 @@ default h_sysfile true
 default hint 'default'
 default hostcat 'cat /etc/hosts'
 default i_arpainet undef
+default i_assert undef
 default i_bsdioctl undef
 default i_crypt undef
-default i_assert undef
 default i_db undef
 default i_dbm undef
 default i_dirent undef
@@ -750,25 +760,22 @@ default i_float define
 default i_fp undef
 default i_fp_class undef
 default i_gdbm undef
+default i_gdbm_ndbm undef
+default i_gdbmndbm undef
 default i_grp undef
 default i_ieeefp undef
 default i_inttypes undef
 default i_langinfo undef
 default i_libutil undef
-default i_mallocmalloc undef
 default i_limits define
 default i_locale undef
 default i_machcthr undef
 default i_malloc undef
+default i_mallocmalloc undef
 default i_math undef
 default i_memory undef
 default i_mntent undef
 default i_ndbm undef
-default i_gdbmndbm undef
-default i_gdbm_ndbm undef
-default d_ndbm_h_uses_prototypes
-default d_gdbmndbm_h_uses_prototypes undef
-default d_gdbm_ndbm_h_uses_prototypes undef
 default i_netdb undef
 default i_neterrno undef
 default i_netinettcp undef
@@ -863,8 +870,6 @@ default loclibpth
 default lp
 default lpr
 default ls ls
-required lseeksize
-required lseektype
 default mad undef
 default madlyh
 default madlyobj
@@ -888,6 +893,7 @@ default myarchname
 default mydomain
 default myhostname
 default myuname ${target}
+default n 'XS/Typemap'
 default n -n
 default need_va_copy undef
 default netdb_hlen_type 'socklen_t'
@@ -902,6 +908,7 @@ default nroff nroff
 default nvEUformat '"E"'
 default nvFUformat '"F"'
 default nvGUformat '"G"'
+default nv_overflows_integers_at '256.0*256.0*256.0*256.0*256.0*256.0*2.0*2.0*2.0*2.0*2.0'
 default nv_preserves_uv_bits 32
 default nveformat '"e"'
 default nvfformat '"f"'
@@ -931,7 +938,6 @@ default plibpth
 default pmake
 default pr
 default procselfexe '"/proc/self/exe"'
-#default procselfpath
 default prototype define
 default ptrsize
 default quadkind
@@ -949,6 +955,10 @@ default rm_try
 default rmail
 default run
 default runnm false
+default sGMTIME_max '2147483647'
+default sGMTIME_min '-2147483648'
+default sLOCALTIME_max '2147483647'
+default sLOCALTIME_min '-2147483648'
 default sPRIEUldbl '"LE"'
 default sPRIFUldbl '"LF"'
 default sPRIGUldbl '"LG"'
@@ -979,7 +989,6 @@ default sh /bin/sh
 default shar
 default sharpbang '#!'
 default shmattype 'void *'
-required shortsize
 default shrpenv
 default shsharp true
 default sig_count
@@ -1056,6 +1065,7 @@ default use5005threads undef
 default use64bitall undef
 default use64bitint undef
 default usecrosscompile undef
+default usedevel undef
 default usedl define
 default usedtrace undef
 default usefaststdio undef
@@ -1085,6 +1095,7 @@ default uvXUformat '"lX"'
 default uvoformat '"lo"'
 default uvuformat '"lu"'
 default uvxformat '"lx"'
+default vaproto 'define'
 default vendorarch
 default vendorarchexp
 default vendorbin
@@ -1096,9 +1107,9 @@ default vendorprefix
 default vendorprefixexp
 default vendorscript
 default vendorscriptexp
-default version "$api_versionstring"
-default version_patchlevel_string
-default versiononly
+default version "5.12.3"
+default version_patchlevel_string 'version 12 subversion 3'
+default versiononly undef
 default vi
 default voidflags 15
 default xlibpth

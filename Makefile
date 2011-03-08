@@ -9,13 +9,17 @@ STATIC = static
 MINIPERL = miniperl$X
 RUNPERL = ./miniperl$X -Ilib
 
+CPS = cp
+RMS = rm -f
+
 POD1 = $(wildcard pod/*.pod)
 MAN1 = $(patsubst pod/%.pod,man/man1/%$(man1ext),$(POD1))
 
-obj += gv$o toke$o perly$o pad$o regcomp$o dump$o util$o mg$o reentr$o mro$o
-obj += hv$o av$o perl$o run$o pp_hot$o sv$o pp$o scope$o pp_ctl$o pp_sys$o
-obj += doop$o doio$o regexec$o utf8$o taint$o deb$o universal$o xsutils$o
-obj += globals$o perlio$o perlapi$o numeric$o mathoms$o locale$o pp_pack$o pp_sort$o 
+obj += $(madlyobj) $(mallocobj) gv$o toke$o perly$o pad$o regcomp$o dump$o util$o mg$o reentr$o mro$o
+obj += hv$o av$o run$o pp_hot$o sv$o pp$o scope$o pp_ctl$o pp_sys$o
+obj += doop$o doio$o regexec$o utf8$o taint$o deb$o universal$o globals$o perlio$o perlapi$o numeric$o
+obj += mathoms$o locale$o pp_pack$o pp_sort$o
+
 plextract = pod/pod2html pod/pod2latex pod/pod2man pod/pod2text \
 	pod/pod2usage pod/podchecker pod/podselect
 
@@ -28,7 +32,8 @@ ext = $(dynamic_ext) $(static_ext) $(nonxs_ext)
 all: miniperl$X perl$x utilities translators extensions
 
 clean:
-	rm -f *$o *$O uudmap.h opmini.c generate_uudmap $(CONFIGPM)
+	rm -f *$o *$O uudmap.h opmini.c generate_uudmap bitcount.h $(CONFIGPM)
+	rm -f perlmini.c
 	@for i in utils; do make -C $$i clean; done
 
 config.h: config.sh config_h.SH
@@ -50,8 +55,10 @@ Makefile:
 
 # ---[ host/miniperl ]----------------------------------------------------------
 
-miniperl$X: $& miniperlmain$O $(obj:$o=$O) opmini$O
+miniperl$X: miniperlmain$O $(obj:$o=$O) opmini$O perlmini$O
 	$(HOSTCC) -o $@ $(filter %$O,$^) $(HOSTLIBS)
+
+miniperlmain$O: miniperlmain.c patchlevel.h
 
 generate_uudmap$X: generate_uudmap.c
 	$(HOSTCC) $(HOSTCFLAGS) -o $@ $^
@@ -61,20 +68,27 @@ ifneq ($O,$o)
 	$(HOSTCC) $(HOSTCFLAGS) -c -o $@ $<
 endif
 
-opmini$O: opmini.c
-	$(HOSTCC) $(HOSTCFMINI) -c -o $@ $<
+globals$O: uudmap.h bitcount.h
 
-globals$O: uudmap.h
-
-uudmap.h: generate_uudmap$X
-	./generate_uudmap > $@
+uudmap.h bitcount.h: generate_uudmap$X
+	./generate_uudmap uudmap.h bitcount.h
 
 opmini.c: op.c
 	cp -f $^ $@
 
+opmini$O: opmini.c
+	$(HOSTCC) $(HOSTCFLAGS) -DPERL_EXTERNAL_GLOB -c -o $@ $<
+
+perlmini.c: perl.c
+	cp -f $^ $@
+
+perlmini$O: perlmini.c
+	$(HOSTCC) $(HOSTCFLAGS) -DPERL_IS_MINIPERL -c -o $@ $<
+	
+
 # ---[ site/perl ]--------------------------------------------------------------
 
-perl$x: $& perlmain$o $(obj) libperl$a op$o
+perl$x: perlmain$o $(obj) libperl$a op$o
 	$(CC) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(LIBS)
 
 %$o: %.c config.h
