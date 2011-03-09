@@ -9,6 +9,7 @@ CONFIGPOD = lib/Config.pod
 XCONFIGPM = xlib/Config.pm xlib/Config_heavy.pl
 STATIC = static
 MINIPERL = ./miniperl$X -Ilib
+MINIPERL_EXE = miniperl$X
 RUNPERL = ./miniperl$X -Ilib
 
 CPS = cp
@@ -112,7 +113,6 @@ nonxs_ext =	cpan/Archive-Extract/pm_to_blib\
 		ext/autouse/pm_to_blib\
 		dist/base/pm_to_blib\
 		cpan/bignum/pm_to_blib\
-		dist/constant/pm_to_blib\
 		cpan/encoding-warnings/pm_to_blib\
 		cpan/if/pm_to_blib\
 		dist/lib/pm_to_blib\
@@ -125,6 +125,10 @@ static_ext += ext/DynaLoader/pm_to_blib
 ext = $(dynamic_ext) $(static_ext) $(nonxs_ext)
 
 # ---[ common ]-----------------------------------------------------------------
+
+# Do NOT delete any intermediate files
+# (mostly Makefile.PLs, but others can be annoying too)
+.SECONDARY:
 
 # Force early building of miniperl -- not really necessary, but makes
 # build process more logical (don't try CC if HOSTCC fails)
@@ -204,11 +208,9 @@ libperl$a: op$o perl$o $(obj) $(DYNALOADER)
 	$(AR) cru $@ $(filter %.o,$^)
 	$(RANLIB) $@
 
-#$(DYNALOADER): miniperl$e preplibrary
-#	$(MAKE) -C ext/DynaLoader DynaLoader.o
-#	cp ext/DynaLoader/DynaLoader.o .
+perl.o: git_version.h
 
-.PHONY: preplibrary
+#.PHONY: preplibrary
 preplibrary: miniperl$X $(CONFIGPM) lib/re.pm
 
 $(CONFIGPM_FROM_CONFIG_SH): $(CONFIGPOD)
@@ -219,9 +221,10 @@ $(CONFIGPOD): config.sh miniperl$X configpm Porting/Glossary lib/Config_git.pl
 
 # Both git_version.h and lib/Config_git.pl are built
 # by make_patchnum.pl.
-git_version.h: lib/Config_git.pl
+git_version.h: lib/Config_git.pl make_patchnum.pl miniperl$X
+	$(MINIPERL) make_patchnum.pl
 
-lib/Config_git.pl: $(MINIPERL_EXE) make_patchnum.pl
+lib/Config_git.pl: make_patchnum.pl miniperl$X
 	$(MINIPERL) make_patchnum.pl
 
 #.PHONY: preplibrary
@@ -254,11 +257,7 @@ lib/re.pm: ext/re/re.pm
 $(nonxs_ext): %/pm_to_blib: %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a
 
-#$(DYNALOADER): ext/DynaLoader/Makefile $(nonxs_ext)
-#	$(MAKE) -C ext/DynaLoader DynaLoader.o PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=static $(STATIC_LDFLAGS)
-
-DynaLoader.o: ext/DynaLoader/DynaLoader.o
-	cp -f $< $@
+DynaLoader.o: ext/DynaLoader/pm_to_blib
 
 $(static_ext): %/pm_to_blib: %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=static $(STATIC_LDFLAGS)
@@ -269,6 +268,10 @@ $(static_ext): %/pm_to_blib: %/Makefile
 %/Makefile: %/Makefile.PL miniperl$X miniperl_top preplibrary cflags
 	$(eval top=$(shell echo $(dir $@) | sed -e 's![^/]\+!..!g'))
 	cd $(dir $@) && $(top)miniperl_top Makefile.PL PERL_CORE=1 PERL=$(top)miniperl_top
+
+# do NOT add miniperl here!!
+%/Makefile.PL:
+	$(MINIPERL) make_ext_Makefile.pl $@
 
 cflags: cflags.SH
 	sh $<
@@ -281,22 +284,6 @@ static_ext: $(static_ext)
 extensions: uni.data cflags $(dynamic_ext) $(static_ext) $(nonxs_ext)
 
 dynaloader: $(DYNALOADER)
-
-#$(DYNALOADER): miniperl$x preplibrary $(nonxs_ext)
-#	$(MINIPERL) make_ext.pl $@ MAKE=$(MAKE) LIBPERL_A=$(LIBPERL) LINKTYPE=static $(STATIC_LDFLAGS)
-
-#d_dummy $(dynamic_ext):	miniperl$X preplibrary makeppport $(DYNALOADER) FORCE $(PERLEXPORT)
-#	$(MINIPERL) make_ext.pl $@ MAKE=$(MAKE) LIBPERL_A=$(LIBPERL) LINKTYPE=dynamic
-#
-#s_dummy $(static_ext):	miniperl$X preplibrary makeppport $(DYNALOADER) FORCE
-#	$(MINIPERL) make_ext.pl $@ MAKE=$(MAKE) LIBPERL_A=$(LIBPERL) LINKTYPE=static $(STATIC_LDFLAGS)
-
-#n_dummy $(nonxs_ext):	miniperl$X preplibrary cflags
-#	$(MINIPERL) make_ext.pl $@ MAKE=$(MAKE) LIBPERL_A=$(LIBPERL)
-
-#.PHONY: makeppport
-#makeppport: miniperl$X $(CONFIGPM)
-#	./miniperl$X -Ilib mkppport
 
 # ---[ Misc ]-------------------------------------------------------------------
 

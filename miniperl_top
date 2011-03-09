@@ -8,6 +8,10 @@
 top=`dirname "$0"`
 exec $top/miniperl \
 	-I$top/lib\
+	-I$top/dist/constant/lib\
+	-I$top/cpan/Getopt-Long/lib\
+	-I$top/cpan/Pod-Simple/lib\
+	-I$top/cpan/Pod-Escapes/lib\
 	-I$top/cpan/AutoLoader/lib\
 	-I$top/cpan/Cwd\
 	-I$top/cpan/Cwd/lib\
