@@ -119,7 +119,8 @@ nonxs_ext =	cpan/Archive-Extract/pm_to_blib\
 		cpan/libnet/pm_to_blib\
 		cpan/parent/pm_to_blib\
 		cpan/podlators/pm_to_blib
-#nonxs_ext = cpan/Archive-Extract/pm_to_blib cpan/Getopt-Long/pm_to_blib
+
+static_ext += ext/DynaLoader/pm_to_blib
 
 ext = $(dynamic_ext) $(static_ext) $(nonxs_ext)
 
@@ -186,7 +187,7 @@ perlmini$O: perlmini.c
 
 # ---[ site/perl ]--------------------------------------------------------------
 
-perl$x: perlmain$o $(obj) libperl$a op$o
+perl$x: perlmain$o $(obj) libperl$a
 	$(CC) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(LIBS)
 
 %$o: %.c config.h
@@ -199,7 +200,7 @@ perlmain.c: miniperlmain.c writemain
 
 # ---[ site/library ]-----------------------------------------------------------
 
-libperl$a: $(obj) $(DYNALOADER)
+libperl$a: op$o perl$o $(obj) $(DYNALOADER)
 	$(AR) cru $@ $(filter %.o,$^)
 	$(RANLIB) $@
 
@@ -250,18 +251,20 @@ lib/re.pm: ext/re/re.pm
 # The rules below replace make_ext script used in the original
 # perl build chain. Some host-specific functionality is lost.
 # Check miniperl_top to see how it works.
-%/pm_to_blib: %/Makefile preplibrary
+$(nonxs_ext): %/pm_to_blib: %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a
 
-#$(DYNALOADER): ext/DynaLoader/Makefile preplibrary $(nonxs_ext)
+#$(DYNALOADER): ext/DynaLoader/Makefile $(nonxs_ext)
 #	$(MAKE) -C ext/DynaLoader DynaLoader.o PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=static $(STATIC_LDFLAGS)
-#	cp ext/DynaLoader/DynaLoader.o .
 
-$(static_ext):
+DynaLoader.o: ext/DynaLoader/DynaLoader.o
+	cp -f $< $@
+
+$(static_ext): %/pm_to_blib: %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=static $(STATIC_LDFLAGS)
 
-#$(dynamic_ext):	%/Makefile preplibrary makeppport $(DYNALOADER) FORCE $(PERLEXPORT)
-#	$(MINIPERL) make_ext.pl $@ MAKE=$(MAKE) LIBPERL_A=$(LIBPERL) LINKTYPE=dynamic
+#$(dynamic_ext): %/pm_to_blib: %/Makefile
+#	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=dynamic
 
 %/Makefile: %/Makefile.PL miniperl$X miniperl_top preplibrary cflags
 	$(eval top=$(shell echo $(dir $@) | sed -e 's![^/]\+!..!g'))
@@ -278,8 +281,9 @@ static_ext: $(static_ext)
 extensions: uni.data cflags $(dynamic_ext) $(static_ext) $(nonxs_ext)
 
 dynaloader: $(DYNALOADER)
-$(DYNALOADER): miniperl$x preplibrary $(nonxs_ext)
-	$(MINIPERL) make_ext.pl $@ MAKE=$(MAKE) LIBPERL_A=$(LIBPERL) LINKTYPE=static $(STATIC_LDFLAGS)
+
+#$(DYNALOADER): miniperl$x preplibrary $(nonxs_ext)
+#	$(MINIPERL) make_ext.pl $@ MAKE=$(MAKE) LIBPERL_A=$(LIBPERL) LINKTYPE=static $(STATIC_LDFLAGS)
 
 #d_dummy $(dynamic_ext):	miniperl$X preplibrary makeppport $(DYNALOADER) FORCE $(PERLEXPORT)
 #	$(MINIPERL) make_ext.pl $@ MAKE=$(MAKE) LIBPERL_A=$(LIBPERL) LINKTYPE=dynamic

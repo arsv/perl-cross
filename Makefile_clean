@@ -1,0 +1,125 @@
+clean:		_tidy _mopup 
+
+realclean:	_realcleaner _mopup
+	@echo "Note that '$(MAKE) realclean' does not delete config.sh or Policy.sh"
+
+_clobber:
+	-@rm -f Cross/run-* Cross/to-* Cross/from-*
+	rm -f t/test_state
+	rm -f config.sh cppstdin Policy.sh extras.lst
+
+clobber:	_realcleaner _mopup _clobber
+
+distclean:	clobber
+
+# Like distclean but also removes emacs backups and *.orig.
+veryclean:	_verycleaner _mopup _clobber
+	-@rm -f Obsolete Wanted
+
+# Do not 'make _mopup' directly.
+_mopup:
+	rm -f *$(OBJ_EXT) *$(LIB_EXT) all perlmain.c opmini.c perlmini.c uudmap.h generate_uudmap$(EXE_EXT) bitcount.h
+	-rmdir .depending
+	-@test -f extra.pods && rm -f `cat extra.pods`
+	-@test -f vms/README_vms.pod && rm -f vms/README_vms.pod
+	-rm -f perl.exp ext.libs $(generated_pods) uni.data opmini.o perlmini.o
+	-rm -f perl.export perl.dll perl.libexp perl.map perl.def
+	-rm -f perl.loadmap miniperl.loadmap perl.prelmap miniperl.prelmap
+	-rm -f perl.third lib*.so.perl.third perl.3log t/perl.third t/perl.3log
+	-rm -f perl.pixie lib*.so.perl.pixie lib*.so.Addrs
+	-rm -f perl.Addrs perl.Counts t/perl.Addrs t/perl.Counts *perl.xok
+	-rm -f cygwin.c libperl*.def libperl*.dll cygperl*.dll *.exe.stackdump
+	-rm -f $(PERL_EXE) $(MINIPERL_EXE) $(LIBPERL) libperl.* microperl
+	-rm -f opcode.h-old opnames.h-old pp.sym-old pp_proto.h-old
+	-rm -f config.arch config.over $(DTRACE_H) runtests
+
+# Do not 'make _tidy' directly.
+_tidy:
+	-cd pod; $(LDLIBPTH) $(MAKE) clean
+	-cd utils; $(LDLIBPTH) $(MAKE) clean
+	-cd x2p; $(LDLIBPTH) $(MAKE) clean
+	-rm -f lib/Config_git.pl git_version.h
+	-@for x in $(DYNALOADER) $(dynamic_ext) $(static_ext) $(nonxs_ext) ; do \
+	$(MINIPERL) make_ext.pl --target=clean $$x MAKE=$(MAKE) ; \
+	done
+
+_cleaner1:
+	-cd os2; rm -f Makefile
+	-cd pod; $(LDLIBPTH) $(MAKE) $(CLEAN)
+	-cd utils; $(LDLIBPTH) $(MAKE) $(CLEAN)
+	-cd x2p; $(LDLIBPTH) $(MAKE) $(CLEAN)
+	-@if test -f $(MINIPERL_EXE) ; then \
+	for x in $(DYNALOADER) $(dynamic_ext) $(static_ext) $(nonxs_ext) ; do \
+	$(MINIPERL) make_ext.pl --target=$(CLEAN) $$x MAKE=$(MAKE) ; \
+	done ; \
+	else \
+	sh $(CLEAN).sh ; \
+	fi
+	rm -f realclean.sh veryclean.sh
+	-for file in `find cpan dist ext -name ppport.h` ; do rm -f $$file; done
+
+# Dear POSIX, thanks for making the default to xargs to be
+# run once if nothhing is passed in. It is such a great help.
+
+# Some systems do not support "?", so keep these files separate.
+_cleaner2:
+	-rm -f core.*perl.*.? t/core.perl.*.? .?*.c
+	rm -f core *perl.core t/core t/*perl.core core.* t/core.*
+	rm -f t/misctmp* t/forktmp* t/tmp* t/c t/$(PERL_EXE) t/rantests
+	rm -f so_locations $(LIBPERL_NONSHR) $(MINIPERL_NONSHR)
+	rm -rf $(addedbyconf)
+	rm -f $(FIRSTMAKEFILE) $(FIRSTMAKEFILE).old makefile.old
+	rm -f $(private)
+	rm -rf $(unidatafiles) $(unidatadirs)
+	rm -rf lib/auto
+	rm -f lib/.exists lib/*/.exists lib/*/*/.exists
+	rm -f h2ph.man pstruct
+	rm -rf .config
+	rm -f preload lib/re.pm
+	rm -rf lib/Encode lib/Compress lib/Hash lib/re
+	rm -rf lib/TAP lib/Module/Pluggable lib/App
+	rm -rf lib/mro
+	rm -rf lib/IO/Compress lib/IO/Uncompress
+	rm -f lib/ExtUtils/ParseXS/t/XSTest.c
+	rm -f lib/ExtUtils/ParseXS/t/XSTest$(OBJ_EXT)
+	rm -f lib/ExtUtils/ParseXS/t/XSTest$(DLSUFFIX)
+	rm -fr lib/B
+	rm -fr lib/CPAN lib/CPANPLUS
+	rm -fr lib/ExtUtils/CBuilder
+	-rmdir cpan/CPANPLUS-Dist-Build/t/dummy-cpanplus cpan/CPANPLUS/t/dummy-cpanplus cpan/CPANPLUS/t/dummy-localmirror
+	-rmdir ext/B/lib
+	-rmdir lib/Archive/Tar lib/Archive lib/Attribute
+	-rmdir lib/CGI
+	-rmdir lib/Data lib/Devel lib/Digest
+	-rmdir lib/ExtUtils/Command lib/ExtUtils/Constant lib/ExtUtils/Liblist lib/ExtUtils/MakeMaker
+	-rmdir lib/File/Spec lib/Filter/Util lib/Filter
+	-rmdir lib/I18N/LangTags lib/IO/Socket lib/IO lib/IPC
+	-rmdir lib/List/Util lib/List
+	-rmdir lib/Locale/Maketext lib/Locale
+	-rmdir lib/Log/Message lib/Log
+	-rmdir lib/Math/Big* lib/Math
+	-rmdir lib/Memoize lib/MIME
+	-rmdir lib/Module/Build/Platform lib/Module/Build lib/Module/Load lib/Module
+	-rmdir lib/Net/FTP lib/Object
+	-rmdir lib/Parse/CPAN lib/Parse
+	-rmdir lib/PerlIO/via lib/PerlIO
+	-rmdir lib/Package lib/Params
+	-rmdir lib/Pod/Perldoc lib/Pod/Simple lib/Pod/Text
+	-rmdir lib/Sys lib/Scalar/Util lib/Scalar
+	-rmdir lib/Term/UI lib/Thread
+	-rmdir lib/Test/Builder/Tester lib/Test/Builder lib/Test
+	-rmdir lib/Unicode/Collate
+	-rmdir lib/XS/APItest lib/XS
+	-rmdir lib/inc/latest lib/inc
+	-rmdir lib/autodie/exception lib/autodie lib/encoding lib/threads
+	-rm -f lib/ExtUtils/CBuilder/t/libcompilet.dll.a
+	-rm -f lib/ExtUtils/ParseXS/t/libXSTest.dll.a
+
+_realcleaner:
+	@$(LDLIBPTH) $(MAKE) _cleaner1 CLEAN=distclean
+	@$(LDLIBPTH) $(MAKE) _cleaner2
+
+_verycleaner:
+	@$(LDLIBPTH) $(MAKE) _cleaner1 CLEAN=veryclean
+	@$(LDLIBPTH) $(MAKE) _cleaner2
+	-rm -f *~ *.orig */*~ */*.orig */*/*~ */*/*.orig

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# This script can be used to run Makefile.PL 
+# The modules listed below are required for MakeMaker to work.
+# Note that is relies on $0 to tell where lib/ is; typically
+#   you should call it as ../../miniperl_top
+
+top=`dirname "$0"`
+exec $top/miniperl \
+	-I$top/lib\
+	-I$top/cpan/AutoLoader/lib\
+	-I$top/cpan/Cwd\
+	-I$top/cpan/Cwd/lib\
+	-I$top/cpan/ExtUtils-Command/lib\
+	-I$top/dist/ExtUtils-Install/lib\
+	-I$top/cpan/ExtUtils-MakeMaker/lib\
+	-I$top/cpan/ExtUtils-Manifest/lib\
+	-I$top/cpan/File-Path/lib\
+	"$@"
