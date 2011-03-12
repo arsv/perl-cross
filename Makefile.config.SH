@@ -42,24 +42,6 @@ ar="$ar"
 ranlib="$ranlib"
 libs="$libs"
  
-dynamic_list=''
-for f in $dynamic_ext; do
-	base=`echo "$f" | sed 's/.*\///'`
-	dynamic_list="${dynamic_list}lib/auto/$f/$base.$dlext "
-done
-
-static_list=''
-for f in $static_ext; do
-	base=`echo "$f" | sed 's/.*\///'`
-	static_list="${static_list}lib/auto/$f/$base\$_a "
-done
-
-nonxs_list=''
-for f in $nonxs_ext; do
-    base=`echo "$f" | sed 's/.*\///'`
-    nonxs_list="${nonxs_list}ext/$f/pm_to_blib "
-done
-
 function ifprefixed() {
 	val=`echo "$2" | sed -e "s/^$1-//"`
 	if [ "$1-$val" == "$2" ]; then
@@ -143,7 +125,7 @@ man3dir = \$(root)$installman3dir
 man1ext = $installman1ext
 man3ext = $installman3ext
 
-dynamic_ext = $dynamic_list
-static_ext = $static_list
-nonxs_ext = $nonxs_list
+dynamic_ext = $dynamic_ext
+static_ext = $static_ext
+nonxs_ext = $nonxs_ext
 END

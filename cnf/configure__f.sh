@@ -286,5 +286,5 @@ function resdef {
 }
 
 function modsymname {
-	echo "$1" | sed -e 's![:/]!_!g' | tr A-Z a-z
+	echo "$1" | sed -e 's!^\(ext\|cpan\|dist\|lib\)/!!' -e 's![:/-]!_!g' | tr A-Z a-z
 }

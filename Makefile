@@ -26,103 +26,12 @@ obj += mathoms$o locale$o pp_pack$o pp_sort$o
 plextract = pod/pod2html pod/pod2latex pod/pod2man pod/pod2text \
 	pod/pod2usage pod/podchecker pod/podselect
 
-nonxs_ext =	cpan/Archive-Extract/pm_to_blib\
-		cpan/Archive-Tar/pm_to_blib\
-		dist/Attribute-Handlers/pm_to_blib\
-		cpan/AutoLoader/pm_to_blib\
-		cpan/B-Debug/pm_to_blib\
-		dist/B-Deparse/pm_to_blib\
-		cpan/B-Lint/pm_to_blib\
-		cpan/CGI/pm_to_blib\
-		cpan/CPAN/pm_to_blib\
-		cpan/CPANPLUS/pm_to_blib\
-		cpan/CPANPLUS-Dist-Build/pm_to_blib\
-		cpan/Class-ISA/pm_to_blib\
-		ext/Devel-SelfStubber/pm_to_blib\
-		cpan/Digest/pm_to_blib\
-		ext/Errno/pm_to_blib\
-		cpan/ExtUtils-CBuilder/pm_to_blib\
-		cpan/ExtUtils-Command/pm_to_blib\
-		cpan/ExtUtils-Constant/pm_to_blib\
-		dist/ExtUtils-Install/pm_to_blib\
-		cpan/ExtUtils-MakeMaker/pm_to_blib\
-		cpan/ExtUtils-Manifest/pm_to_blib\
-		cpan/ExtUtils-ParseXS/pm_to_blib\
-		cpan/File-Fetch/pm_to_blib\
-		cpan/File-Path/pm_to_blib\
-		cpan/File-Temp/pm_to_blib\
-		ext/FileCache/pm_to_blib\
-		dist/Filter-Simple/pm_to_blib\
-		cpan/Getopt-Long/pm_to_blib\
-		dist/I18N-LangTags/pm_to_blib\
-		cpan/IO-Compress/pm_to_blib\
-		cpan/IO-Zlib/pm_to_blib\
-		cpan/IPC-Cmd/pm_to_blib\
-		ext/IPC-Open2/pm_to_blib\
-		ext/IPC-Open3/pm_to_blib\
-		cpan/Locale-Codes/pm_to_blib\
-		dist/Locale-Maketext/pm_to_blib\
-		cpan/Locale-Maketext-Simple/pm_to_blib\
-		cpan/Log-Message/pm_to_blib\
-		cpan/Log-Message-Simple/pm_to_blib\
-		cpan/Math-BigInt/pm_to_blib\
-		cpan/Math-BigRat/pm_to_blib\
-		cpan/Math-Complex/pm_to_blib\
-		cpan/Memoize/pm_to_blib\
-		cpan/Module-Build/pm_to_blib\
-		dist/Module-CoreList/pm_to_blib\
-		cpan/Module-Load/pm_to_blib\
-		cpan/Module-Load-Conditional/pm_to_blib\
-		cpan/Module-Loaded/pm_to_blib\
-		cpan/Module-Pluggable/pm_to_blib\
-		cpan/NEXT/pm_to_blib\
-		dist/Net-Ping/pm_to_blib\
-		cpan/Object-Accessor/pm_to_blib\
-		cpan/Package-Constants/pm_to_blib\
-		cpan/Params-Check/pm_to_blib\
-		cpan/Parse-CPAN-Meta/pm_to_blib\
-		cpan/PerlIO-via-QuotedPrint/pm_to_blib\
-		cpan/Pod-Escapes/pm_to_blib\
-		cpan/Pod-LaTeX/pm_to_blib\
-		cpan/Pod-Parser/pm_to_blib\
-		dist/Pod-Perldoc/pm_to_blib\
-		dist/Pod-Plainer/pm_to_blib\
-		cpan/Pod-Simple/pm_to_blib\
-		dist/Safe/pm_to_blib\
-		dist/SelfLoader/pm_to_blib\
-		cpan/Shell/pm_to_blib\
-		dist/Switch/pm_to_blib\
-		cpan/Term-ANSIColor/pm_to_blib\
-		cpan/Term-Cap/pm_to_blib\
-		cpan/Term-UI/pm_to_blib\
-		cpan/Test/pm_to_blib\
-		cpan/Test-Harness/pm_to_blib\
-		cpan/Test-Simple/pm_to_blib\
-		cpan/Text-Balanced/pm_to_blib\
-		cpan/Text-ParseWords/pm_to_blib\
-		cpan/Text-Tabs/pm_to_blib\
-		dist/Thread-Queue/pm_to_blib\
-		dist/Thread-Semaphore/pm_to_blib\
-		cpan/Tie-File/pm_to_blib\
-		ext/Tie-Memoize/pm_to_blib\
-		cpan/Tie-RefHash/pm_to_blib\
-		ext/Time-Local/pm_to_blib\
-		cpan/Unicode-Collate/pm_to_blib\
-		dist/XSLoader/pm_to_blib\
-		cpan/autodie/pm_to_blib\
-		ext/autouse/pm_to_blib\
-		dist/base/pm_to_blib\
-		cpan/bignum/pm_to_blib\
-		cpan/encoding-warnings/pm_to_blib\
-		cpan/if/pm_to_blib\
-		dist/lib/pm_to_blib\
-		cpan/libnet/pm_to_blib\
-		cpan/parent/pm_to_blib\
-		cpan/podlators/pm_to_blib
-
-static_ext += ext/DynaLoader/pm_to_blib
+static_tgt = $(patsubst %,%/pm_to_blib,$(static_ext))
+dynamic_tgt = $(patsubst %,%/pm_to_blib,$(dynamic_ext))
+nonxs_tgt = $(patsubst %,%/pm_to_blib,$(nonxs_ext))
 
 ext = $(dynamic_ext) $(static_ext) $(nonxs_ext)
+tgt = $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
 
 # ---[ common ]-----------------------------------------------------------------
 
@@ -200,7 +109,7 @@ perl$x: perlmain$o $(obj) libperl$a
 globals.o: uudmap.h
 
 perlmain.c: miniperlmain.c writemain
-	sh writemain $(DYNALOADER) $(static_ext) > perlmain.c
+	sh writemain $(DYNALOADER) > perlmain.c
 
 # ---[ site/library ]-----------------------------------------------------------
 
@@ -254,16 +163,16 @@ lib/re.pm: ext/re/re.pm
 # The rules below replace make_ext script used in the original
 # perl build chain. Some host-specific functionality is lost.
 # Check miniperl_top to see how it works.
-$(nonxs_ext): %/pm_to_blib: %/Makefile
+$(nonxs_tgt): %/pm_to_blib: %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a
 
 DynaLoader.o: ext/DynaLoader/pm_to_blib
 
-$(static_ext): %/pm_to_blib: %/Makefile
+$(static_tgt) ext/DynaLoader/pm_to_blib: %/pm_to_blib: %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=static $(STATIC_LDFLAGS)
 
-#$(dynamic_ext): %/pm_to_blib: %/Makefile
-#	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=dynamic
+$(dynamic_tgt): %/pm_to_blib: %/Makefile
+	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=dynamic
 
 %/Makefile: %/Makefile.PL miniperl$X miniperl_top preplibrary cflags
 	$(eval top=$(shell echo $(dir $@) | sed -e 's![^/]\+!..!g'))
@@ -276,14 +185,37 @@ $(static_ext): %/pm_to_blib: %/Makefile
 cflags: cflags.SH
 	sh $<
 
+makeppport: miniperl$X $(CONFIGPM)
+	./miniperl_top mkppport
+
 makefiles: $(ext:pm_to_blib=Makefile)
 
-nonxs_ext: $(nonxs_ext)
-dynamic_ext: $(dynamic_ext)
-static_ext: $(static_ext)
-extensions: uni.data cflags $(dynamic_ext) $(static_ext) $(nonxs_ext)
+nonxs_ext: $(nonxs_tgt)
+dynamic_ext: $(dynamic_tgt)
+static_ext: $(static_tgt)
+extensions: uni.data cflags $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
 
 dynaloader: $(DYNALOADER)
+
+cpan/Devel-PPPort/PPPort.pm:
+	cd cpan/Devel-PPPort && ../../miniperl_top PPPort_pm.PL
+
+cpan/Devel-PPPort/ppport.h:
+	cd cpan/Devel-PPPort && ../../miniperl_top ppport_h.PL
+
+# THree following rules ensure that modules listed in mkppport.lst get
+# their ppport.h installed
+mkppport_lst = $(shell cat mkppport.lst | grep '^[a-z]')
+
+mkppport_lst:
+	@echo $(mkppport_lst)
+	@echo $(patsubst %,%/ppport.h,$(mkppport_lst))
+
+$(patsubst %,%/pm_to_blib,$(mkppport_lst)): %/pm_to_blib: %/ppport.h
+# Having %/ppport.h here isn't a very good idea since the initial ppport.h matches
+# the pattern too
+$(patsubst %,%/ppport.h,$(mkppport_lst)): cpan/Devel-PPPort/ppport.h
+	cp -f $< $@
 
 # ---[ Misc ]-------------------------------------------------------------------
 
