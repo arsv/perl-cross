@@ -12,9 +12,6 @@ MINIPERL = ./miniperl$X -Ilib
 MINIPERL_EXE = miniperl$X
 RUNPERL = ./miniperl$X -Ilib
 
-CPS = cp
-RMS = rm -f
-
 POD1 = $(wildcard pod/*.pod)
 MAN1 = $(patsubst pod/%.pod,man/man1/%$(man1ext),$(POD1))
 
@@ -97,11 +94,9 @@ perlmini$O: perlmini.c
 
 # ---[ site/perl ]--------------------------------------------------------------
 
-perl$x: perlmain$o $(obj) libperl$a $(static_obj) ext.libs
-	@echo static_ext=$(static_ext)
-	@echo static_obj=$(static_obj)
+perl$x: perlmain$o $(obj) libperl$a $(static_tgt) ext.libs
 	$(eval extlibs=$(shell cat ext.libs))
-	$(CC) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(LIBS) $(extlibs)
+	$(CC) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(static_obj) $(LIBS) $(extlibs)
 
 %$o: %.c config.h
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -255,7 +250,14 @@ install.miniperl: miniperl$X xlib/Config.pm xlib/Config_heavy.pl
 
 # ---[ clean ]------------------------------------------------------------------
 clean:
-	rm -f *$o *$O uudmap.h opmini.c generate_uudmap bitcount.h $(CONFIGPM)
-	rm -f perlmini.c
-	@for i in utils; do make -C $$i clean; done
-
+	-test -n "$o" && rm -f *$o
+	-test -n "$O" && rm -f *$O
+	@for i in utils; do $(MAKE) -C $$i clean; done
+	@for i in $(nonxs_ext) $(static_ext) $(dynamic_ext); do $(MAKE) -C $$i clean; done
+	-rm -f uudmap.h opmini.c generate_uudmap$X bitcount.h $(CONFIGPM)
+	-rm -f git_version.h lib/re.pm lib/Config_git.pl
+	-rm -f perlmini.c perlmain.c
+	-rm -f config.h xconfig.h
+	-rm -f $(UNICOPY)/*
+	-rm -f $(patsubst %,%/ppport.h,$(mkppport_lst))
+	-rm -f cpan/Devel-PPPort/ppport.h cpan/Devel-PPPort/PPPort.pm

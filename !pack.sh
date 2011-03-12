@@ -8,6 +8,7 @@ tar -zcvf \!pack.tar.gz\
 	cnf/config*\
 	cnf/hints\
 	installman\
+	extlibs\
 	writemain.SH\
 	Makefile\
 	Makefile.config.SH\
