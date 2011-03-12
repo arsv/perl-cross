@@ -192,7 +192,7 @@ cpan/Unicode-Normalize/unicore: lib/unicore
 cpan/Unicode-Normalize/unicore/CombiningClass.pl: cpan/Unicode-Normalize/unicore lib/unicore/CombiningClass.pl
 
 lib/unicore/CombiningClass.pl: lib/unicore/mktables miniperl$X lib/unicore/*.txt
-	cd lib/unicore && ../../miniperl_top mktables -globlist
+	cd lib/unicore && ../../miniperl_top mktables
 
 # THree following rules ensure that modules listed in mkppport.lst get
 # their ppport.h installed
