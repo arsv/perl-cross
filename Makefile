@@ -51,6 +51,12 @@ config-pm: $(CONFIGPM)
 
 xconfig-pm: $(XCONFIGPM)
 
+$(XCONFIGPM): miniperl$X tconfig.sh | xlib
+	./miniperl_top configpm --config-sh=tconfig.sh --config-pm=xlib/Config.pm --config-pod=xlib/Config.pod
+
+xlib:
+	mkdir -p $@
+
 # prevent the following rule from overwriting Makefile
 # by running Makefile.SH (part of original distribution)
 Makefile:
