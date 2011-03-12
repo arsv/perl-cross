@@ -7,6 +7,7 @@ tar -zcvf \!pack.tar.gz\
 	x2p/Makefile\
 	cnf/config*\
 	cnf/hints\
+	installman\
 	Makefile\
 	Makefile.config.SH\
 	make_ext_Makefile.pl\

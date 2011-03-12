@@ -41,7 +41,7 @@ tgt = $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
 
 # Force early building of miniperl -- not really necessary, but makes
 # build process more logical (no reason to even try CC if HOSTCC fails)
-all: miniperl$X perl$x utilities extensions
+all: miniperl$X perl$x utilities extensions translators
 
 config.h: config.sh config_h.SH
 	CONFIG_H=$@ CONFIG_SH=$< ./config_h.SH
@@ -115,7 +115,6 @@ libperl$a: op$o perl$o $(obj) $(DYNALOADER)
 
 perl.o: git_version.h
 
-#.PHONY: preplibrary
 preplibrary: miniperl$X $(CONFIGPM) lib/re.pm
 
 $(CONFIGPM_FROM_CONFIG_SH): $(CONFIGPOD)
@@ -126,7 +125,7 @@ $(CONFIGPOD): config.sh miniperl$X configpm Porting/Glossary lib/Config_git.pl
 
 # Both git_version.h and lib/Config_git.pl are built
 # by make_patchnum.pl.
-git_version.h lib/Config_git.pl: make_patchnum.pl miniperl$X
+git_version.h lib/Config_git.pl: make_patchnum.pl | miniperl$X
 	./miniperl_top make_patchnum.pl
 
 lib/re.pm: ext/re/re.pm
@@ -155,9 +154,7 @@ $(dynamic_tgt): %/pm_to_blib: %/Makefile
 # Allow building modules by typing "make cpan/Module-Name"
 $(static_ext) $(dynamic_ext) $(nonxs_ext): %: %/pm_to_blib
 
-# do NOT add miniperl dependency here!!
-# it will overwrite all pre-made Makefiles
-%/Makefile.PL:
+%/Makefile.PL: | miniperl$X
 	./miniperl_top make_ext_Makefile.pl $@
 
 cflags: cflags.SH
@@ -191,10 +188,10 @@ cpan/Unicode-Normalize/Makefile: cpan/Unicode-Normalize/unicore/CombiningClass.p
 $(UNICORE)/%.pl: $(UNICORE)/mktables $(UNICORE)/*.txt miniperl$X
 	cd lib/unicore && ../../miniperl_top mktables
 	touch $@
+$(UNICOPY)/%.pl: $(UNICORE)/%.pl | $(UNICOPY)
+	cp -a $< $@
 $(UNICOPY):
 	mkdir -p $@
-$(UNICOPY)/%.pl: $(UNICORE)/%.pl $(UNICOPY)
-	cp -a $< $@
 
 # The following rules ensure that modules listed in mkppport.lst get
 # their ppport.h installed
@@ -237,11 +234,11 @@ META.yml: Porting/makemeta Porting/Maintainers.pl Porting/Maintainers.pm miniper
 install: install.perl install.man
 
 install.perl: installperl miniperl$X
-	$(RUNPERL) installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
+	./miniperl_top installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
 	-@test ! -s extras.lst || $(MAKE) extras.install
 
 install.man: installman miniperl$X
-	$(RUNPERL) installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
+	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
 
 install.miniperl: miniperl$X xlib/Config.pm xlib/Config_heavy.pl
 	install -D -m 0755 miniperl $(hostbin)/$(target_name)-miniperl$X
