@@ -1,6 +1,6 @@
 TOP = ..
 include $(TOP)/Makefile.config
-PERL = $(TOP)/miniperl -I$(TOP)/lib
+PERL = $(TOP)/miniperl_top
 
 plextract = c2ph config_data corelist cpan h2ph h2xs instmodsh\
 	perlbug perldoc perlivp pl2pm prove ptar ptardiff cpanp-run-perl\
@@ -9,7 +9,7 @@ plextract = c2ph config_data corelist cpan h2ph h2xs instmodsh\
 all: $(plextract) 
 
 %: %.PL ../config.sh
-	$(PERL) -I../lib $<
+	$(PERL) $<
 
 perlbug: ../patchlevel.h
 

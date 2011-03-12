@@ -2,6 +2,7 @@
 
 tar -zcvf \!pack.tar.gz\
 	lib/Pod/Man.pm\
+	ext/POSIX/Makefile.PL\
 	utils/Makefile\
 	x2p/Makefile\
 	cnf/config*\

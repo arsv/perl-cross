@@ -1,4 +1,9 @@
 # Expect this line to be read by t/posix.t, don't change it
+
+# Explicitly avoid including '.' in @INC; autoloader gets confused since it
+# can find POSIX.pm, but can't find autosplit.ix.
+BEGIN { pop @INC;}
+#
 use ExtUtils::MakeMaker;
 use ExtUtils::Constant 0.23 'WriteConstants';
 use Config;

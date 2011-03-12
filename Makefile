@@ -174,14 +174,14 @@ makefiles: $(ext:pm_to_blib=Makefile)
 nonxs_ext: $(nonxs_tgt)
 dynamic_ext: $(dynamic_tgt)
 static_ext: $(static_tgt)
-extensions: uni.data cflags $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
+extensions: cflags $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
 
 dynaloader: $(DYNALOADER)
 
 cpan/Devel-PPPort/PPPort.pm:
 	cd cpan/Devel-PPPort && ../../miniperl_top PPPort_pm.PL
 
-cpan/Devel-PPPort/ppport.h:
+cpan/Devel-PPPort/ppport.h: cpan/Devel-PPPort/PPPort.pm
 	cd cpan/Devel-PPPort && ../../miniperl_top ppport_h.PL
 
 cpan/Unicode-Normalize/Makefile: cpan/Unicode-Normalize/unicore/CombiningClass.pl
