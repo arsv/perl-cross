@@ -40,13 +40,8 @@ tgt = $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
 .SECONDARY:
 
 # Force early building of miniperl -- not really necessary, but makes
-# build process more logical (don't try CC if HOSTCC fails)
-all: miniperl$X perl$x utilities translators extensions
-
-clean:
-	rm -f *$o *$O uudmap.h opmini.c generate_uudmap bitcount.h $(CONFIGPM)
-	rm -f perlmini.c
-	@for i in utils; do make -C $$i clean; done
+# build process more logical (no reason to even try CC if HOSTCC fails)
+all: miniperl$X perl$x utilities extensions
 
 config.h: config.sh config_h.SH
 	CONFIG_H=$@ CONFIG_SH=$< ./config_h.SH
@@ -58,7 +53,8 @@ config-pm: $(CONFIGPM)
 
 xconfig-pm: $(XCONFIGPM)
 
-# Tprevent the following rule from overwriting Makefile
+# prevent the following rule from overwriting Makefile
+# by running Makefile.SH (part of original distribution)
 Makefile:
 	touch $@
 
@@ -126,34 +122,15 @@ $(CONFIGPM_FROM_CONFIG_SH): $(CONFIGPOD)
 
 configpod: $(CONFIGPOD)
 $(CONFIGPOD): config.sh miniperl$X configpm Porting/Glossary lib/Config_git.pl
-	$(MINIPERL) configpm
+	./miniperl_top configpm
 
 # Both git_version.h and lib/Config_git.pl are built
 # by make_patchnum.pl.
 git_version.h: lib/Config_git.pl make_patchnum.pl miniperl$X
-	$(MINIPERL) make_patchnum.pl
+	./miniperl_top make_patchnum.pl
 
 lib/Config_git.pl: make_patchnum.pl miniperl$X
-	$(MINIPERL) make_patchnum.pl
-
-#.PHONY: preplibrary
-#preplibrary: miniperl$x lib/lib.pm
-#	@mkdir -p lib/auto
-#	./miniperl -Ilib -e 'use AutoSplit; \
-#		autosplit_lib_modules(@ARGV)' lib/*.pm
-#	./miniperl -Ilib -e 'use AutoSplit; \
-#		autosplit_lib_modules(@ARGV)' lib/*/*.pm
-#	$(MAKE) lib/re.pm
-
-#lib/lib.pm: miniperl$X $(CONFIGPM)
-#	./miniperl -Ilib lib/lib_pm.PL
-
-#lib/Config.pod $(CONFIGPM): miniperl$X configpm config.sh
-#	./miniperl -Ilib configpm
-
-#$(XCONFIGPM): miniperl$X tconfig.sh
-#	@mkdir -p xlib
-#	./miniperl -Ilib configpm --config-sh=tconfig.sh --config-pm=xlib/Config.pm --config-pod=xlib/Config.pod
+	./miniperl_top make_patchnum.pl
 
 lib/re.pm: ext/re/re.pm
 	cp -f ext/re/re.pm lib/re.pm
@@ -178,9 +155,13 @@ $(dynamic_tgt): %/pm_to_blib: %/Makefile
 	$(eval top=$(shell echo $(dir $@) | sed -e 's![^/]\+!..!g'))
 	cd $(dir $@) && $(top)miniperl_top Makefile.PL PERL_CORE=1 PERL=$(top)miniperl_top
 
-# do NOT add miniperl here!!
+# Allow building modules by typing "make cpan/Module-Name"
+$(static_ext) $(dynamic_ext) $(nonxs_ext): %: %/pm_to_blib
+
+# do NOT add miniperl dependency here!!
+# it will overwrite all pre-made Makefiles
 %/Makefile.PL:
-	$(MINIPERL) make_ext_Makefile.pl $@
+	./miniperl_top make_ext_Makefile.pl $@
 
 cflags: cflags.SH
 	sh $<
@@ -235,12 +216,8 @@ utilities: miniperl$x $(CONFIGPM) $(plextract) lib/lib.pm
 translators: miniperl$x $(CONFIGPM)
 	$(MAKE) -C x2p all
 
-uni.data: miniperl$X $(CONFIGPM) lib/unicore/mktables
-	cd lib/unicore && ../../miniperl -I../../lib mktables -w
-	touch uni.data
-
 pod/%: miniperl$X lib/Config.pod pod/%.PL config.sh
-	cd pod && ../miniperl$X -I../lib $*.PL
+	cd pod && ../miniperl_top $*.PL
 
 # ---[ modules ]----------------------------------------------------------------
 modules modules.done: modules.list uni.data
@@ -274,4 +251,9 @@ install.miniperl: miniperl$X xlib/Config.pm xlib/Config_heavy.pl
 	install -D -m 0644 xlib/Config.pm $(hostprefix)/$(target_arch)/lib/perl/Config.pm
 	install -D -m 0644 xlib/Config_heavy.pl $(hostprefix)/$(target_arch)/lib/perl/Config_heavy.pl
 
-#include Makefile_clean
+# ---[ clean ]------------------------------------------------------------------
+clean:
+	rm -f *$o *$O uudmap.h opmini.c generate_uudmap bitcount.h $(CONFIGPM)
+	rm -f perlmini.c
+	@for i in utils; do make -C $$i clean; done
+

@@ -7,7 +7,6 @@ tar -zcvf \!pack.tar.gz\
 	cnf/config*\
 	cnf/hints\
 	Makefile\
-	Makefile_clean\
 	Makefile.config.SH\
 	make_ext_Makefile.pl\
 	configpm\
