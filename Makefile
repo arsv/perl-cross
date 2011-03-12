@@ -126,10 +126,7 @@ $(CONFIGPOD): config.sh miniperl$X configpm Porting/Glossary lib/Config_git.pl
 
 # Both git_version.h and lib/Config_git.pl are built
 # by make_patchnum.pl.
-git_version.h: lib/Config_git.pl make_patchnum.pl miniperl$X
-	./miniperl_top make_patchnum.pl
-
-lib/Config_git.pl: make_patchnum.pl miniperl$X
+git_version.h lib/Config_git.pl: make_patchnum.pl miniperl$X
 	./miniperl_top make_patchnum.pl
 
 lib/re.pm: ext/re/re.pm
@@ -184,23 +181,24 @@ cpan/Devel-PPPort/PPPort.pm:
 cpan/Devel-PPPort/ppport.h: cpan/Devel-PPPort/PPPort.pm
 	cd cpan/Devel-PPPort && ../../miniperl_top ppport_h.PL
 
+UNICORE = lib/unicore
+UNICOPY = cpan/Unicode-Normalize/unicore
+
 cpan/Unicode-Normalize/Makefile: cpan/Unicode-Normalize/unicore/CombiningClass.pl
 
-cpan/Unicode-Normalize/unicore: lib/unicore
-	ln -sf ../../lib/unicore $@
-
-cpan/Unicode-Normalize/unicore/CombiningClass.pl: cpan/Unicode-Normalize/unicore lib/unicore/CombiningClass.pl
-
-lib/unicore/CombiningClass.pl: lib/unicore/mktables miniperl$X lib/unicore/*.txt
+# mktables does not touch the files unless they need to be rebuilt,
+# which confuses make.
+$(UNICORE)/%.pl: $(UNICORE)/mktables $(UNICORE)/*.txt miniperl$X
 	cd lib/unicore && ../../miniperl_top mktables
+	touch $@
+$(UNICOPY):
+	mkdir -p $@
+$(UNICOPY)/%.pl: $(UNICORE)/%.pl $(UNICOPY)
+	cp -a $< $@
 
-# THree following rules ensure that modules listed in mkppport.lst get
+# The following rules ensure that modules listed in mkppport.lst get
 # their ppport.h installed
 mkppport_lst = $(shell cat mkppport.lst | grep '^[a-z]')
-
-mkppport_lst:
-	@echo $(mkppport_lst)
-	@echo $(patsubst %,%/ppport.h,$(mkppport_lst))
 
 $(patsubst %,%/pm_to_blib,$(mkppport_lst)): %/pm_to_blib: %/ppport.h
 # Having %/ppport.h here isn't a very good idea since the initial ppport.h matches
