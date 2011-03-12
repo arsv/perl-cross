@@ -1,0 +1,14 @@
+#!./miniperl
+
+foreach(@ARGV) {
+	s!^(dist|ext|cpan)/!lib/auto/!;
+	s!-!/!g;
+	$_ .= "/extralibs.ld";
+	next unless -f $_;
+	open(EL, '<', $_) || next;
+	push(@libs, <EL>);	
+	close(EL);
+}
+$libs = join ' ', @libs;
+$libs =~ s/\s+/ /g;
+print "$libs\n";

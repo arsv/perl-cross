@@ -27,6 +27,7 @@ plextract = pod/pod2html pod/pod2latex pod/pod2man pod/pod2text \
 	pod/pod2usage pod/podchecker pod/podselect
 
 static_tgt = $(patsubst %,%/pm_to_blib,$(static_ext))
+static_obj = $(shell for i in $(static_ext); do echo $$i | sed -e 's!\(.*[/-]\(.*\)\)!\1/\2.o!g'; done)
 dynamic_tgt = $(patsubst %,%/pm_to_blib,$(dynamic_ext))
 nonxs_tgt = $(patsubst %,%/pm_to_blib,$(nonxs_ext))
 
@@ -96,8 +97,11 @@ perlmini$O: perlmini.c
 
 # ---[ site/perl ]--------------------------------------------------------------
 
-perl$x: perlmain$o $(obj) libperl$a
-	$(CC) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(LIBS)
+perl$x: perlmain$o $(obj) libperl$a $(static_obj) ext.libs
+	@echo static_ext=$(static_ext)
+	@echo static_obj=$(static_obj)
+	$(eval extlibs=$(shell cat ext.libs))
+	$(CC) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(LIBS) $(extlibs)
 
 %$o: %.c config.h
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -105,7 +109,10 @@ perl$x: perlmain$o $(obj) libperl$a
 globals.o: uudmap.h
 
 perlmain.c: miniperlmain.c writemain
-	sh writemain $(DYNALOADER) > perlmain.c
+	./writemain DynaLoader $(static_ext) > perlmain.c
+
+ext.libs: $(static_ext) | miniperl$X
+	./miniperl_top extlibs $(static_ext) > $@
 
 # ---[ site/library ]-----------------------------------------------------------
 

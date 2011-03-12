@@ -61,9 +61,17 @@ for arg in "$@"; do
 			what=`echo "$a" | sed -s 's/-/_/g'`
 			setvar "$what" "$v"
 			;;
-		disable-mod|disable-module)
-			s=`modsymname "$v"`
-			setvar "disable_$s" "1"
+		disable-mod|disable-module|disable-modules)
+			for m in `echo "$v" | sed -e 's/,/ /g'`; do
+				s=`modsymname "$m"`
+				setvar "disable_$s" "1"
+			done
+			;;
+		static-mod|static-modules|static)
+			for m in `echo "$v" | sed -e 's/,/ /g'`; do
+				s=`modsymname "$m"`
+				setvar "static_$s" "1"
+			done
 			;;
 		use-*)
 			what=`echo "$a" | sed -e 's/^use-//'`
