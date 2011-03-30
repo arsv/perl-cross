@@ -19,28 +19,28 @@ function extdir {
 function extadd {
 	s=`modsymname "$2"`
 	if [ "$s" == "dynaloader" ]; then
-		msg "\tskipping $2 ($s)"
+		msg "\tskipping $2"
 		return
 	fi
 	o=`valueof "only_$s"`
 	if [ -n "$onlyext" -a -z "$o" ]; then
-		msg "\tskipping $2 ($s)"
+		msg "\tskipping $2"
 		return
 	fi
 	d=`valueof "disable_$s"`
 	if [ -n "$d" -a "$d" != "0" ]; then
-		msg "\tdisabled $2 ($s)"
+		msg "\tdisabled $2"
 		return
 	fi
 	t=`valueof "static_$s"`
 	if [ "$1" == "xs" -a -n "$t" -a "$t" != "0" ]; then
-		msg "\tstatic $2 ($s)"
+		msg "\tstatic $2"
 		static_ext="$static_ext$2 "
 	elif [ "$1" == "xs" ]; then
-		msg "\tdynamic $2 ($s)"
+		msg "\tdynamic $2"
 		dynamic_ext="$dynamic_ext$2 "
 	else 
-		msg "\tnon-xs $2 ($s)"
+		msg "\tnon-xs $2"
 		nonxs_ext="$nonxs_ext$2 "
 	fi
 }
@@ -76,14 +76,6 @@ extonlyif XS/Typemap "$usedl" == 'define'
 extonlyif VMS-DCLsym "$osname" == "vms"		# XXX: is it correct?
 extonlyif VMS-Stdio "$osname" == "vms"
 extonlyif Sys-Hostname "true" == "false"	# XXX: MakeMaker fails here
-
-#if [ -n "$onlyext" ]; then
-#	for e in $onlyext; do
-#		s=`modsymname "$e"`
-#		log "only-enabled $s"
-#		eval "only_$s=1"
-#	done
-#fi
 
 for d in ext cpan dist; do
 	msg "Looking for extensions recursively under $d/"

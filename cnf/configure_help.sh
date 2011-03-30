@@ -59,6 +59,11 @@ options are just slightly modified variable names).
 					configure for the host system
 					(only useful when cross-compiling)
 
+	--static-mod=mod1,mod2,...	Build modules mod1, mod2, ..., statically
+	--disable-mod=mod1,mod2,...	Do not build modules mod1, mod2, ...
+					modX should be something like cpan/Archive-Extract
+					static only applies to XS modules
+
 Note: unlike traditional autoconf'ed scripts, this configure does not allow option values
 without = sign ("--option value").
 
