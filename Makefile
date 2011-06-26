@@ -28,8 +28,8 @@ static_obj = $(shell for i in $(static_ext); do echo $$i | sed -e 's!\(.*[/-]\(.
 dynamic_tgt = $(patsubst %,%/pm_to_blib,$(dynamic_ext))
 nonxs_tgt = $(patsubst %,%/pm_to_blib,$(nonxs_ext))
 
-ext = $(dynamic_ext) $(static_ext) $(nonxs_ext)
-tgt = $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
+ext = $(nonxs_ext) $(dynamic_ext) $(static_ext)
+tgt = $(nonxs_tgt) $(dynamic_tgt) $(static_tgt)
 
 # ---[ common ]-----------------------------------------------------------------
 
@@ -39,7 +39,7 @@ tgt = $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
 
 # Force early building of miniperl -- not really necessary, but makes
 # build process more logical (no reason to even try CC if HOSTCC fails)
-all: miniperl$X perl$x utilities extensions translators
+all: miniperl$X nonxs_ext dynaloader perl$x utilities extensions translators
 
 config.h: config.sh config_h.SH
 	CONFIG_H=$@ CONFIG_SH=$< ./config_h.SH
@@ -117,7 +117,7 @@ ext.libs: $(static_ext) | miniperl$X
 
 # ---[ site/library ]-----------------------------------------------------------
 
-libperl$a: op$o perl$o $(obj) $(DYNALOADER)
+libperl$a: op$o perl$o $(obj) DynaLoader$o
 	$(AR) cru $@ $(filter %.o,$^)
 	$(RANLIB) $@
 
@@ -149,7 +149,7 @@ $(nonxs_tgt): %/pm_to_blib: %/Makefile
 
 DynaLoader.o: ext/DynaLoader/pm_to_blib
 
-$(static_tgt) ext/DynaLoader/pm_to_blib: %/pm_to_blib: %/Makefile
+$(static_tgt) ext/DynaLoader/pm_to_blib: %/pm_to_blib: %/Makefile $(nonxs_tgt)
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=static $(STATIC_LDFLAGS)
 
 $(dynamic_tgt): %/pm_to_blib: %/Makefile
@@ -161,6 +161,8 @@ $(dynamic_tgt): %/pm_to_blib: %/Makefile
 
 # Allow building modules by typing "make cpan/Module-Name"
 $(static_ext) $(dynamic_ext) $(nonxs_ext): %: %/pm_to_blib
+
+$(static_tgt) $(dynamic_tgt): $(nonxs_tgt)
 
 %/Makefile.PL: | miniperl$X
 	./miniperl_top make_ext_Makefile.pl $@
@@ -179,6 +181,9 @@ static_ext: $(static_tgt)
 extensions: cflags $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
 
 dynaloader: $(DYNALOADER)
+
+$(DYNALOADER): ext/DynaLoader/pm_to_blib ext/DynaLoader/Makefile
+	make -C $(dir $<)
 
 cpan/Devel-PPPort/PPPort.pm:
 	cd cpan/Devel-PPPort && ../../miniperl_top PPPort_pm.PL
@@ -213,7 +218,7 @@ $(patsubst %,%/ppport.h,$(mkppport_lst)): cpan/Devel-PPPort/ppport.h
 
 # ---[ Misc ]-------------------------------------------------------------------
 
-utilities: miniperl$x $(CONFIGPM) $(plextract) lib/lib.pm
+utilities: miniperl$x $(CONFIGPM) $(plextract)
 	$(MAKE) -C utils all
 
 translators: miniperl$x $(CONFIGPM)

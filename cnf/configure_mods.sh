@@ -10,7 +10,7 @@ function extdir {
 			true
 		elif [ -f "$i/$L.c" -o -f "$i/$L.xs" ]; then
 			extadd "xs" "$i"
-		elif [ -f "$i/Makefile.PL" ]; then
+		elif [ -f "$i/Makefile.PL" -o -f "$i/Makefile" -o -d "$i/lib" ]; then
 			extadd "noxs" "$i"
 		fi
 	done
