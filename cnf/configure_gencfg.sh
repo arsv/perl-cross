@@ -895,7 +895,7 @@ default myhostname
 default myuname ${target}
 default n 'XS/Typemap'
 default n -n
-default need_va_copy undef
+default need_va_copy define
 default netdb_hlen_type 'socklen_t'
 default netdb_host_type 'const void *'
 default netdb_name_type int
