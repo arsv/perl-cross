@@ -6,8 +6,8 @@ mstart "Checking how to get hostname"
 if nothinted phostname; then
 	_myhostname=`hostname`
 	if [ -n "$_myhostname" ]; then
-		result "hostname"
 		setvar phostname hostname
+		result "hostname"
 	else
 		result unknown
 	fi

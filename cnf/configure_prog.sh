@@ -12,8 +12,8 @@ function whichprog {
 
 	if [ -n "$_force" ]; then
 		if which "$_force" >&/dev/null; then
-			result "$_force (forced)"
 			setvar "$_symbol" "$_force"
+			result "$_force (forced)"
 			return 0
 		else
 			result "forced '$_force' not found"
@@ -27,8 +27,8 @@ function whichprog {
 	for p in "$@"; do
 		if [ -n "$p" ]; then
 			if which "$p" >&/dev/null; then
-				result "$p"
 				setvar "$_symbol" "$p"
+				result "$p"
 				return 0
 			fi
 		fi
@@ -64,6 +64,7 @@ VERSION __VERSION__
 #endif
 #endif
 END
+	try_dump
 	if not run $cc $cflags -E try.c > try.out 2>>$cfglog; then
 		result "definitely not gcc"
 	else
@@ -71,8 +72,8 @@ END
 		# output something unexpected
 		_r=`grep -v '^#' try.out | grep . | head -1 | grep '^VERSION' | sed -e 's/VERSION //' -e 's/"//g'`
 		if [ -n "$_r" ]; then
-			result "gcc ver. $_r"
 			setvar 'gccversion' "$_r"
+			result "gcc ver. $_r"
 		else
 			result "probably not gcc"
 		fi

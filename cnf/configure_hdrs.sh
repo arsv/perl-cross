@@ -102,13 +102,13 @@ fi
 # assume header is usable as long as it's there
 mstart "Looking which header to use for varargs"
 if [ "$i_stdarg" == 'define' ]; then
-	result '<stdarg.h>'	
 	setvar 'i_varargs' 'undef'
 	setvar 'i_varhdr' 'stdarg.h'
+	result '<stdarg.h>'	
 elif [ "$i_varargs" == 'define' ]; then
-	result '<varargs.h>'
 	setvar 'i_stdarg' 'undef'
 	setvar 'i_varhdr' 'varargs.h'
+	result '<varargs.h>'
 else
 	result 'nothing found'
 fi

@@ -84,8 +84,8 @@ function hasfuncr {
 			return 0
 		fi
 	fi
-	msg "\tassuming $w is unusable"
 	setvar "$D" 'undef'
+	msg "\tassuming $w is unusable"
 	return 1
 }
 

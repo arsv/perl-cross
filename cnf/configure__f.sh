@@ -10,6 +10,7 @@ function die {
 	exit -1
 }
 
+# note: setvar()s should preceede result() to produce a nice log
 function result {
 	echo "Result: $*" >> $cfglog
 	echo >> $cfglog

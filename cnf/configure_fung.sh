@@ -38,8 +38,8 @@ elif [ "$d_rand" == 'define' ]; then
 	setvar 'randfunc' 'rand'
 	result 'yick, looks like I have to use rand()'
 else
-	result 'none found'
 	setvar 'randfunc' ''
+	result 'none found'
 fi
 	
 # It's a bit more complicated in original Configure, but let's
