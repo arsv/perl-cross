@@ -185,10 +185,10 @@ dynaloader: $(DYNALOADER)
 $(DYNALOADER): ext/DynaLoader/pm_to_blib ext/DynaLoader/Makefile
 	make -C $(dir $<)
 
-cpan/Devel-PPPort/PPPort.pm:
+cpan/Devel-PPPort/PPPort.pm: | miniperl$X
 	cd cpan/Devel-PPPort && ../../miniperl_top PPPort_pm.PL
 
-cpan/Devel-PPPort/ppport.h: cpan/Devel-PPPort/PPPort.pm
+cpan/Devel-PPPort/ppport.h: cpan/Devel-PPPort/PPPort.pm | miniperl$X
 	cd cpan/Devel-PPPort && ../../miniperl_top ppport_h.PL
 
 UNICORE = lib/unicore
