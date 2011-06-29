@@ -64,9 +64,6 @@ options are just slightly modified variable names).
 					modX should be something like cpan/Archive-Extract
 					static only applies to XS modules
 
-Note: unlike traditional autoconf'ed scripts, this configure does not allow option values
-without = sign ("--option value").
-
 config.log contains verbose description of what was tested, and how.
 Check it if configure output looks suspicious.
 EOF

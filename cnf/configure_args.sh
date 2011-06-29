@@ -16,17 +16,67 @@ function defyes { defineyesno "$1" "$2" 'define' 'undef'; }
 function defno  { defineyesno "$1" "$2" 'undef' 'define'; }
 
 config_arg0="$0"
-config_argc=0
+config_argc=$#
 config_args="$*"
 
-for arg in "$@"; do
-	config_argc=$[config_argc+1]
-	a=`echo "$arg" | sed -e 's/=.*//' -e 's/^--//'`
-	v=`echo "$arg" | sed -n -e 's/[^=]*=//p'`
-	A="$a"
-	case "$a" in 
-		with-*) a=`echo "$a" | sed -e 's/^with-//'` ;;
+while [ $# -gt 0 ]; do
+	a="$1"; shift;	# arg ("set" or 'D')
+	k=''		# key ("prefix")
+	v=''		# value ("/usr/local")
+	x=''
+
+	# check what kind of option is this
+	case "$a" in
+		-[A-Za-z]*)
+			k=`echo "$a" | sed -e 's/^-.//'`
+			a=`echo "$a" | sed -e 's/^-\(.\).*/\1/'`
+			;;
+		--[A-Za-z]*)
+			a=`echo "$a" | sed -e 's/^--//'`
+			;;
+		*)
+			echo "Bad option $a"
+			continue;
+			;;
 	esac
+	# split --set-foo and similar constructs into --set foo
+	# and things like --prefix=/foo into --prefix and /foo
+	case "$a" in
+		set-*|use-*|include-*)
+			k=`echo "$a" | sed -e 's/^[^-]*-//' -e 's/-/_/g'`
+			a=`echo "$a" | sed -e 's/-.*//'`
+			;;
+		dont-use-*|dont-include-*)	
+			k=`echo "$a" | sed -e 's/^dont-[^-]*-//' -e 's/-/_/g'`
+			a=`echo "$a" | sed -e 's/^\(dont-[^-]*\)-.*/\1/'`
+			;;
+		*=*)
+			k=`echo "$a" | sed -e 's/^[^=]*=//'`
+			a=`echo "$a" | sed -e 's/=.*//'`
+			;;
+	esac
+	# check whether kv is required
+	# note that $x==1 means $k must be set; the value, $v, may be empty
+	case "$a" in
+		help|regen*|mode|host|target|build) x='' ;;
+		*) x=1 ;;
+	esac
+	# fetch argument if necessary (--set foo=bar)
+	if [ -n "$x" -a -z "$k" ]; then
+		k="$1"; shift
+	fi
+	# split kv pair into k and v (k=foo v=bar)
+	case "$k" in
+		*=*)
+			v=`echo "$k" | sed -e 's/^[^=]*=//'`
+			k=`echo "$k" | sed -e 's/=.*//'`
+			;;
+	esac
+	if [ -z "$v" -a -n "$k" ]; then v="$k"; k=""; fi
+	# ($a, $k, $v) are all set here by this point
+	#echo "a=$a k=$k v=$v"
+
+	# process the options
 	case "$a" in
 		mode) test -z "$mode" && setvar $a "$v" || die "Can't set mode twice!" ;;
 		help) setvar "mode" "help" ;;
@@ -36,7 +86,7 @@ for arg in "$@"; do
 		siteprefix|sitehtml[13]dir)	setvar $a "$v" ;;
 		siteman[13]dir|vendorman[13]dir)setvar $a "$v" ;;
 		vendorprefix|vendorhtml[13]dir)	setvar $a "$v" ;;
-		byteorder)			setvar $a "$v" ;;
+		#byteorder)			setvar $a "$v" ;;
 		build|target|targetarch)	setvar $a "$v" ;;
 		cc|cpp|ar|ranlib|objdump)	setvar $a "$v" ;;
 		sysroot)			setvar $a "$v" ;;
@@ -80,41 +130,15 @@ for arg in "$@"; do
 				setvar "onlyext" "$s $onlyext"
 			done
 			;;
-		use-*)
-			what=`echo "$a" | sed -e 's/^use-//'`
-			setvar "use$what" 'define'
-			;;
-		dont-use-*)
-			what=`echo "$a" | sed -e 's/^dont-use-//'`
-			setvar "use$what" 'undef'
-			;;
-		set-*)
-			what=`echo "$a" | sed -e 's/^set-//' -e 's/-/_/g'`
-			test -z "$v" && msg "--$a=<empty> has no effect"
-			setvar "$what" "$v"
-			;;
-		has-*)
-			what=`echo "$a" | sed -e 's/^has-//'`
-			defyes "d_$what" "$v"
-			;;
-		no-*)
-			what=`echo "$a" | sed -e 's/^no-//' -e 's/_/-/g'`
-			defno "d_$what" "$v"
-			;;
-		lacks-*)
-			what=`echo "$a" | sed -e 's/^lacks-//' -e 's/_/-/g'`
-			defno "d_$what" "$v"
-			;;
-		include-*)
-			what=`echo "$a" | sed -e 's/^include-//' -e 's/-h$//' -e 's![/.-]!!g'`
-			defyes "i_$what" "$v"
-			;;
-		dont-include-*)
-			what=`echo "$a" | sed -e 's/^dont-include-//' -e 's/-h$//' -e 's![/.-]!!g'`
-			defno "i_$what" "$v"
-			;;
-		mode|host|target|build)
-			;;
+		use) setvar "use$v" 'define' ;;
+		dont-use) setvar "use$v" 'undef' ;;
+		set) setvar "$k" "$v" ;;
+		has) defyes "d_$k" "$v" ;;
+		no) defno "d_$k" "$v" ;;
+		lacks) defno "d_$k" "$v" ;;
+		include) defyes "i_$k" "$v" ;;
+		dont-include) defno "i_$k" "$v" ;;
+		mode|host|target|build) ;;
 		*) die "Unknown argument $a" ;;
 	esac
 done
