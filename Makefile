@@ -204,7 +204,7 @@ cpan/Unicode-Normalize/Makefile: cpan/Unicode-Normalize/unicore/CombiningClass.p
 
 # mktables does not touch the files unless they need to be rebuilt,
 # which confuses make.
-$(UNICORE)/%.pl: $(UNICORE)/mktables $(UNICORE)/*.txt miniperl$X
+$(UNICORE)/%.pl: $(UNICORE)/mktables $(UNICORE)/*.txt $(CONFIGPM) | miniperl$X 
 	cd lib/unicore && ../../miniperl_top mktables
 	touch $@
 $(UNICOPY)/%.pl: $(UNICORE)/%.pl | $(UNICOPY)

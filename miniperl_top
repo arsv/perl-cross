@@ -9,6 +9,7 @@ top=`dirname "$0"`
 exec $top/miniperl \
 	-I$top/lib\
 	-I$top/dist/constant/lib\
+	-I$top/dist/base/lib\
 	-I$top/cpan/Getopt-Long/lib\
 	-I$top/cpan/Pod-Simple/lib\
 	-I$top/cpan/Pod-Escapes/lib\
@@ -20,4 +21,5 @@ exec $top/miniperl \
 	-I$top/cpan/ExtUtils-MakeMaker/lib\
 	-I$top/cpan/ExtUtils-Manifest/lib\
 	-I$top/cpan/File-Path/lib\
+	-I$top/cpan/Text-Tabs/lib\
 	"$@"
