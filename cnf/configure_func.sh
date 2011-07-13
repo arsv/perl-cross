@@ -4,7 +4,7 @@
 function haslibs {
 	require 'cc'
 	mstart "Checking libraries"
-	ifhint 'libs' && return
+	ifhint $1 && return
 
 	try_start
 	try_add "int main(void) { return 0; }"
