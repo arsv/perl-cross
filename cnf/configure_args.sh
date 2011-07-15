@@ -15,6 +15,15 @@ function defineyesno {
 function defyes { defineyesno "$1" "$2" 'define' 'undef'; }
 function defno  { defineyesno "$1" "$2" 'undef' 'define'; }
 
+# setordefine key hasarg arg default
+function setordefine {
+	if [ -n "$2" ]; then
+		setvaru "$1" "$3"
+	else
+		setvaru "$1" "$4"
+	fi
+}
+
 config_arg0="$0"
 config_argc=$#
 config_args="$*"
@@ -70,11 +79,19 @@ while [ $# -gt 0 ]; do
 		*=*)
 			v=`echo "$k" | sed -e 's/^[^=]*=//'`
 			k=`echo "$k" | sed -e 's/=.*//'`
+			x=1
+			;;
+		*)
+			x=''
 			;;
 	esac
-	if [ -z "$v" -a -n "$k" ]; then v="$k"; k=""; fi
-	# ($a, $k, $v) are all set here by this point
 	#echo "a=$a k=$k v=$v"
+	#if [ -z "$v" -a -n "$k" ]; then v="$k"; k=""; fi
+
+	# ($a, $k, $v) are all set here by this point
+	# having non-empty x here means the option actually had a parameter
+	# and can be used to separate -Dfoo and -Dfoo=''
+	#echo "a=$a k=$k v=$v ($x)"
 
 	# process the options
 	case "$a" in
@@ -138,6 +155,13 @@ while [ $# -gt 0 ]; do
 		lacks) defno "d_$k" "$v" ;;
 		include) defyes "i_$k" "$v" ;;
 		dont-include) defno "i_$k" "$v" ;;
+		D)
+			setordefine "$k" "$x" "$v" 'define'
+			;;
+		U)
+			test -n "$v" && msg "WARNING: -Ukey=val, val ignored; use -Dkev=val instead"
+			setordefine "$k" "$x" "" 'undef' # "" is *not* a typo here!
+			;;
 		mode|host|target|build) ;;
 		*) die "Unknown argument $a" ;;
 	esac
