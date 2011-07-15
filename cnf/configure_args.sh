@@ -155,6 +155,8 @@ while [ $# -gt 0 ]; do
 		lacks) defno "d_$k" "$v" ;;
 		include) defyes "i_$k" "$v" ;;
 		dont-include) defno "i_$k" "$v" ;;
+		mode|host|target|build) ;;
+		# original Configure options
 		D)
 			setordefine "$k" "$x" "$v" 'define'
 			;;
@@ -162,7 +164,9 @@ while [ $# -gt 0 ]; do
 			test -n "$v" && msg "WARNING: -Ukey=val, val ignored; use -Dkev=val instead"
 			setordefine "$k" "$x" "" 'undef' # "" is *not* a typo here!
 			;;
-		mode|host|target|build) ;;
+		S|O|V|K|f) die "-$a is not supported" ;;
+		d|r) msg "WARNING: -$a makes no sense for this version of configure and was ignored" ;;
+		e|E) msg "WARNING: -$a ignored; you'll have to proceed with 'make' anyway" ;;
 		*) die "Unknown argument $a" ;;
 	esac
 done
