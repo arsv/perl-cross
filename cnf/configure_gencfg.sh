@@ -1124,4 +1124,14 @@ if [ "$mode" == "buildmini" ]; then
 	default sysroot
 fi
 
+for k in $uservars; do
+	k=`echo "$k" | sed -e 's/[^A-Za-z0-9_-]//g' -e 's/-/_/g'`
+	x=`valueof "x_$k"`
+	if [ "$x" != "w" ]; then
+		v=`valueof "$k"`
+		log "Writing user-defined $k=$v to $config"
+		putvar "$k" "$v"
+	fi
+done
+
 failpoint

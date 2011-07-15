@@ -2,11 +2,11 @@
 
 function defineyesno {
 	if [ "$2" == "yes" ]; then
-		setvar "$1" "$3"
+		setvaru "$1" "$3"
 	elif [ "$2" == "no" ]; then
-		setvar "$1" "$4"
+		setvaru "$1" "$4"
 	elif [ -z "$2" ]; then
-		setvar "$1" "$3"
+		setvaru "$1" "$3"
 	else
 		die "Bad value for $1, only 'yes' and 'no' are allowed"
 	fi
@@ -109,7 +109,7 @@ while [ $# -gt 0 ]; do
 			;;
 		target-*)
 			what=`echo "$a" | sed -s 's/-/_/g'`
-			setvar "$what" "$v"
+			setvaru "$what" "$v"
 			;;
 		disable-mod|disable-ext|disable-module|disable-modules)
 			for m in `echo "$v" | sed -e 's/,/ /g'`; do
@@ -130,9 +130,9 @@ while [ $# -gt 0 ]; do
 				setvar "onlyext" "$s $onlyext"
 			done
 			;;
-		use) setvar "use$v" 'define' ;;
-		dont-use) setvar "use$v" 'undef' ;;
-		set) setvar "$k" "$v" ;;
+		use) setvaru "use$v" 'define' ;;
+		dont-use) setvaru "use$v" 'undef' ;;
+		set) setvaru "$k" "$v" ;;
 		has) defyes "d_$k" "$v" ;;
 		no) defno "d_$k" "$v" ;;
 		lacks) defno "d_$k" "$v" ;;

@@ -51,13 +51,37 @@ function mstart {
 # setvar name value
 # emulates (incorrect in sh) statement $$1="$2"
 function setvar {
-	eval $1="'$2'"
-	log "Set $1='$2'"
+	_x=`valueof "$1"`
+	if [ "$_x" != "$2" ]; then
+		eval $1="'$2'"
+		log "Set $1='$2'"
+	fi
 }
 
+# setvar for user-defined variables
+# additional care is taken here to allow setting
+# variables *not* listed in _gencfg
+# $uservars keeps the list of user-set variables
+# $x_(varname) is set to track putvar() calls for this variable
+uservars=''
+function setvaru {
+	if [ -n "$uservars" ]; then
+		uservars="$uservars $1"
+	else
+		uservars="$1"
+	fi
+	eval "x_$1"="s"
+	eval "$1"="'$2'"
+	log "Set user $1='$2'"
+}
+
+
 # putvar name value
-# just writes given variable to config
+# writes given variable to config, and checks it as
+# "written" if necessary (i.e. for user variables)
 function putvar {
+	_x=`valueof "x_$1"`
+	test "$_x" == 's' && eval "x_$1='w'"
 	echo "$1='$2'" >> $config
 	setvar "$1" "$2"
 }

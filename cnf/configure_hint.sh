@@ -23,7 +23,7 @@ function usehints {
 function hint {
 	eval _value="\"\$$1\""
 	if [ -z "$_value" ]; then
-		setvar "$1" "$2"
+		setvaru "$1" "$2"
 	fi
 }
 
