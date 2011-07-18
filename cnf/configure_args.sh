@@ -85,6 +85,9 @@ while [ $# -gt 0 ]; do
 			x=''
 			;;
 	esac
+	if [ -n "$k" ]; then
+		k=`echo "$k" | sed -e 's/-/_/g'`
+	fi
 	#echo "a=$a k=$k v=$v"
 	#if [ -z "$v" -a -n "$k" ]; then v="$k"; k=""; fi
 
@@ -170,6 +173,3 @@ while [ $# -gt 0 ]; do
 		*) die "Unknown argument $a" ;;
 	esac
 done
-
-test -z "$ccflags" && exit 1
-log "after args ccflags=$ccflags"
