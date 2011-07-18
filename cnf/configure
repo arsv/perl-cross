@@ -5,8 +5,8 @@ config='config.bad'
 cfglog='config.log'
 
 . $base/configure__f.sh
-. $base/configure_args.sh
 . $base/configure_clev.sh
+. $base/configure_args.sh
 
 if [ "$mode" == 'help' ]; then
 	. $base/configure_help.sh

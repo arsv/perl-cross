@@ -70,8 +70,8 @@ function setvaru {
 	else
 		uservars="$1"
 	fi
-	eval "x_$1"="s"
-	eval "$1"="'$2'"
+	eval x_$1='s'
+	eval $1="'$2'"
 	log "Set user $1='$2'"
 }
 
@@ -170,14 +170,14 @@ function try_dump_out {
 function try_preproc {
 	require 'cpp'
 	#try_dump
-	run $cpp $cflags try.c > try.out 2>> $cfglog
+	run $cpp $ccflags try.c > try.out 2>> $cfglog
 }
 
 function try_compile {
 	require 'cc'
 	require '_o'
 	try_dump
-	run $cc $cflags -c -o try$_o try.c >> $cfglog 2>&1
+	run $cc $ccflags -c -o try$_o try.c >> $cfglog 2>&1
 }
 
 # an equivalent of try_compile with -Werror, but without
@@ -187,7 +187,7 @@ function try_compile_check_warnings {
 	require 'cc'
 	require '_o'
 	try_dump
-	run $cc $cflags -c -o try$_o try.c > try.out 2>&1
+	run $cc $ccflags -c -o try$_o try.c > try.out 2>&1
 	_r=$?
 	cat try.out >> $cfglog
 	if [ $_r != 0 ]; then
@@ -202,7 +202,7 @@ function try_compile_check_warnings {
 function try_link_libs {
 	require 'cc'
 	try_dump
-	run $cc $cflags -o try$_e try.c $* >> $cfglog 2>&1
+	run $cc $ccflags -o try$_e try.c $* >> $cfglog 2>&1
 }
 
 function try_link {

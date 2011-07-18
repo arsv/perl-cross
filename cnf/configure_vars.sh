@@ -28,12 +28,11 @@ function appendvar {
 
 
 setfromvar cc CC
-setfromvar cflags CFLAGS
+setfromvar ccflags CFLAGS
 setfromvar cppflags CPPFLAGS
 setfromvar ld LD
 setfromvar ldflags LDFLAGS
 setfromvar ar AR
 setfromvar ranlib RANLIB
 setfromvar objdump OBJDUMP
-appendvar cflags "$ccdefines"
-appendvar ccflags "$cflags"
+#appendvar ccflags "$ccdefines"

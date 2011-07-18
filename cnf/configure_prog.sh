@@ -65,7 +65,7 @@ VERSION __VERSION__
 #endif
 END
 	try_dump
-	if not run $cc $cflags -E try.c > try.out 2>>$cfglog; then
+	if not run $cc $ccflags -E try.c > try.out 2>>$cfglog; then
 		result "definitely not gcc"
 	else
 		# a bit paranoid here, in case some non-gnu compiler will decide to

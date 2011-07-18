@@ -9,7 +9,7 @@ fi
 echo -n > Makefile.config
 if [ "$usecrosscompile" == 'define' ]; then
 	unset cc
-	unset cflags
+	unset ccflags
 	unset ar
 	unset ranlib
 	unset libs
@@ -20,7 +20,7 @@ if [ "$usecrosscompile" == 'define' ]; then
 	
 	. ./xconfig.sh
 	hostcc="$cc"
-	hostcflags="$cflags"
+	hostccflags="$ccflags"
 	hostar="$ar"
 	hostranlib="$ranlib"
 	hostlibs="$libs"
@@ -36,12 +36,6 @@ if [ "$usecrosscompile" == 'define' ]; then
 	. ./config.sh
 fi
 
-cc="$cc"
-cflags="$cflags"
-ar="$ar"
-ranlib="$ranlib"
-libs="$libs"
- 
 function ifprefixed() {
 	val=`echo "$2" | sed -e "s/^$1-//"`
 	if [ "$1-$val" == "$2" ]; then
@@ -58,11 +52,11 @@ CROSS = $target_name-
 CC = `ifprefixed "$target_name" "$cc"`
 AR = `ifprefixed "$target_name" "$ar"`
 RANLIB = `ifprefixed "$target_name" "$ranlib"`
-CFLAGS = $cflags
+CFLAGS = $cflags $ccflags
 LIBS = $libs
 
 HOSTCC = $hostcc
-HOSTCFLAGS = -DUSE_CROSS_COMPILE $cflags
+HOSTCFLAGS = $cflags -DUSE_CROSS_COMPILE $hostccflags
 HOSTCFMINI = \$(HOSTCFLAGS) -DPERL_EXTERNAL_GLOB
 HOSTLIBS = $hostlibs
 hostbin = \$(DESTDIR)$hostbin
@@ -89,7 +83,7 @@ cat >> Makefile.config <<END
 CC = $cc
 AR = $ar
 RANLIB = $ranlib
-CFLAGS = $cflags
+CFLAGS = $cflags $ccflags
 LIBS = $libs
 
 HOSTCC = \$(CC)

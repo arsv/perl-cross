@@ -52,11 +52,11 @@ while [ $# -gt 0 ]; do
 	# and things like --prefix=/foo into --prefix and /foo
 	case "$a" in
 		set-*|use-*|include-*)
-			k=`echo "$a" | sed -e 's/^[^-]*-//' -e 's/-/_/g'`
+			k=`echo "$a" | sed -e 's/^[^-]*-//'`
 			a=`echo "$a" | sed -e 's/-.*//'`
 			;;
 		dont-use-*|dont-include-*)	
-			k=`echo "$a" | sed -e 's/^dont-[^-]*-//' -e 's/-/_/g'`
+			k=`echo "$a" | sed -e 's/^dont-[^-]*-//'`
 			a=`echo "$a" | sed -e 's/^\(dont-[^-]*\)-.*/\1/'`
 			;;
 		*=*)
@@ -170,3 +170,6 @@ while [ $# -gt 0 ]; do
 		*) die "Unknown argument $a" ;;
 	esac
 done
+
+test -z "$ccflags" && exit 1
+log "after args ccflags=$ccflags"
