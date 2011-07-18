@@ -93,30 +93,6 @@ function setifndef {
 	fi
 }
 
-# default name value
-function default {
-	v=`valueof "$1"`
-	if [ -z "$v" ]; then
-		putvar "$1" "$2"
-	else
-		putvar "$1" "$v"
-	fi
-}
-
-# required name
-function required {
-	v=`valueof "$1"`
-	if [ -n "$v" ]; then
-		putvar "$1" "$v"
-	else
-		fail "Required variable $1 not defined"
-	fi
-}
-
-function const {
-	putvar "$1" "$2"
-}
-
 # archlabel target targetarch -> label
 function archlabel {
 	if [ -n "$1" -a -n "$2" ]; then
@@ -127,6 +103,15 @@ function archlabel {
 		echo "$1"
 	else
 		echo "unknown"
+	fi
+}
+
+function setvardefault {
+	v=`valueof "$1"`
+	if [ -z "$v" ]; then
+		setvar "$1" "$2"
+	else
+		setvar "$1" "$v"
 	fi
 }
 

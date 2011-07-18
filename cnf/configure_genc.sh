@@ -11,26 +11,60 @@
 
 # Keep this file in sync with Glossary
 
-test -n "$config" || die "Can't generate don't-know-what (no \$config set)"
+if [ -z "$cleanonly" ]; then
+	# do a real write to $config
 
-function default_inst {
-	if [ -n "$2" ]; then
-		z="$2"
-		s="$1"
-	else
-		z="$1"
-		s="$1"
-	fi
-	v=`valueof "$s"`
-	if [ -n "$v" -a "$v" != ' ' ]; then
-		default "install$z" "$installprefix$v"
-	else
-		default "install$z" ''
-	fi
-}
+	# default name value
+	function default {
+		v=`valueof "$1"`
+		if [ -z "$v" ]; then
+			putvar "$1" "$2"
+		else
+			putvar "$1" "$v"
+		fi
+	}
 
-msg "Generating $config"
-echo -ne "#!/bin/sh\n\n" > $config
+	function default_inst {
+		if [ -n "$2" ]; then
+			z="$2"
+			s="$1"
+		else
+			z="$1"
+			s="$1"
+		fi
+		v=`valueof "$s"`
+		if [ -n "$v" -a "$v" != ' ' ]; then
+			default "install$z" "$installprefix$v"
+		else
+			default "install$z" ''
+		fi
+	}
+
+	# required name
+	function required {
+		v=`valueof "$1"`
+		if [ -n "$v" ]; then
+			putvar "$1" "$v"
+		else
+			fail "Required variable $1 not defined"
+		fi
+	}
+
+	function const {
+		putvar "$1" "$2"
+	}
+
+	test -n "$config" || die "Can't generate don't-know-what (no \$config set)"
+	msg "Generating $config"
+	echo -ne "#!/bin/sh\n\n" > $config
+else 
+	# clean up the environment
+
+	function default { unset -v "$1"; }
+	function default_inst { unset -v "$1"; }
+	function required { unset -v "$1"; }
+	function const { unset -v "$1"; }
+fi
 
 default prefix "/usr"
 default sharedir "$prefix/share"
@@ -1124,14 +1158,21 @@ if [ "$mode" == "buildmini" ]; then
 	default sysroot
 fi
 
-for k in $uservars; do
-	k=`echo "$k" | sed -e 's/[^A-Za-z0-9_-]//g' -e 's/-/_/g'`
-	x=`valueof "x_$k"`
-	if [ "$x" != "w" ]; then
-		v=`valueof "$k"`
-		log "Writing user-defined $k=$v to $config"
-		putvar "$k" "$v"
-	fi
-done
+if [ -z "$cleanonly" ]; then
+	for k in $uservars; do
+		k=`echo "$k" | sed -e 's/[^A-Za-z0-9_-]//g' -e 's/-/_/g'`
+		x=`valueof "x_$k"`
+		if [ "$x" != "w" ]; then
+			v=`valueof "$k"`
+			log "Writing user-defined $k=$v to $config"
+			putvar "$k" "$v"
+		fi
+	done
 
-failpoint
+	failpoint
+fi
+
+unset -f default
+unset -f default_inst
+unset -f required
+unset -f const

@@ -113,4 +113,4 @@ else
 	result 'nothing found'
 fi
 
-const i_systimek undef
+setvar i_systimek undef

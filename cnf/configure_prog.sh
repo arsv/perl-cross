@@ -49,7 +49,7 @@ check whichprog "ranlib"     ranlib 0  ${pf1}ranlib ${pf2}ranlib
 check whichprog "readelf"    readelf 1 ${pf1}readelf ${pf2}readelf readelf
 check whichprog "objdump"    objdump 1 ${pf1}objdump ${pf2}objdump
 
-const 'cpp' "$cc -E"
+setvar 'cpp' "$cc -E"
 
 failpoint
 

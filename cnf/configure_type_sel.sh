@@ -60,25 +60,25 @@ esac
 msg "Choosing C types to be used for perl internal types"
 case "$use64bitint:$d_quad:$quadtype" in
 define:define:?*)
-	const ivtype "$quadtype"
-	const uvtype "$uquadtype"
-	const ivsize 8
-	const uvsize 8
+	setvar ivtype "$quadtype"
+	setvar uvtype "$uquadtype"
+	setvar ivsize 8
+	setvar uvsize 8
 	;;
-*)	const ivtype "long"
-	const uvtype "unsigned long"
-	const ivsize $longsize
-	const uvsize $longsize
+*)	setvar ivtype "long"
+	setvar uvtype "unsigned long"
+	setvar ivsize $longsize
+	setvar uvsize $longsize
 	;;
 esac
 
 case "$uselongdouble:$d_longdouble" in
 define:define)
-	const nvtype "long double"
-	const nvsize $longdblsize
+	setvar nvtype "long double"
+	setvar nvsize $longdblsize
 	;;
-*)	const nvtype double
-	const nvsize $doublesize
+*)	setvar nvtype double
+	setvar nvsize $doublesize
 	;;
 esac
 
@@ -118,6 +118,6 @@ typeorfallback 'size' 'size_t' 'uint64_t' 'unsigned long'
 typeorfallback 'ssize' 'ssize_t' 'int64_t' 'long'
 typeorfallback 'time' 'time_t' 'uint32_t' 'unsigned int'
 typeorfallback 'uid' 'uid_t' 'int'
-const uidsign '1'
+setvar uidsign '1'
 
 failpoint

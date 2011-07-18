@@ -6,6 +6,7 @@ cfglog='config.log'
 
 . $base/configure__f.sh
 . $base/configure_args.sh
+. $base/configure_clev.sh
 
 if [ "$mode" == 'help' ]; then
 	. $base/configure_help.sh
@@ -83,7 +84,7 @@ elif [ "$mode" == "native" ]; then
 fi
 
 if [ "$mode" == "target" ]; then
-	const 'usecrosscompile' 'define'
+	setvar 'usecrosscompile' 'define'
 fi
 
 if [ "$mode" == 'native' -o "$mode" == 'buildmini' -o "$mode" == "target" ]; then
@@ -106,12 +107,12 @@ if [ "$mode" == 'native' -o "$mode" == 'buildmini' -o "$mode" == "target" ]; the
 	failpoint
 	. $base/configure_mods.sh
 	failpoint
-	. $base/configure_gencfg.sh
+	. $base/configure_genc.sh
 	failpoint
 	if [ "$mode" == 'target' ]; then
 		config="tconfig.sh"
-		. $base/configure_target.sh
-		. $base/configure_gencfg.sh
+		. $base/configure_targ.sh
+		. $base/configure_genc.sh
 		failpoint
 	fi
 fi
