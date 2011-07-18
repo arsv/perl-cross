@@ -73,7 +73,7 @@ Makefile:
 # ---[ host/miniperl ]----------------------------------------------------------
 
 miniperl$X: miniperlmain$O $(obj:$o=$O) opmini$O perlmini$O
-	$(HOSTCC) -o $@ $(filter %$O,$^) $(HOSTLIBS)
+	$(HOSTCC) $(HOSTLDFLAGS) -o $@ $(filter %$O,$^) $(HOSTLIBS)
 
 miniperlmain$O: miniperlmain.c patchlevel.h
 
@@ -107,7 +107,7 @@ perlmini$O: perlmini.c
 
 perl$x: perlmain$o $(obj) libperl$a $(static_tgt) ext.libs
 	$(eval extlibs=$(shell cat ext.libs))
-	$(CC) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(static_obj) $(LIBS) $(extlibs)
+	$(CC) $(LDFLAGS) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(static_obj) $(LIBS) $(extlibs)
 
 %$o: %.c config.h
 	$(CC) $(CFLAGS) -c -o $@ $<

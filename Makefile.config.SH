@@ -21,6 +21,7 @@ if [ "$usecrosscompile" == 'define' ]; then
 	. ./xconfig.sh
 	hostcc="$cc"
 	hostccflags="$ccflags"
+	hostldflags="$ldflags"
 	hostar="$ar"
 	hostranlib="$ranlib"
 	hostlibs="$libs"
@@ -53,11 +54,13 @@ CC = `ifprefixed "$target_name" "$cc"`
 AR = `ifprefixed "$target_name" "$ar"`
 RANLIB = `ifprefixed "$target_name" "$ranlib"`
 CFLAGS = $cflags $ccflags
+LDFLAGS = $ldflags
 LIBS = $libs
 
 HOSTCC = $hostcc
 HOSTCFLAGS = $cflags -DUSE_CROSS_COMPILE $hostccflags
 HOSTCFMINI = \$(HOSTCFLAGS) -DPERL_EXTERNAL_GLOB
+HOSTLDFLAGS = $hostldflags
 HOSTLIBS = $hostlibs
 hostbin = \$(DESTDIR)$hostbin
 hostarch = \$(DESTDIR)$hostarch
@@ -84,11 +87,13 @@ CC = $cc
 AR = $ar
 RANLIB = $ranlib
 CFLAGS = $cflags $ccflags
+LDFLAGS = $ldflags
 LIBS = $libs
 
 HOSTCC = \$(CC)
 HOSTCFLAGS = \$(CFLAGS)
 HOSTCFMINI = \$(HOSTCFLAGS) -DPERL_EXTERNAL_GLOB
+HOSTLDFLAGS = \$(LDFLAGS)
 HOSTLIBS = \$(LIBS)
 
 # suffixes for static library, object and executable files
