@@ -27,6 +27,7 @@ function setordefine {
 config_arg0="$0"
 config_argc=$#
 config_args="$*"
+optint=1
 
 while [ $# -gt 0 ]; do
 	a="$1"; shift;	# arg ("set" or 'D')
@@ -67,7 +68,7 @@ while [ $# -gt 0 ]; do
 	# check whether kv is required
 	# note that $x==1 means $k must be set; the value, $v, may be empty
 	case "$a" in
-		help|regen*|mode|host|target|build) x='' ;;
+		help|regen*|mode|host|target|build|keeplog) x='' ;;
 		*) x=1 ;;
 	esac
 	# fetch argument if necessary (--set foo=bar)
@@ -85,28 +86,38 @@ while [ $# -gt 0 ]; do
 			x=''
 			;;
 	esac
-	if [ -n "$k" ]; then
-		k=`echo "$k" | sed -e 's/-/_/g'`
-	fi
 	#echo "a=$a k=$k v=$v"
+
+	# Account for the fact that in "--set foo" foo is key
+	# while in "--mode foo" foo is value
+	case "$a" in
+		set|use|has|no|include|dont-use|dont-include|S|U)	
+			k=`echo "$k" | sed -e 's/-/_/g'`
+			;;
+		*)
+			if [ -z "$v" -a -n "$k" ]; then
+				v="$k"
+				k=""
+			fi
+	esac
 	#if [ -z "$v" -a -n "$k" ]; then v="$k"; k=""; fi
 
 	# ($a, $k, $v) are all set here by this point
 	# having non-empty x here means the option actually had a parameter
 	# and can be used to separate -Dfoo and -Dfoo=''
-	#echo "a=$a k=$k v=$v ($x)"
+	#log "a=$a k=$k v=$v ($x)"
 
 	# process the options
 	case "$a" in
 		mode) test -z "$mode" && setvar $a "$v" || die "Can't set mode twice!" ;;
 		help) setvar "mode" "help" ;;
 		regen|regenerate) setvar "mode" "regen" ;;
+		keeplog) setvar "$a" 1 ;;
 		prefix|html[13]dir|libsdir)	setvar $a "$v" ;;
 		man[13]dir|otherlibsdir)	setvar $a "$v" ;;
 		siteprefix|sitehtml[13]dir)	setvar $a "$v" ;;
 		siteman[13]dir|vendorman[13]dir)setvar $a "$v" ;;
 		vendorprefix|vendorhtml[13]dir)	setvar $a "$v" ;;
-		#byteorder)			setvar $a "$v" ;;
 		build|target|targetarch)	setvar $a "$v" ;;
 		cc|cpp|ar|ranlib|objdump)	setvar $a "$v" ;;
 		sysroot)			setvar $a "$v" ;;
@@ -150,12 +161,11 @@ while [ $# -gt 0 ]; do
 				setvar "onlyext" "$s $onlyext"
 			done
 			;;
-		use) setvaru "use$v" 'define' ;;
-		dont-use) setvaru "use$v" 'undef' ;;
+		use) setvaru "use$k" 'define' ;;
+		dont-use) setvaru "use$k" 'undef' ;;
 		set) setvaru "$k" "$v" ;;
 		has) defyes "d_$k" "$v" ;;
 		no) defno "d_$k" "$v" ;;
-		lacks) defno "d_$k" "$v" ;;
 		include) defyes "i_$k" "$v" ;;
 		dont-include) defno "i_$k" "$v" ;;
 		mode|host|target|build) ;;

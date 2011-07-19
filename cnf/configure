@@ -2,7 +2,10 @@
 
 if [ -z "$base" ]; then export base=.; else export base; fi
 config='config.bad'
-cfglog='config.log'
+cfglog_base="config.log"
+cfglog="$cfglog_base.$$"
+unset keeplog
+echo -n > "$cfglog"
 
 . $base/configure__f.sh
 . $base/configure_clev.sh
@@ -13,8 +16,15 @@ if [ "$mode" == 'help' ]; then
 	exit
 fi
 
+if [ -z "$keeplog" ]; then
+	cat "$cfglog" > "$cfglog_base"
+else
+	cat "$cfglog" >> "$cfglog_base"
+fi
+rm -f "$cfglog"
+cfglog="$cfglog_base"
+
 if [ -z "$mode" ]; then
-	echo -n > $cfglog
 	mstart "Guessing build platform"
 	if [ "x$build" == "x" ]; then
 		buildarch=`$base/config.guess 2>>$cfglog`
@@ -59,13 +69,14 @@ fi
 if [ "$mode" == "cross" ]; then
 	msg "Respawning configure for build and target platforms"
 	msg
-	run $0 $hco --mode=buildmini --targetarch="$buildarch"\
+	run $0 $hco --keeplog --mode=buildmini --targetarch="$buildarch"\
 		--target-name="$target" --target-arch="$targetarch" --sysroot="$sysroot"\
 		|| die "configure --mode=buildmini failed"
 	msg
-       	run $0 "$@" --mode=target --target="$target" --targetarch="$targetarch"\
+       	run $0 "$@" --keeplog --mode=target --target="$target" --targetarch="$targetarch"\
 		|| die "configure --mode=target failed"
 	msg
+	msg "Ok, back to the top-level configure"
 elif [ "$mode" == "buildmini" ]; then
 	targetlabel=`archlabel "$build" "$targetarch"`
 	msg "Configuring build-time miniperl for $targetlabel"
