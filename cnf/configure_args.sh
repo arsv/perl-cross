@@ -27,12 +27,15 @@ function setordefine {
 config_arg0="$0"
 config_argc=$#
 config_args="$*"
-optint=1
 
-while [ $# -gt 0 ]; do
-	a="$1"; shift;	# arg ("set" or 'D')
-	k=''		# key ("prefix")
-	v=''		# value ("/usr/local")
+# Do *not* use shifts here! The args may be used later
+# to call configure --mode=target, and saving them otherwise
+# is hard.
+i=1
+while [ $i -le $# ]; do
+	eval a="\${$i}"; i=$[i+1]	# arg ("set" or 'D')
+	k=''				# key ("prefix")
+	v=''				# value ("/usr/local")
 	x=''
 
 	# check what kind of option is this
@@ -73,7 +76,7 @@ while [ $# -gt 0 ]; do
 	esac
 	# fetch argument if necessary (--set foo=bar)
 	if [ -n "$x" -a -z "$k" ]; then
-		k="$1"; shift
+		eval k="\${$i}"; i=$[i+1]
 	fi
 	# split kv pair into k and v (k=foo v=bar)
 	case "$k" in
@@ -183,3 +186,4 @@ while [ $# -gt 0 ]; do
 		*) die "Unknown argument $a" ;;
 	esac
 done
+unset -v i a k v x
