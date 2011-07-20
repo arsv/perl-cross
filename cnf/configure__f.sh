@@ -77,6 +77,7 @@ function setvaru {
 		uservars="$1"
 	fi
 	setenv "$1" "$2"
+	setenv "u_$1" "$2"
 	if [ -n "$3" ]; then
 		setenv "x_$1" "$3"
 	else
@@ -311,4 +312,12 @@ function resdef {
 
 function modsymname {
 	echo "$1" | sed -e 's!^\(ext\|cpan\|dist\|lib\)/!!' -e 's![:/-]!_!g' | tr A-Z a-z
+}
+
+# like source but avoid $PATH searches for simple file names
+function sourcenopath {
+	case "$1" in
+		/*) source "$1" ;;
+		*) source "./$1" ;;
+	esac
 }

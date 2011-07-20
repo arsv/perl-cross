@@ -24,6 +24,15 @@ function setordefine {
 	fi
 }
 
+# pushvar stem value
+function pushnvar {
+	eval n_$1=\$[n_$1+0]
+	eval n_=\${n_$1}
+	eval $1_$n_="'$2'"
+	eval n_$1=\$[n_$1+1]
+	unset -v n_
+}
+
 config_arg0="$0"
 config_argc=$#
 config_args="$*"
@@ -193,10 +202,30 @@ while [ $i -le $# -o -n "$n" ]; do
 			test -n "$v" && msg "WARNING: -Ukey=val, val ignored; use -Dkev=val instead"
 			setordefine "$k" "$x" "" 'undef' # "" is *not* a typo here!
 			;;
-		S|O|V|K|f) die "-$a is not supported" ;;
+		O) overwrite=1 ;;
+		f) pushnvar loadfile "$v" ;;
+		S|V|K) die "-$a is not supported" ;;
 		d|r) msg "WARNING: -$a makes no sense for this version of configure and was ignored" ;;
 		e|E) msg "WARNING: -$a ignored; you'll have to proceed with 'make' anyway" ;;
 		*) die "Unknown argument $a" ;;
 	esac
 done
 unset -v i a k v x n
+
+# Process -f args (if any) after all options have been parsed
+test -n "$n_loadfile" && for((i=0;i<n_loadfile;i++)); do
+	f=`valueof "loadfile_$i"`
+	sourcenopath $f
+done
+unset -v i f
+
+# Handle -O
+if [ -n "$overwrite" -a -n "$uservars" ]; then
+	for k in $uservars; do
+		v=`valueof "u_$k"`
+		setenv $k "$v"
+	done
+fi
+echo "uservars=$uservars"
+echo "foo=$foo"
+exit 0
