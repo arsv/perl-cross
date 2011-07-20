@@ -32,14 +32,26 @@ config_args="$*"
 # to call configure --mode=target, and saving them
 # by other means is hard.
 i=1
-while [ $i -le $# ]; do
-	eval a="\${$i}"; i=$[i+1]	# arg ("set" or 'D')
-	k=''				# key ("prefix")
-	v=''				# value ("/usr/local")
+n=''	# next opt
+while [ $i -le $# -o -n "$n" ]; do
+	# in case we've got a short-opt cluster (-abc etc.)
+	if [ -z "$n" ]; then
+		eval a="\${$i}"; i=$[i+1]	# arg ("set" or 'D')
+	else
+		a="-$n"
+		n=''
+	fi
+	k=''					# key ("prefix")
+	v=''					# value ("/usr/local")
 	x=''
 
 	# check what kind of option is this
 	case "$a" in
+		# short opts
+		-[dehrsEKOSV]*)
+			n=`echo "$a" | sed -e 's/^-.//'`
+			a=`echo "$a" | sed -e 's/^-\(.\).*/\1/'`
+			;;
 		-[A-Za-z]*)
 			k=`echo "$a" | sed -e 's/^-.//'`
 			a=`echo "$a" | sed -e 's/^-\(.\).*/\1/'`
@@ -75,7 +87,8 @@ while [ $i -le $# ]; do
 		*) x=1 ;;
 	esac
 	# fetch argument if necessary (--set foo=bar)
-	if [ -n "$x" -a -z "$k" ]; then
+	# note that non-empty n means there must be no argument
+	if [ -n "$x" -a -z "$k" -a -z "$n" ]; then
 		eval k="\${$i}"; i=$[i+1]
 	fi
 	# split kv pair into k and v (k=foo v=bar)
@@ -186,4 +199,4 @@ while [ $i -le $# ]; do
 		*) die "Unknown argument $a" ;;
 	esac
 done
-unset -v i a k v x
+unset -v i a k v x n
