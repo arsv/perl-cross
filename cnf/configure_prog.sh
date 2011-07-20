@@ -7,16 +7,17 @@ function whichprog {
 	_what="$1"; shift
 	_symbol="$1"; shift
 	_fail="$1"; shift
-	eval _force="\"\$$_symbol\""
+	_force=`valueof "$_symbol"`
+	_src=`valueof "x_$_symbol"`
 	mstart "Checking for $_what"
 
 	if [ -n "$_force" ]; then
 		if which "$_force" >&/dev/null; then
 			setvar "$_symbol" "$_force"
-			result "$_force (forced)"
+			result "$_force ($_src)"
 			return 0
 		else
-			result "forced '$_force' not found"
+			result "$_src '$_force' not found"
 			if [ -n "$_fail" -a "$_fail" != "0" ]; then
 				fail "no $_what found"
 			fi

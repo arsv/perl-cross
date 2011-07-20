@@ -1162,9 +1162,9 @@ if [ -z "$cleanonly" ]; then
 	for k in $uservars; do
 		k=`echo "$k" | sed -e 's/[^A-Za-z0-9_-]//g' -e 's/-/_/g'`
 		x=`valueof "x_$k"`
-		if [ "$x" != "w" ]; then
+		if [ "$x" != "written" ]; then
 			v=`valueof "$k"`
-			log "Writing user-defined $k=$v to $config"
+			log "Writing $x $k=$v to $config"
 			putvar "$k" "$v"
 		fi
 	done

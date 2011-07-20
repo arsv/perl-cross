@@ -10,7 +10,6 @@ function typeselect () {
 	_rqsize="$1"; shift
 	_symboli="$1"; shift
 	_symbolu="$1"; shift
-	#isset "$_symboli" && isset "$_symbolu" && return
 
 	mstart "Looking which type to use for $_symboli"
 	for _itype in "$@"; do

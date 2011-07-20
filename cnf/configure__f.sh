@@ -48,6 +48,12 @@ function mstart {
 	echo -ne "$* ... " >& 2
 }
 
+# setenv name value
+# emulates (incorrect in sh) statement $$1="$2"
+function setenv {
+	eval $1="'$2'"
+}
+
 # setvar name value
 # emulates (incorrect in sh) statement $$1="$2"
 function setvar {
@@ -70,8 +76,12 @@ function setvaru {
 	else
 		uservars="$1"
 	fi
-	eval x_$1='s'
-	eval $1="'$2'"
+	setenv "$1" "$2"
+	if [ -n "$3" ]; then
+		setenv "x_$1" "$3"
+	else
+		setenv "x_$1" 'user'
+	fi
 	log "Set user $1='$2'"
 }
 
@@ -81,7 +91,7 @@ function setvaru {
 # "written" if necessary (i.e. for user variables)
 function putvar {
 	_x=`valueof "x_$1"`
-	test "$_x" == 's' && eval "x_$1='w'"
+	test -n "$_x" && setenv "x_$1" 'written'
 	echo "$1='$2'" >> $config
 	setvar "$1" "$2"
 }
@@ -243,9 +253,11 @@ function pullval {
 
 function ifhint {
 	h=`valueof "$1"`
+	x=`valueof "x_$1"`
+	test -z "$x" && x='preset'
 	if test -n "$h"; then
-		log "Hint for $1: $h"
-		result "(hinted) $h"
+		log "Value for $1: $h ($x)"
+		result "($x) $h"
 		return 0
 	else
 		return 1
@@ -260,14 +272,16 @@ function hinted {
 
 function ifhintdefined {
 	h=`valueof "$1"`
+	x=`valueof "x_$1"`
+	test -z "$x" && x='preset'
 	if test -n "$h"; then
 		if [ "$h" == 'define' ]; then
-			log "Hint for $1: $2 (yes, define)"
-			result "(hinted) $2"
+			log "Value for $1: $2 (yes, define) ($x)"
+			result "($x) $2"
 			__=0
 		else
-			log "Hint for $1: $2 (no, undef)"
-			result "(hinted) $3"
+			log "Value for $1: $2 (no, undef) ($x)"
+			result "($x) $3"
 			__=1
 		fi	
 		return 0
