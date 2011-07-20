@@ -29,8 +29,8 @@ config_argc=$#
 config_args="$*"
 
 # Do *not* use shifts here! The args may be used later
-# to call configure --mode=target, and saving them otherwise
-# is hard.
+# to call configure --mode=target, and saving them
+# by other means is hard.
 i=1
 while [ $i -le $# ]; do
 	eval a="\${$i}"; i=$[i+1]	# arg ("set" or 'D')
