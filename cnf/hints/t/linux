@@ -1,0 +1,5 @@
+hint d_nanosleep 'define'
+hint d_clock_gettime 'define'
+hint d_clock_getres 'define'
+hint d_clock_nanosleep 'define'
+hint d_clock 'define'

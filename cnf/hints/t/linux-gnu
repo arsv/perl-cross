@@ -10,9 +10,3 @@ hint d_snprintf 'define'
 hint d_vsnprintf 'define'
 
 hint ccdefines '-D_POSIX_C_SOURCE -D_XOPEN_SOURCE -D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64'
-
-hint d_nanosleep 'define'
-hint d_clock_gettime 'define'
-hint d_clock_getres 'define'
-hint d_clock_nanosleep 'define'
-hint d_clock 'define'
