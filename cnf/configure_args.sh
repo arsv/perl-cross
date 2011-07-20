@@ -226,6 +226,3 @@ if [ -n "$overwrite" -a -n "$uservars" ]; then
 		setenv $k "$v"
 	done
 fi
-echo "uservars=$uservars"
-echo "foo=$foo"
-exit 0
