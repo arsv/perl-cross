@@ -92,7 +92,7 @@ while [ $i -le $# -o -n "$n" ]; do
 	# check whether kv is required
 	# note that $x==1 means $k must be set; the value, $v, may be empty
 	case "$a" in
-		help|regen*|mode|host|target|build|keeplog) x='' ;;
+		help|regen*|mode|host|target|build|keeplog|[dehrsEKOSV]) x='' ;;
 		*) x=1 ;;
 	esac
 	# fetch argument if necessary (--set foo=bar)
