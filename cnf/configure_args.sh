@@ -33,6 +33,17 @@ function pushnvar {
 	unset -v n_
 }
 
+# pushvar stem key value
+function pushnvarkvx {
+	eval n_$1=\$[n_$1+0]
+	eval n_=\${n_$1}
+	eval $1_k_$n_="'$2'"
+	eval $1_v_$n_="'$3'"
+	eval $1_x_$n_="'$4'"
+	eval n_$1=\$[n_$1+1]
+	unset -v n_
+}
+
 config_arg0="$0"
 config_argc=$#
 config_args="$*"
@@ -204,6 +215,8 @@ while [ $i -le $# -o -n "$n" ]; do
 			;;
 		O) overwrite=1 ;;
 		f) pushnvar loadfile "$v" ;;
+		A)	# see configure_hint
+			pushnvarkvx appendlist "$k" "$v" "$x" ;;
 		S|V|K) die "-$a is not supported" ;;
 		d|r) msg "WARNING: -$a makes no sense for this version of configure and was ignored" ;;
 		e|E) msg "WARNING: -$a ignored; you'll have to proceed with 'make' anyway" ;;
