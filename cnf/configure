@@ -114,10 +114,14 @@ if [ "$mode" == 'native' -o "$mode" == 'buildmini' -o "$mode" == "target" ]; the
 	. $base/configure_func.sh
 	. $base/configure_fung.sh
 	. $base/configure_link.sh
-	test "$usethreads" == 'define' && . $base/configure_thrd.sh
-	failpoint
-	. $base/configure_mods.sh
-	failpoint
+	if [ "$usethreads" == 'define' ]; then
+		. $base/configure_thrd.sh
+		failpoint
+	fi
+	if [ "$mode" != "buildmini" ]; then
+		. $base/configure_mods.sh
+		failpoint
+	fi
 	. $base/configure_genc.sh
 	failpoint
 	if [ "$mode" == 'target' ]; then
