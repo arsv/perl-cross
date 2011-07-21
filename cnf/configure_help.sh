@@ -2,66 +2,125 @@
 
 cat <<EOF
 Usage:
-	configure [--option[=value]] ...
+	configure [options]
 
-Options are either self-explainatory or too obscure to be
+configure adheres to common GNU autoconf style, but also accepts most
+of the original Configure options. Both short (-D) and long (--define)
+options are supported. Valid ways to supply arguments for the options:
+-f config.sh, -fconfig.sh -D key=val, -Dkey=val, --set-key=val, --set key=val.
+Whenever necessary, dashes in "key" are converted to underscores so it's ok
+to use --set-d-something instead of --set-d_something.
+
+The options themselves are either self-explainatory or too obscure to be
 documented here. In latter case check which config.sh variable you're
-interested in and refer to Porting/Glossary for description (most
-options are just slightly modified variable names).
+interested in and refer to Porting/Glossary for description.
 
-	--help				show this message
-	--mode=<mode>			(don't use this)
-		--mode=cross		Force cross-compilation mode
-	--regenerate			Re-generate config.h, xconfig.h and Makefile.config
-					from config.sh and xconfig.sh
+	--help			show this message
+	--mode=<mode>		(don't use this)
+		--mode=cross	Force cross-compilation mode
+	--regenerate		Re-generate config.h, xconfig.h
+				and Makefile.config
+				from config.sh and xconfig.sh
 
-	--prefix=/usr			Used for default values only
-	--html1dir=<dir>		For HTML documentation
+	--prefix=/usr		Installation prefix
+	--html1dir=<dir>	For HTML documentation
 	--html3dir=<dir>
-	--man1dir=<dir>			For manual pages
+	--man1dir=<dir>		For manual pages
 	--man3dir=<dir>
 
-	--build=<machine>		Default prefix for \$HOSTCC etc.
-	--target=<machine>		Same, for primary \$CC
-	--hints=<h1>,<h2>,...		Use specified hints (cnf/hints/<h1> etc.)
-					Does not affect hint selection for modules
+	--build=<machine>	Default prefix for \$HOSTCC etc.
+	--target=<machine>	Same, for primary \$CC
+	--hints=<h1>,<h2>,...	Use specified hints (cnf/hints/<h1> etc.)
+				Does not affect hint selection for modules
 	
-	--with-libs=<libs>		Comma-separated list of libraries to use
-					(only basenames, use "dl" to have -ldl passed to linker)
+	--with-libs=<libs>	Comma-separated list of libraries to use
+				(only basenames, use "dl" to have -ldl
+				 passed to linker)
 
-	--with-cc=			C compiler
-	--with-cpp=			C preprocessor
-	--with-ranlib=			ranlib; set to 'true' or 'echo' if you don't need it
-	--with-objdump=			objdump; only needed for some configure tests
-					(all for target system when cross-compiling)
+	--with-cc=		C compiler
+	--with-cpp=		C preprocessor
+	--with-ranlib=		ranlib; set to 'true' or 'echo' if
+				 you don't need it
+	--with-objdump=		objdump; only needed for some tests
 		
-	--host-cc=			Same, for host system
-	--host-cpp=			(only useful when cross-compiling)
+	--host-cc=		Same, for host/build system
+	--host-cpp=		(only useful when cross-compiling)
 	--host-ranlib=
 	--host-objdump=			
 	--host-libs=
 
-	--target-cc=			Same, for/on target system.
-	--target-cpp=			(not used by this script *at all*; set these
-	--target-ranlib=		if you want to build modules natively on the
-	--target-objdump=		target system)
+	--sysroot=		path to (copy of) target system root
 
-	--sysroot=			path to (copy of) target system root
+Options from the original Configure which are not supported or make
+no sense for this version of configure:
 
-	--enable-<something>		See use<something> in Glossary
-	--has-<function>		See d_<function> in Glossary
-	--include-<header>[=yes|no]	Assume given header is present (or missing)
-					in the system. E.g., disabling <sys/time.h>:
+	-e		go on without questioning past the production
+			 of config.sh (ignored)
+	-E		stop at the end of questions, after having
+			 produced config.sh (ignored)
+	-r		reuse C symbols value if possible, skips costly
+			 nm extraction (ignored, other method is used)
+	-s		silent mode (ignored)
+	-K		(not supported)
+	-S		perform variable substitutions on all .SH files
+			 (ignored)
+	-V 		show version number (not supported)
+
+The following options are used to manipulate the values configure will
+write to config.sh. Check Porting/Glossary for the list of possible
+symbols.
+
+	-d		(ignored) use defaults for all answers.
+	-f file.sh	load configuration from specified file
+	-h		(ignored)
+	-D symbol[=value]	define symbol to have some value:
+		-D symbol         symbol gets the value 'define'
+		-D symbol=value   symbol gets the value 'value'
+	    common used examples (see INSTALL for more info):
+		-Duse64bitint            use 64bit integers
+		-Duse64bitall            use 64bit integers and pointers
+		-Dusethreads             use thread support
+		-Dinc_version_list=none  do not include older perl trees in @INC
+		-DEBUGGING=none          DEBUGGING options
+		-Dcc=gcc                 choose your compiler
+		-Dprefix=/opt/perl5      choose your destination
+	-O		let -D and -U override definitions
+			 from loaded configuration file.
+	-U symbol	undefine symbol:
+		-U symbol    symbol gets the value 'undef'
+		-U symbol=   symbol gets completely empty
+		e.g.:  -Uversiononly
+
+	-A [a:]symbol=value	manipulate symbol after the platform specific
+				hints have been applied:
+		-A append:symbol=value   append value to symbol
+		-A symbol=value          like append:, but with a separating space
+		-A define:symbol=value   define symbol to have value
+		-A clear:symbol          define symbol to be ''
+		-A define:symbol         define symbol to be 'define'
+		-A eval:symbol=value     define symbol to be eval of value
+		-A prepend:symbol=value  prepend value to symbol
+		-A undef:symbol          define symbol to be 'undef'
+		-A undef:symbol=         define symbol to be ''
+		e.g.:   -A prepend:libswanted='cl pthread '
+			-A ccflags=-DSOME_MACRO
+
+
+	--enable-<something>		Set use<something> to 'define'
+	--has-<function>		Set d_<function> to 'define'
+	--include-<header>[=yes|no]	Set i_<header> to 'define' or 'undef'
+					e.g. for <sys/time.h>:
 						--include-sys-time-h=no
-	--set-<something>=value		See <something> in Glossary
+	--set symbol=value		Set symbol to value
 
-	--host-<option>[=value]		Results in --<option>[=value] being passed to
-					configure for the host system
+	--host-<option>[=value]		Results in --<option>[=value] being
+					passed to configure for the host system
 					(only useful when cross-compiling)
 
-	--static-mod=mod1,mod2,...	Build modules mod1, mod2, ..., statically
-	--disable-mod=mod1,mod2,...	Do not build modules mod1, mod2, ...
-					modX should be something like cpan/Archive-Extract
+	--static-mod=mod1,mod2,...	Build specified modules statically
+	--disable-mod=mod1,mod2,...	Do not build specified modules
+					modX should be something like
+					cpan/Archive-Extract
 					static only applies to XS modules
 
 config.log contains verbose description of what was tested, and how.
