@@ -8,7 +8,7 @@ case "$DEBUGGING" in
 			*-g*)
 				result "already enabled" ;;
 			*)
-				setvar optimize "$optimize -g"
+				appendvar optimize "-g"
 				result "yes" ;;
    		esac ;;
 	none|undef)
@@ -20,9 +20,13 @@ esac
 mstart "Checking whether to use -DDEBUGGING"
 case "$DEBUGGING" in
 	both|define)
-		setvar dflt '-DDEBUGGING'
-		result "yes" ;;
+		case "$ccdefines" in 
+			*-DDEBUGGING*)
+				result "already there" ;;
+			*)
+				appendvar ccdefines '-DDEBUGGING'
+				result "yes" ;;
+		esac ;;
 	*)
-		setvar dflt ''
 		result "no" ;;
 esac

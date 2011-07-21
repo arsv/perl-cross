@@ -21,6 +21,7 @@ if [ "$usecrosscompile" == 'define' ]; then
 	. ./xconfig.sh
 	hostcc="$cc"
 	hostccflags="$ccflags"
+	hostccdefines="$ccdefines"
 	hostldflags="$ldflags"
 	hostar="$ar"
 	hostranlib="$ranlib"
@@ -53,12 +54,12 @@ CROSS = $target_name-
 CC = `ifprefixed "$target_name" "$cc"`
 AR = `ifprefixed "$target_name" "$ar"`
 RANLIB = `ifprefixed "$target_name" "$ranlib"`
-CFLAGS = $cflags $ccflags
+CFLAGS = $cflags $ccflags $ccdefines $optimize
 LDFLAGS = $ldflags
 LIBS = $libs
 
 HOSTCC = $hostcc
-HOSTCFLAGS = $cflags -DUSE_CROSS_COMPILE $hostccflags
+HOSTCFLAGS = $cflags -DUSE_CROSS_COMPILE $hostccflags $hostccdefines
 HOSTCFMINI = \$(HOSTCFLAGS) -DPERL_EXTERNAL_GLOB
 HOSTLDFLAGS = $hostldflags
 HOSTLIBS = $hostlibs
@@ -86,7 +87,7 @@ cat >> Makefile.config <<END
 CC = $cc
 AR = $ar
 RANLIB = $ranlib
-CFLAGS = $cflags $ccflags
+CFLAGS = $cflags $ccflags $ccdefines $optimize
 LDFLAGS = $ldflags
 LIBS = $libs
 

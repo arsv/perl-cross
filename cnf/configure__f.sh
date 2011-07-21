@@ -321,3 +321,13 @@ function sourcenopath {
 		*) source "./$1" ;;
 	esac
 }
+
+# appendsvar vardst value-to-append
+function appendvar {
+	v=`valueof "$1"`
+	if [ -n "$v" -a -n "$2" ]; then
+		setvar "$1" "$v $2"
+	elif [ -z "$v" -a -n "$2" ]; then
+		setvar "$1" "$2"
+	fi
+}
