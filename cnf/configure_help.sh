@@ -79,11 +79,11 @@ symbols.
 	    common used examples (see INSTALL for more info):
 		-Duse64bitint            use 64bit integers
 		-Duse64bitall            use 64bit integers and pointers
-		-Dusethreads             use thread support
+		-Dusethreads             use thread support (also --use-threads)
 		-Dinc_version_list=none  do not include older perl trees in @INC
 		-DEBUGGING=none          DEBUGGING options
-		-Dcc=gcc                 choose your compiler
-		-Dprefix=/opt/perl5      choose your destination
+		-Dcc=gcc                 same as --with-cc=gcc
+		-Dprefix=/opt/perl5      same as --prefix=/opt/perl5
 	-O		let -D and -U override definitions
 			 from loaded configuration file.
 	-U symbol	undefine symbol:
@@ -113,15 +113,25 @@ symbols.
 						--include-sys-time-h=no
 	--set symbol=value		Set symbol to value
 
-	--host-<option>[=value]		Results in --<option>[=value] being
-					passed to configure for the host system
-					(only useful when cross-compiling)
+When configuring a cross-build, -D/--set and other similar options affect
+target perl configuration (config.sh) only. Use the following options if
+you need to tweak xconfig.sh:
+
+	--host-<option>[=value]		Pass --<option>[=value] to miniperl
+					configure on the host system (xconfig.sh)
+			e.g. --host-define-foo, --host-set-foo=bar
+
+	--target-<option>[=value]	(same for tconfig.sh; do not use)
+
+Generally configure tries to build all modules it can find in the source tree.
+Use the following options to alter modules list:
 
 	--static-mod=mod1,mod2,...	Build specified modules statically
 	--disable-mod=mod1,mod2,...	Do not build specified modules
 					modX should be something like
 					cpan/Archive-Extract
 					static only applies to XS modules
+	--only-mod=mod1,mod2,...	Build listed modules only
 
 config.log contains verbose description of what was tested, and how.
 Check it if configure output looks suspicious.
