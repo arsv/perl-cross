@@ -59,3 +59,6 @@ linkvar d_syserrlst d_sys_errlist
 
 linkvar ptrsize voidptrsize
 linkvar d_longdbl d_longdouble
+
+# allow -DEBUGGING
+linkvar DEBUGGING EBUGGING
