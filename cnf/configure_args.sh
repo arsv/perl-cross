@@ -127,7 +127,7 @@ while [ $i -le $# -o -n "$n" ]; do
 	# Account for the fact that in "--set foo" foo is key
 	# while in "--mode foo" foo is value
 	case "$a" in
-		set|use|has|no|include|dont-use|dont-include|S|U)	
+		set|use|has|no|include|dont-use|dont-include|D|U)	
 			k=`echo "$k" | sed -e 's/-/_/g'`
 			;;
 		*)
