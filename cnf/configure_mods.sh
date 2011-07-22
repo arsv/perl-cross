@@ -52,7 +52,7 @@ function extonlyif {
 		return
 	else
 		log "pre-disabling $s"
-		msg "pre-disabling $s"
+		msg "\tpre-disabling $s"
 		eval "disable_$s=1"
 	fi
 

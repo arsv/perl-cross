@@ -14,7 +14,10 @@ case "$DEBUGGING" in
 	none|undef)
 		case "$optimize" in
 			*-g*) setvar optimize "`echo $optimize | sed -e 's/-g ?//'`" ;;
-   		esac ;;
+   		esac
+		result "no" ;;
+	*)
+		result "no" ;;
 esac
 
 mstart "Checking whether to use -DDEBUGGING"
