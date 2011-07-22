@@ -44,7 +44,7 @@ tgt = $(nonxs_tgt) $(dynamic_tgt) $(static_tgt)
 
 # Force early building of miniperl -- not really necessary, but makes
 # build process more logical (no reason to even try CC if HOSTCC fails)
-all: miniperl$X nonxs_ext dynaloader perl$x utilities extensions translators
+all: miniperl$X dynaloader perl$x nonxs_ext utilities extensions translators
 
 config.h: config.sh config_h.SH
 	CONFIG_H=$@ CONFIG_SH=$< ./config_h.SH
