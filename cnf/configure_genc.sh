@@ -1158,6 +1158,12 @@ if [ "$mode" == "buildmini" ]; then
 	default sysroot
 fi
 
+if [ "$disabledmods" == 'define' ]; then
+	default disabledmods 'define'
+	default disabled_dynamic_ext ''
+	default disabled_nonxs_ext ''
+fi
+
 if [ -z "$cleanonly" ]; then
 	for k in $uservars; do
 		k=`echo "$k" | sed -e 's/[^A-Za-z0-9_-]//g' -e 's/-/_/g'`

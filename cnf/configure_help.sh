@@ -133,6 +133,11 @@ Use the following options to alter modules list:
 					static only applies to XS modules
 	--only-mod=mod1,mod2,...	Build listed modules only
 
+	--disable-disabled-mods		Do not generate make rules for	
+					disabled modules. Without this option,
+					any module found by counfigure can be built
+					manually with "make cpan/Module-Name".
+
 config.log contains verbose description of what was tested, and how.
 Check it if configure output looks suspicious.
 EOF

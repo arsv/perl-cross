@@ -197,6 +197,7 @@ while [ $i -le $# -o -n "$n" ]; do
 				setvar "onlyext" "$s $onlyext"
 			done
 			;;
+		disable-disabled-mods) setvar 'disabledmods' 'undef' ;;
 		use) setvaru "use$k" 'define' ;;
 		dont-use) setvaru "use$k" 'undef' ;;
 		set) setvaru "$k" "$v" ;;

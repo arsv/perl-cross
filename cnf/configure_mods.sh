@@ -25,11 +25,13 @@ function extadd {
 	o=`valueof "only_$s"`
 	if [ -n "$onlyext" -a -z "$o" ]; then
 		msg "\tskipping $2"
+		extadddisabled "$1" "$2"
 		return
 	fi
 	d=`valueof "disable_$s"`
 	if [ -n "$d" -a "$d" != "0" ]; then
 		msg "\tdisabled $2"
+		extadddisabled "$1" "$2"
 		return
 	fi
 	t=`valueof "static_$s"`
@@ -42,6 +44,15 @@ function extadd {
 	else 
 		msg "\tnon-xs $2"
 		nonxs_ext="$nonxs_ext$2 "
+	fi
+}
+
+function extadddisabled {
+	s=`modsymname "$2"`
+	if [ "$1" == "xs" ]; then
+		disabled_dynamic_ext="$disabled_dynamic_ext$2 "
+	else
+		disabled_nonxs_ext="$disabled_nonxs_ext$2 "
 	fi
 }
 
@@ -86,3 +97,9 @@ msg
 msg "Static modules: $static_ext"
 msg "Non-XS modules: $nonxs_ext"
 msg "Dynamic modules: $dynamic_ext"
+
+if [ -z "$disabledmods" ]; then
+	# see configure_args on how to undef it
+	# see configure_genc for its only effect within configure
+	disabledmods='define'
+fi

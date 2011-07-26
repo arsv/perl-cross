@@ -5,6 +5,8 @@ if [ ! -f config.sh ]; then
 	exit -1
 fi
 
+disabledmods=''
+
 . ./config.sh
 echo -n > Makefile.config
 if [ "$usecrosscompile" == 'define' ]; then
@@ -129,3 +131,10 @@ dynamic_ext = $dynamic_ext
 static_ext = $static_ext
 nonxs_ext = $nonxs_ext
 END
+
+if [ "$disabledmods" == 'define' ]; then
+	cat >> Makefile.config << END
+disabled_dynamic_ext=$disabled_dynamic_ext
+disabled_nonxs_ext=$disabled_nonxs_ext
+END
+fi

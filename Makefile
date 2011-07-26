@@ -32,6 +32,8 @@ static_tgt = $(patsubst %,%/pm_to_blib,$(static_ext))
 static_obj = $(shell for i in $(static_ext); do echo $$i | sed -e 's!\(.*[/-]\(.*\)\)!\1/\2.o!g'; done)
 dynamic_tgt = $(patsubst %,%/pm_to_blib,$(dynamic_ext))
 nonxs_tgt = $(patsubst %,%/pm_to_blib,$(nonxs_ext))
+disabled_dynamic_tgt = $(patsubst %,%/pm_to_blib,$(disabled_dynamic_ext))
+disabled_nonxs_tgt = $(patsubst %,%/pm_to_blib,$(disabled_nonxs_ext))
 
 ext = $(nonxs_ext) $(dynamic_ext) $(static_ext)
 tgt = $(nonxs_tgt) $(dynamic_tgt) $(static_tgt)
@@ -147,7 +149,7 @@ lib/re.pm: ext/re/re.pm
 # The rules below replace make_ext script used in the original
 # perl build chain. Some host-specific functionality is lost.
 # Check miniperl_top to see how it works.
-$(nonxs_tgt): %/pm_to_blib: %/Makefile
+$(nonxs_tgt) $(disabled_nonxs_tgt): %/pm_to_blib: %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a
 
 DynaLoader.o: ext/DynaLoader/pm_to_blib
@@ -158,7 +160,7 @@ ext/DynaLoader/pm_to_blib: %/pm_to_blib: %/Makefile
 $(static_tgt): %/pm_to_blib: %/Makefile $(nonxs_tgt)
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=static $(STATIC_LDFLAGS)
 
-$(dynamic_tgt): %/pm_to_blib: %/Makefile
+$(dynamic_tgt) $(disabled_dynamic_tgt): %/pm_to_blib: %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=dynamic
 
 %/Makefile: %/Makefile.PL preplibrary cflags | $(EXTUTILS) miniperl$X miniperl_top
@@ -166,7 +168,7 @@ $(dynamic_tgt): %/pm_to_blib: %/Makefile
 	cd $(dir $@) && $(top)miniperl_top Makefile.PL PERL_CORE=1 PERL=$(top)miniperl_top
 
 # Allow building modules by typing "make cpan/Module-Name"
-$(static_ext) $(dynamic_ext) $(nonxs_ext): %: %/pm_to_blib
+$(static_ext) $(dynamic_ext) $(nonxs_ext) $(disabled_dynamic_ext) $(disabled_nonxs_ext): %: %/pm_to_blib
 
 $(static_tgt) $(dynamic_tgt): $(nonxs_tgt)
 
