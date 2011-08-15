@@ -37,6 +37,10 @@ disabled_nonxs_tgt = $(patsubst %,%/pm_to_blib,$(disabled_nonxs_ext))
 
 ext = $(nonxs_ext) $(dynamic_ext) $(static_ext)
 tgt = $(nonxs_tgt) $(dynamic_tgt) $(static_tgt)
+disabled_ext = $(disabled_nonxs_ext) $(disabled_dynamic_ext)
+
+ext_makefiles = $(patsubst %,%/Makefile,$(ext))
+disabled_ext_makefiles = $(pathsubst %,%/Makefile,$(disabled_ext))
 
 # ---[ common ]-----------------------------------------------------------------
 
@@ -152,7 +156,8 @@ lib/re.pm: ext/re/re.pm
 $(nonxs_tgt) $(disabled_nonxs_tgt): %/pm_to_blib: %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a
 
-DynaLoader.o: ext/DynaLoader/pm_to_blib
+DynaLoader$o: ext/DynaLoader/pm_to_blib
+	cp ext/DynaLoader/DynaLoader$o $@
 
 ext/DynaLoader/pm_to_blib: %/pm_to_blib: %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=static $(STATIC_LDFLAGS)
@@ -170,6 +175,13 @@ $(dynamic_tgt) $(disabled_dynamic_tgt): %/pm_to_blib: %/Makefile
 # Allow building modules by typing "make cpan/Module-Name"
 $(static_ext) $(dynamic_ext) $(nonxs_ext) $(disabled_dynamic_ext) $(disabled_nonxs_ext): %: %/pm_to_blib
 
+nonxs_ext: $(nonxs_tgt)
+dynamic_ext: $(dynamic_tgt)
+static_ext: $(static_tgt)
+extensions: cflags $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
+modules: extensions
+
+# Some things needed to make modules
 %/Makefile.PL: | miniperl$X
 	./miniperl_top make_ext_Makefile.pl $@
 
@@ -181,16 +193,7 @@ makeppport: miniperl$X $(CONFIGPM)
 
 makefiles: $(ext:pm_to_blib=Makefile)
 
-nonxs_ext: $(nonxs_tgt)
-dynamic_ext: $(dynamic_tgt)
-static_ext: $(static_tgt)
-extensions: cflags $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
-modules: extensions
-
 dynaloader: $(DYNALOADER)
-
-$(DYNALOADER): ext/DynaLoader/pm_to_blib ext/DynaLoader/Makefile
-	make -C $(dir $<)
 
 cpan/Devel-PPPort/PPPort.pm: | miniperl$X
 	cd cpan/Devel-PPPort && ../../miniperl_top PPPort_pm.PL
@@ -253,6 +256,10 @@ modules-reset:
 	$(if $(disabled_nonxs_ext),   rm -f $(patsubst %,%/pm_to_blib,$(disabled_nonxs_ext)))
 	$(if $(disabled_dynamic_ext), rm -f $(patsubst %,%/pm_to_blib,$(disabled_dynamic_ext)))
 
+modules-makefiles: $(ext_makefiles)
+
+modules-clean: clean-modules
+
 # ---[ Misc ]-------------------------------------------------------------------
 
 utilities: miniperl$x $(CONFIGPM) $(plextract)
@@ -297,11 +304,21 @@ install.miniperl: miniperl$X xlib/Config.pm xlib/Config_heavy.pl
 	install -D -m 0644 xlib/Config_heavy.pl $(hostprefix)/$(target_arch)/lib/perl/Config_heavy.pl
 
 # ---[ clean ]------------------------------------------------------------------
-clean:
+.PHONY: clean clean-obj clean-generated-files clean-subdirs clean-modules
+clean: clean-obj clean-generated-files clean-subdirs clean-modules
+
+clean-obj:
 	-test -n "$o" && rm -f *$o
 	-test -n "$O" && rm -f *$O
-	@for i in utils; do $(MAKE) -C $$i clean; done
-	@for i in $(nonxs_ext) $(static_ext) $(dynamic_ext); do $(MAKE) -C $$i clean; done
+
+clean-subdirs:
+	@for i in utils x2p; do $(MAKE) -C $$i clean; done
+
+# assuming modules w/o Makefiles were never built and need no cleaning
+clean-modules:
+	@for i in $(ext) $(disabled_ext); do test -f $$i/Makefile && make $$i/Makefile && $(MAKE) -C $$i clean || true; done
+
+clean-generated-files:
 	-rm -f uudmap.h opmini.c generate_uudmap$X bitcount.h $(CONFIGPM)
 	-rm -f git_version.h lib/re.pm lib/Config_git.pl
 	-rm -f perlmini.c perlmain.c
