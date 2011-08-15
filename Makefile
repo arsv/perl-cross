@@ -187,6 +187,7 @@ nonxs_ext: $(nonxs_tgt)
 dynamic_ext: $(dynamic_tgt)
 static_ext: $(static_tgt)
 extensions: cflags $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
+modules: extensions
 
 dynaloader: $(DYNALOADER)
 
@@ -245,6 +246,15 @@ cpan/ExtUtils-ParseXS/Makefile cpan/ExtUtils-Constant/Makefile: \
 
 cpan/List-Util/pm_to_blib: dynaloader
 
+# ---[ modules cleanup & rebuilding ] ------------------------------------------
+
+modules-reset:
+	$(if $(nonxs_ext),            rm -f $(patsubst %,%/pm_to_blib,$(nonxs_ext)))
+	$(if $(static_ext),           rm -f $(patsubst %,%/pm_to_blib,$(static_ext)))
+	$(if $(dynamic_ext),          rm -f $(patsubst %,%/pm_to_blib,$(dynamic_ext)))
+	$(if $(disabled_nonxs_ext),   rm -f $(patsubst %,%/pm_to_blib,$(disabled_nonxs_ext)))
+	$(if $(disabled_dynamic_ext), rm -f $(patsubst %,%/pm_to_blib,$(disabled_dynamic_ext)))
+
 # ---[ Misc ]-------------------------------------------------------------------
 
 utilities: miniperl$x $(CONFIGPM) $(plextract)
@@ -256,8 +266,8 @@ translators: miniperl$x $(CONFIGPM) cpan/Cwd/pm_to_blib
 pod/%: miniperl$X lib/Config.pod pod/%.PL config.sh
 	cd pod && ../miniperl_top $*.PL
 
-# ---[ modules ]----------------------------------------------------------------
-modules modules.done: modules.list uni.data
+# ---[ modules lists ]----------------------------------------------------------
+modules.done: modules.list uni.data
 	echo -n > modules.done
 	-cat $< | (while read i; do $(MAKE) -C $$i && echo $$i >> modules.done; done)
 
