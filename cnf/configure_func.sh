@@ -57,8 +57,8 @@ function hasvar {
 
 function isvoid {
 	require 'cc'
-	ifhint "d_$1" && return
 	mstart "Checking whether $1 is void"
+	ifhint "d_$1" && return
 
 	try_start
 	try_includes $3
