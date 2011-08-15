@@ -170,8 +170,6 @@ $(dynamic_tgt) $(disabled_dynamic_tgt): %/pm_to_blib: %/Makefile
 # Allow building modules by typing "make cpan/Module-Name"
 $(static_ext) $(dynamic_ext) $(nonxs_ext) $(disabled_dynamic_ext) $(disabled_nonxs_ext): %: %/pm_to_blib
 
-$(static_tgt) $(dynamic_tgt): $(nonxs_tgt)
-
 %/Makefile.PL: | miniperl$X
 	./miniperl_top make_ext_Makefile.pl $@
 
