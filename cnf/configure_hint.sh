@@ -27,6 +27,16 @@ function hint {
 	fi
 }
 
+function trypphints {
+	h_="$1-"; shift
+	for ha in $@; do
+		for hp in $h_ ''; do
+			hh=`echo "$ha" | sed -e "s!:!$hp!"`
+			usehints "$hh"
+		done
+	done
+}
+
 msg "Checking which hints to use"
 if [ -n "$userhints" ]; then
 	for h in `echo "$userhints" | sed -e 's/,/ /g'`; do
@@ -47,24 +57,15 @@ if [ -n "$targetarch" ]; then
 	h_type=`echo "$targetarch" | cut -d - -f 3-`
 	log "	got arch='$h_arch' mach='$h_mach' base='$h_base' type='$h_type'"
 
-	if [ "$mode" == 'buildmini' ]; then
-		h_='host-'
-	elif [ "$mode" == 'target' ]; then
-		h_='target-'
-	else
-		h_=''
-	fi
+	case "$mode" in
+		buildmini) h_pref='host' ;;
+		target) h_pref='target' ;;
+		*) h_pref=''
+	esac
 
-
-	for ha in ":$targetarch" "a/:$h_arch-$h_mach" "a/:$h_arch" \
-			"s/:$h_type" "s/:$h_base"
-	do
-		for hp in $h_ ''; do
-			hh=`echo "$ha" | sed -e "s!:!$hp!"`
-			test -n "$cctype" && usehints "$hh-$cctype"
-			usehints "$hh"
-		done
-	done
+	trypphints "$h_pref"\
+		":$targetarch" "a/:$h_arch-$h_mach" "a/:$h_arch" \
+		"s/:$h_type" "s/:$h_base"
 
 	# Once we get all this $h_*, let's set archname
 	setvardefault archname "$h_arch-$h_base"
