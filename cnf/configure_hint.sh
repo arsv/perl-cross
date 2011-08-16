@@ -46,15 +46,29 @@ if [ -n "$targetarch" ]; then
 	h_base=`echo "$targetarch" | cut -d - -f 3`
 	h_type=`echo "$targetarch" | cut -d - -f 3-`
 	log "	got arch='$h_arch' mach='$h_mach' base='$h_base' type='$h_type'"
-	usehints "a/$targetarch"
-	usehints "t/$h_type"
-	usehints "t/$h_base"
-	usehints "h/$h_arch-$h_mach"
-	usehints "h/$h_arch"
+
+	if [ "$mode" == 'buildmini' ]; then
+		h_='host-'
+	elif [ "$mode" == 'target' ]; then
+		h_='target-'
+	else
+		h_=''
+	fi
+
+	for h_pref in $h_ ''; do
+		usehints "$h_pref$targetarch"
+
+		usehints "a/$h_pref$h_arch-$h_mach"
+		usehints "a/$h_pref$h_arch"
+
+		usehints "s/$h_pref$h_base-$h_type"
+		usehints "s/$h_pref$h_base"
+	done
+
 	# Once we get all this $h_*, let's set archname
 	setvardefault archname "$h_arch-$h_base"
 elif [ -n "$target" ]; then
-	usehints "z/$target"
+	usehints "$target"
 	setvardefault archname "$target"
 fi
 

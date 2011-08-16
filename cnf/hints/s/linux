@@ -1,0 +1,10 @@
+d_nanosleep=define
+d_clock_gettime=define
+d_clock_getres=define
+d_clock_nanosleep=define
+d_clock=define
+
+# From the original linux.sh
+d_lstat=define
+usemallocwrap=define
+libswanted="$libswanted gdbm_compat"
