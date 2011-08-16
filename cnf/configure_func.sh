@@ -68,9 +68,9 @@ function isvoid {
 }
 
 if [ "$usethreads" == 'define' ]; then
-	check haslibs libs $try_libs $try_libs_thread
+	check haslibs libs $libswanted $try_libs $try_libs_thread
 else
-	check haslibs libs $try_libs
+	check haslibs libs $libswanted $try_libs
 fi
 
 check hasfunc _fwalk
