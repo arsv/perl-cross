@@ -16,7 +16,7 @@ function usehints {
 		. ./config.hint.tmp
 		rm -f config.hint.tmp
 	else
-		msg "	no hints for $1"
+		log "	no hints for $1"
 	fi
 }
 
@@ -36,10 +36,10 @@ fi
 	
 # For i686-pc-linux-gnu, try such hints:
 #	i686-pc-linux-gnu	(complete target arch)
-#	linux-gnu		(os name)
-#	linux
-#	i686-pc			(machine name)
-#	i686
+#	a/i686-pc		(architecture/machine name)
+#	a/i686
+#	s/linux-gnu		(operating system name)
+#	s/linux
 if [ -n "$targetarch" ]; then
 	h_arch=`echo "$targetarch" | cut -d - -f 1`
 	h_mach=`echo "$targetarch" | cut -d - -f 2`
@@ -55,14 +55,13 @@ if [ -n "$targetarch" ]; then
 		h_=''
 	fi
 
-	for h_pref in $h_ ''; do
-		usehints "$h_pref$targetarch"
-
-		usehints "a/$h_pref$h_arch-$h_mach"
-		usehints "a/$h_pref$h_arch"
-
-		usehints "s/$h_pref$h_base-$h_type"
-		usehints "s/$h_pref$h_base"
+	for ha in ":$targetarch" "a/:$h_arch-$h_mach" "a/:$h_arch" \
+			"s/:$h_type" "s/:$h_base"
+	do
+		for hp in $h_ ''; do
+			hh=`echo "$ha" | sed -e "s!:!$hp!"`
+			usehints "$hh"
+		done
 	done
 
 	# Once we get all this $h_*, let's set archname
