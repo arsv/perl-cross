@@ -55,11 +55,13 @@ if [ -n "$targetarch" ]; then
 		h_=''
 	fi
 
+
 	for ha in ":$targetarch" "a/:$h_arch-$h_mach" "a/:$h_arch" \
 			"s/:$h_type" "s/:$h_base"
 	do
 		for hp in $h_ ''; do
 			hh=`echo "$ha" | sed -e "s!:!$hp!"`
+			test -n "$cctype" && usehints "$hh-$cctype"
 			usehints "$hh"
 		done
 	done
