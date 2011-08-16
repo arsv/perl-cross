@@ -17,7 +17,7 @@ function whichprog {
 			result "$_force ($_src)"
 			return 0
 		else
-			result "$_src '$_force' not found"
+			result "'$_force' not found ($_src)"
 			if [ -n "$_fail" -a "$_fail" != "0" ]; then
 				fail "no $_what found"
 			fi
