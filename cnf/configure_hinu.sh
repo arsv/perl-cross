@@ -7,6 +7,9 @@
 if [ -n "$targetarch" -a -n "$cctype" ]; then
 	msg "Checking which hints to use for cc type $cctype"
 	trypphints "$h_pref"\
-		":$targetarch-$cctype" "a/:$h_arch-$h_mach-$cctype" "a/:$h_arch-$cctype" \
-		"s/:$h_type-$cctype" "s/:$h_base-$cctype"
+		"$targetarch-$cctype" "$h_arch-$h_mach-$cctype" "$h_arch-$cctype" \
+		"$h_type-$cctype" "$h_base-$cctype" "default-$cctype"
+
+	# Add separator to log file
+	log
 fi

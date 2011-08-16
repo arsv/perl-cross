@@ -28,12 +28,10 @@ function hint {
 }
 
 function trypphints {
-	h_="$1-"; shift
+	hp="$1"; shift
 	for ha in $@; do
-		for hp in $h_ ''; do
-			hh=`echo "$ha" | sed -e "s!:!$hp!"`
-			usehints "$hh"
-		done
+		test -n "$hp" && usehints "$hp-$ha"
+		usehints "$ha"
 	done
 }
 
@@ -64,17 +62,16 @@ if [ -n "$targetarch" ]; then
 	esac
 
 	trypphints "$h_pref"\
-		":$targetarch" "a/:$h_arch-$h_mach" "a/:$h_arch" \
-		"s/:$h_type" "s/:$h_base"
+		"$targetarch" "$h_arch-$h_mach" "$h_arch" \
+		"$h_type" "$h_base" "default"
 
 	# Once we get all this $h_*, let's set archname
 	setvardefault archname "$h_arch-$h_base"
 elif [ -n "$target" ]; then
 	usehints "$target"
 	setvardefault archname "$target"
+	usehints "default"
 fi
-
-usehints "default"
 
 # Add separator to log file
 log
