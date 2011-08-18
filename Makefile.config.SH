@@ -49,7 +49,7 @@ function ifprefixed() {
 	fi
 }
 
-cflags='-DPERL_CORE -std=c89 -W -ansi'
+cflags='-DPERL_CORE '
 if [ "$usecrosscompile" == "define" ]; then
 cat >> Makefile.config <<END
 CROSS = $target_name-

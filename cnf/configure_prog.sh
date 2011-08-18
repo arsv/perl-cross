@@ -85,9 +85,9 @@ fi
 if [ -z "$cctype" ]; then
 	mstart "Trying to guess what kind of compiler \$cc is"
 	if not hinted 'cctype'; then
-		if $cc -V >try.out 2>/dev/null; then
+		if $cc -V >try.out 2>&1; then
 			_cl=`head -1 try.out`
-		elif $cc --version >try.out 2>/dev/null; then
+		elif $cc --version >try.out 2>&1; then
 			_cl=`head -1 try.out`
 		else
 			_cl=''
@@ -113,7 +113,7 @@ if [ -z "$cctype" ]; then
 					;;
 			esac
 		else 
-			_cc=`echo "$cc" | sed -e "s/^$target-//" | sed -e 's/-[0-9][0-9.a-z]*$//'`
+			_cc=`echo "$cc" | sed -e 's!.*/!!' -e "s/^$target-//" | sed -e 's/-[0-9][0-9.a-z]*$//'`
 			if [ -n "$_cc" -a "$_cc" != 'cc' ]; then
 				setvar 'cctype' "$_cc"
 				result "$_cc"
