@@ -22,7 +22,7 @@ function hasdef {
 	fi
 }
 
-# hasfield name field 'includes'
+# hasfield name struct field 'includes'
 function hasfield {
 	mstart "Checking whether $2 has $3"
 	ifhintdefined "$1" 'yes' 'no' && return 0
@@ -63,3 +63,5 @@ check hasfield d_pwpasswd 'struct passwd' pw_passwd pwd.h
 check hasfield d_statblks 'struct stat' st_blocks 'sys/types.h sys/stat.h'
 check hasfield d_dirnamlen 'struct dirent' d_namelen 'sys/types.h'
 check hasfield d_grpasswd 'struct group' gr_passwd grp.h
+check hasfield d_sockaddr_sa_len 'struct sockaddr' sa_len 'sys/types.h sys/socket.h'
+check hasfield d_sin6_scope_id 'struct sockaddr_in6' sin6_scope_id 'sys/types.h sys/socket.h netinet/in.h'

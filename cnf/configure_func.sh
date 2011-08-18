@@ -224,6 +224,7 @@ check hasfunc poll
 check hasfunc pthread_atfork
 check hasfunc pthread_attr_setscope
 check hasfunc pthread_yield
+check hasfunc prctl
 check hasfunc rand
 check hasfunc random
 check hasfunc readdir

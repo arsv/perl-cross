@@ -525,6 +525,8 @@ default d_phostname undef
 default d_pipe undef
 default d_poll undef
 default d_portable undef
+default d_prctl undef
+default d_prctl_set_name undef
 default d_printf_format_null define
 default d_procselfexe undef
 default d_pseudofork undef
@@ -558,6 +560,8 @@ default d_sbrkproto define
 default d_scalbnl undef
 default d_sched_yield undef
 default d_scm_rights undef
+default d_sin6_scope_id undef
+default d_sockaddr_sa_len undef
 default d_seekdir undef
 default d_select undef
 default d_sem define
@@ -627,6 +631,8 @@ default d_sresuproto define
 default d_statblks undef
 default d_statfs_f_flags undef
 default d_statfs_s undef
+default d_static_inline undef
+default perl_static_inline static
 default d_statvfs undef
 default d_stdio_cnt_lval undef
 default d_stdio_ptr_lval undef
