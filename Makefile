@@ -2,20 +2,16 @@ default: all
 
 include Makefile.config
 
-DYNALOADER = DynaLoader$o
 CONFIGPM_FROM_CONFIG_SH = lib/Config.pm lib/Config_heavy.pl
 CONFIGPM = $(CONFIGPM_FROM_CONFIG_SH) lib/Config_git.pl
 CONFIGPOD = lib/Config.pod
 XCONFIGPM = xlib/Config.pm xlib/Config_heavy.pl
 STATIC = static
-MINIPERL = ./miniperl$X -Ilib
-MINIPERL_EXE = miniperl$X
-RUNPERL = ./miniperl$X -Ilib
-# The following modules are required to build Makefiles for other modules
-# Be careful here! They must be built before running any Makefile.PLs,
-# and they must have their own rules down below (search for EXTUTILS)
-EXTUTILS = lib/ExtUtils/xsubpp lib/ExtUtils/Constant.pm \
-	$(patsubst cpan/ExtUtils-Constant/lib/%,lib/%,$(wildcard cpan/ExtUtils-Constant/lib/ExtUtils/Constant/*.pm))
+# Note: MakeMaker will look for xsubpp only in specific locations
+# This is one of them; but dist/ExtUtils-ParseXS isn't.
+XSUBPP = lib/ExtUtils/xsubpp
+# For autodoc.pl below
+MANIFEST_CH = $(shell sed -e 's/\s.*//' MANIFEST | grep '\.[ch]$$')
 
 POD1 = $(wildcard pod/*.pod)
 MAN1 = $(patsubst pod/%.pod,man/man1/%$(man1ext),$(POD1))
@@ -24,9 +20,6 @@ obj += $(madlyobj) $(mallocobj) gv$o toke$o perly$o pad$o regcomp$o dump$o util$
 obj += hv$o av$o run$o pp_hot$o sv$o pp$o scope$o pp_ctl$o pp_sys$o
 obj += doop$o doio$o regexec$o utf8$o taint$o deb$o universal$o globals$o perlio$o perlapi$o numeric$o
 obj += mathoms$o locale$o pp_pack$o pp_sort$o keywords$o
-
-plextract = pod/pod2html pod/pod2latex pod/pod2man pod/pod2text \
-	pod/pod2usage pod/podchecker pod/podselect
 
 static_tgt = $(patsubst %,%/pm_to_blib,$(static_ext))
 static_obj = $(shell for i in $(static_ext); do echo $$i | sed -e 's!\(.*[/-]\(.*\)\)!\1/\2.o!g'; done)
@@ -62,7 +55,7 @@ config-pm: $(CONFIGPM)
 
 xconfig-pm: $(XCONFIGPM)
 
-$(XCONFIGPM): miniperl$X tconfig.sh | xlib
+$(XCONFIGPM): tconfig.sh | xlib miniperl$X
 	./miniperl_top configpm --config-sh=tconfig.sh --config-pm=xlib/Config.pm --config-pod=xlib/Config.pod
 
 xlib:
@@ -109,7 +102,7 @@ perlmini$O: perlmini.c
 	$(HOSTCC) $(HOSTCFLAGS) -DPERL_IS_MINIPERL -c -o $@ $<
 	
 lib/ExtUtils/Miniperl.pm: miniperlmain.c minimod.pl $(CONFIGPM) | miniperl$X
-	$(MINIPERL) minimod.pl > lib/ExtUtils/Miniperl.pm
+	./miniperl_top minimod.pl > lib/ExtUtils/Miniperl.pm
 
 # We don't want to regenerate perly.c and perly.h, but they might
 # appear out-of-date after a patch is applied or a new distribution is
@@ -136,7 +129,7 @@ perl$x: perlmain$o $(obj) libperl$a $(static_tgt) ext.libs
 globals.o: uudmap.h
 
 perlmain.c: lib/ExtUtils/Miniperl.pm | miniperl$X
-	$(MINIPERL) -MExtUtils::Miniperl -e 'writemain(@ARGV)' DynaLoader $(static_ext) > $@
+	./miniperl_top -MExtUtils::Miniperl -e 'writemain(@ARGV)' DynaLoader $(static_ext) > $@
 
 ext.libs: $(static_ext) | miniperl$X
 	./miniperl_top extlibs $(static_ext) > $@
@@ -152,7 +145,7 @@ perl.o: git_version.h
 preplibrary: miniperl$X $(CONFIGPM) lib/re.pm
 
 configpod: $(CONFIGPOD)
-$(CONFIGPM_FROM_CONFIG_SH) $(CONFIGPOD): config.sh miniperl$X configpm Porting/Glossary lib/Config_git.pl
+$(CONFIGPM_FROM_CONFIG_SH) $(CONFIGPOD): config.sh configpm Porting/Glossary lib/Config_git.pl | miniperl$X
 	./miniperl_top configpm
 
 # Both git_version.h and lib/Config_git.pl are built
@@ -163,6 +156,18 @@ git_version.h lib/Config_git.pl: make_patchnum.pl | miniperl$X
 lib/re.pm: ext/re/re.pm
 	cp -f ext/re/re.pm lib/re.pm
 
+pod/perlmodlib.pod: pod/perlmodlib.PL | miniperl$X
+	./miniperl_top -Ilib -Idist/Cwd -Idist/Cwd/lib $< -q
+
+autodoc: pod/perlintern.pod
+pod/perlintern.pod pod/perlapi.pod: autodoc.pl embed.fnc $(MANIFEST_CH)
+	./miniperl_top $<
+
+# NOT used by this Makefile, replaced by miniperl_top
+# Avoid building.
+lib/buildcustomize.pl: write_buildcustomize.pl | miniperl$X
+	./miniperl$X -Ilib $< > $@
+
 # ---[ Modules ]----------------------------------------------------------------
 
 # The rules below replace make_ext script used in the original
@@ -172,6 +177,7 @@ $(nonxs_tgt) $(disabled_nonxs_tgt): %/pm_to_blib: %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a
 
 DynaLoader$o: ext/DynaLoader/pm_to_blib
+	@if [ ! -f ext/DynaLoader/DynaLoader$o ]; then rm $<; echo "Stale pm_to_blib, please re-run make"; false; fi
 	cp ext/DynaLoader/DynaLoader$o $@
 
 ext/DynaLoader/pm_to_blib: %/pm_to_blib: %/Makefile
@@ -183,9 +189,11 @@ $(static_tgt): %/pm_to_blib: %/Makefile $(nonxs_tgt)
 $(dynamic_tgt) $(disabled_dynamic_tgt): %/pm_to_blib: %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=dynamic
 
-%/Makefile: %/Makefile.PL preplibrary cflags | $(EXTUTILS) miniperl$X miniperl_top
+%/Makefile: %/Makefile.PL preplibrary cflags | $(XSUBPP) miniperl$X
 	$(eval top=$(shell echo $(dir $@) | sed -e 's![^/]\+!..!g'))
-	cd $(dir $@) && $(top)miniperl_top Makefile.PL PERL_CORE=1 PERL=$(top)miniperl_top
+	cd $(dir $@) && $(top)miniperl_top -I$(top)lib Makefile.PL \
+	 INSTALLDIRS=perl INSTALLMAN1DIR=none INSTALLMAN3DIR=none \
+	 PERL_CORE=1 LIBPERL_A=libperl.a PERL_CORE=1 PERL="$(top)miniperl_top"
 
 # Allow building modules by typing "make cpan/Module-Name"
 $(static_ext) $(dynamic_ext) $(nonxs_ext) $(disabled_dynamic_ext) $(disabled_nonxs_ext): %: %/pm_to_blib
@@ -203,18 +211,18 @@ modules: extensions
 cflags: cflags.SH
 	sh $<
 
-makeppport: miniperl$X $(CONFIGPM)
-	./miniperl_top mkppport
+makeppport: $(CONFIGPM) | miniperl$X
+	./miniper_top mkppport
 
 makefiles: $(ext:pm_to_blib=Makefile)
 
-dynaloader: $(DYNALOADER)
+dynaloader: DynaLoader$o
 
 cpan/Devel-PPPort/PPPort.pm: | miniperl$X
-	cd cpan/Devel-PPPort && ../../miniperl_top PPPort_pm.PL
+	cd cpan/Devel-PPPort && ../../miniperl -I../../lib PPPort_pm.PL
 
 cpan/Devel-PPPort/ppport.h: cpan/Devel-PPPort/PPPort.pm | miniperl$X
-	cd cpan/Devel-PPPort && ../../miniperl_top ppport_h.PL
+	cd cpan/Devel-PPPort && ../../miniperl -I../../lib ppport_h.PL
 
 UNICORE = lib/unicore
 UNICOPY = cpan/Unicode-Normalize/unicore
@@ -223,7 +231,7 @@ cpan/Unicode-Normalize/Makefile: cpan/Unicode-Normalize/unicore/CombiningClass.p
 
 # mktables does not touch the files unless they need to be rebuilt,
 # which confuses make.
-$(UNICORE)/%.pl: $(UNICORE)/mktables $(UNICORE)/*.txt $(CONFIGPM) | miniperl$X 
+$(UNICORE)/%.pl: $(UNICORE)/mktables $(UNICORE)/*.txt $(CONFIGPM) | miniperl$X
 	cd lib/unicore && ../../miniperl_top mktables
 	touch $@
 $(UNICOPY)/%.pl: $(UNICORE)/%.pl | $(UNICOPY)
@@ -241,18 +249,8 @@ $(patsubst %,%/pm_to_blib,$(mkppport_lst)): %/pm_to_blib: %/ppport.h
 $(patsubst %,%/ppport.h,$(mkppport_lst)): cpan/Devel-PPPort/ppport.h
 	cp -f $< $@
 
-# $EXTUTILS building rules
-lib/ExtUtils/xsubpp: cpan/ExtUtils-ParseXS/lib/ExtUtils/xsubpp
+lib/ExtUtils/xsubpp: dist/ExtUtils-ParseXS/lib/ExtUtils/xsubpp
 	cp -f $< $@
-
-lib/ExtUtils/Constant.pm: cpan/ExtUtils-Constant/lib/ExtUtils/Constant.pm
-	cp -f $< $@
-
-lib/ExtUtils/Constant/%: cpan/ExtUtils-Constant/lib/ExtUtils/Constant/%
-	mkdir -p `dirname $@`
-	cp -f $< $@
-
-cpan/ExtUtils-ParseXS/lib/ExtUtils/xsubpp: cpan/ExtUtils-ParseXS/pm_to_blib
 
 # No ExtUtils dependencies here because that's where they come from
 cpan/ExtUtils-ParseXS/Makefile cpan/ExtUtils-Constant/Makefile: \
@@ -277,10 +275,10 @@ modules-clean: clean-modules
 
 # ---[ Misc ]-------------------------------------------------------------------
 
-utilities: miniperl$x $(CONFIGPM) $(plextract)
+utilities: miniperl$X $(CONFIGPM)
 	$(MAKE) -C utils all
 
-translators: miniperl$x $(CONFIGPM) cpan/Cwd/pm_to_blib
+translators: miniperl$X $(CONFIGPM) dist/Cwd/pm_to_blib
 	$(MAKE) -C x2p all
 
 pod/%: miniperl$X lib/Config.pod pod/%.PL config.sh
@@ -301,7 +299,7 @@ modules.list: $(CONFIGPM) $(MODLISTS) cflags
 .PHONY: install install.perl install.pod
 
 META.yml: Porting/makemeta Porting/Maintainers.pl Porting/Maintainers.pm miniperl$X
-	$(RUNPERL) $<
+	./miniperl_top $<
 
 install: install.perl install.man
 
@@ -331,7 +329,7 @@ clean-subdirs:
 
 # assuming modules w/o Makefiles were never built and need no cleaning
 clean-modules:
-	@for i in $(ext) $(disabled_ext); do test -f $$i/Makefile && make $$i/Makefile && $(MAKE) -C $$i clean || true; done
+	@for i in $(ext) $(disabled_ext); do test -f $$i/Makefile && $(MAKE) $$i/Makefile && $(MAKE) -C $$i clean || true; done
 
 clean-generated-files:
 	-rm -f uudmap.h opmini.c generate_uudmap$X bitcount.h $(CONFIGPM)
@@ -339,5 +337,6 @@ clean-generated-files:
 	-rm -f perlmini.c perlmain.c
 	-rm -f config.h xconfig.h
 	-rm -f $(UNICOPY)/*
+	-rm -f pod/perlmodlib.pod
 	-rm -f $(patsubst %,%/ppport.h,$(mkppport_lst))
 	-rm -f cpan/Devel-PPPort/ppport.h cpan/Devel-PPPort/PPPort.pm

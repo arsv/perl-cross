@@ -9,7 +9,6 @@ tar -zcvf \!pack.tar.gz\
 	cnf/hints\
 	installman\
 	extlibs\
-	writemain.SH\
 	Makefile\
 	Makefile.config.SH\
 	make_ext_Makefile.pl\

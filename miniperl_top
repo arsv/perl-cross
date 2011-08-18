@@ -1,25 +1,29 @@
 #!/bin/sh
 
 # This script can be used to run Makefile.PL 
-# The modules listed below are required for MakeMaker to work.
 # Note that is relies on $0 to tell where lib/ is; typically
 #   you should call it as ../../miniperl_top
+# This script replaces lib/buildcustomize.pl functionality
+# Check write_buildcustomize.pl for the list of modules to include here
 
 top=`dirname "$0"`
-exec $top/miniperl \
+if [ -f $top/lib/buildcustomize.pl ]; then
+	# buildcustomize.pl silently overrides all -I options below
+	echo "Remove $top/lib/buildcustomize.pl before running miniperl_top" >&2
+	exit 1
+fi
+exec $top/miniperl\
 	-I$top/lib\
-	-I$top/dist/constant/lib\
-	-I$top/dist/base/lib\
-	-I$top/cpan/Getopt-Long/lib\
-	-I$top/cpan/Pod-Simple/lib\
-	-I$top/cpan/Pod-Escapes/lib\
 	-I$top/cpan/AutoLoader/lib\
-	-I$top/cpan/Cwd\
-	-I$top/cpan/Cwd/lib\
-	-I$top/cpan/ExtUtils-Command/lib\
+	-I$top/dist/Cwd -I$top/dist/Cwd/lib\
+	-I$top/dist/ExtUtils-Command/lib\
 	-I$top/dist/ExtUtils-Install/lib\
 	-I$top/cpan/ExtUtils-MakeMaker/lib\
-	-I$top/cpan/ExtUtils-Manifest/lib\
+	-I$top/dist/ExtUtils-Manifest/lib\
 	-I$top/cpan/File-Path/lib\
-	-I$top/cpan/Text-Tabs/lib\
+	-I$top/ext/re\
+	-I$top/cpan/ExtUtils-Constant/lib\
+	-I$top/dist/ExtUtils-ParseXS/lib\
+	-I$top/dist/constant/lib\
+	-I$top/cpan/Getopt-Long/lib\
 	"$@"
