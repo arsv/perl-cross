@@ -23,7 +23,7 @@ MAN1 = $(patsubst pod/%.pod,man/man1/%$(man1ext),$(POD1))
 obj += $(madlyobj) $(mallocobj) gv$o toke$o perly$o pad$o regcomp$o dump$o util$o mg$o reentr$o mro$o
 obj += hv$o av$o run$o pp_hot$o sv$o pp$o scope$o pp_ctl$o pp_sys$o
 obj += doop$o doio$o regexec$o utf8$o taint$o deb$o universal$o globals$o perlio$o perlapi$o numeric$o
-obj += mathoms$o locale$o pp_pack$o pp_sort$o
+obj += mathoms$o locale$o pp_pack$o pp_sort$o keywords$o
 
 plextract = pod/pod2html pod/pod2latex pod/pod2man pod/pod2text \
 	pod/pod2usage pod/podchecker pod/podselect
@@ -108,6 +108,21 @@ perlmini.c: perl.c
 perlmini$O: perlmini.c
 	$(HOSTCC) $(HOSTCFLAGS) -DPERL_IS_MINIPERL -c -o $@ $<
 	
+lib/ExtUtils/Miniperl.pm: miniperlmain.c minimod.pl $(CONFIGPM) | miniperl$X
+	$(MINIPERL) minimod.pl > lib/ExtUtils/Miniperl.pm
+
+# We don't want to regenerate perly.c and perly.h, but they might
+# appear out-of-date after a patch is applied or a new distribution is
+# made.
+perly.c: perly.y
+	-@sh -c true
+
+perly.h: perly.y
+	-@sh -c true
+
+# this outputs perly.h, perly.act and perly.tab
+regen_perly:
+	perl regen_perly.pl
 
 # ---[ site/perl ]--------------------------------------------------------------
 
@@ -120,8 +135,8 @@ perl$x: perlmain$o $(obj) libperl$a $(static_tgt) ext.libs
 
 globals.o: uudmap.h
 
-perlmain.c: miniperlmain.c writemain
-	./writemain DynaLoader $(static_ext) > perlmain.c
+perlmain.c: lib/ExtUtils/Miniperl.pm | miniperl$X
+	$(MINIPERL) -MExtUtils::Miniperl -e 'writemain(@ARGV)' DynaLoader $(static_ext) > $@
 
 ext.libs: $(static_ext) | miniperl$X
 	./miniperl_top extlibs $(static_ext) > $@
