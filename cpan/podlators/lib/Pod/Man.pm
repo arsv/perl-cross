@@ -31,7 +31,6 @@ use subs qw(makespace);
 use vars qw(@ISA %ESCAPES $PREAMBLE $VERSION);
 
 use Carp qw(croak);
-use Encode qw(encode);
 use Pod::Simple ();
 
 @ISA = qw(Pod::Simple);
@@ -750,7 +749,7 @@ sub outindex {
 sub output {
     my ($self, @text) = @_;
     if ($$self{ENCODE}) {
-        print { $$self{output_fh} } encode ('UTF-8', join ('', @text));
+        print { $$self{output_fh} } Encode::encode ('UTF-8', join ('', @text));
     } else {
         print { $$self{output_fh} } @text;
     }
@@ -786,6 +785,9 @@ sub start_document {
                 $$self{ENCODE} = 0;
             }
         }
+    }
+    if ($$self{ENCODE}) {
+        require Encode;
     }
 
     # Determine information for the preamble and then output it.

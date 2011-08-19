@@ -1,13 +1,12 @@
 #!/bin/sh
 
 tar -zcvf \!pack.tar.gz\
-	lib/Pod/Man.pm\
+	cpan/podlators/lib/Pod/Man.pm\
 	ext/POSIX/Makefile.PL\
 	utils/Makefile\
 	x2p/Makefile\
 	cnf/config*\
 	cnf/hints\
-	installman\
 	extlibs\
 	Makefile\
 	Makefile.config.SH\
