@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Find out which progs to use (mostly by trying prefixes based on $target)
 

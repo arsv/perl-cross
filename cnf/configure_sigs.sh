@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Check which signals we have defined.
 # This may seem a little barbaric, but the whole procedure

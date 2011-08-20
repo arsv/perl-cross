@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Names of some variables in original configure are shortened
 # (e.g. i_niin for <netinet/in.h>), and it breaks strict pattern

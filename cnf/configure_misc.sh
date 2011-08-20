@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Some final tweaks that do not fit in any other file
 

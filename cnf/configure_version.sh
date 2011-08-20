@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # setverpart name NAME
 function setverpart {

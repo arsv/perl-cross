@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Check availability of some types, and possibly their size
 

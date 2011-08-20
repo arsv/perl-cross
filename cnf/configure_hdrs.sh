@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # We can't really check if header is there (gcc reports no errors for (some?) missing
 # headers). And, in fact, we need not to. All we want to know is whether it's

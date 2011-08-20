@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Clean the environment
 cleanonly=1

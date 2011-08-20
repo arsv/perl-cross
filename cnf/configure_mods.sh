@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Since 5.10.1 the module dirs are flat, so there's no need
 # for recursive search etc.

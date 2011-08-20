@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # We want to see
 #	var=value

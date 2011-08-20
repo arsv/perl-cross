@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # General-purpose functions used by most of other modules
 
@@ -7,7 +7,7 @@
 function die {
 	echo "ERROR: $*" >> $cfglog
 	echo "ERROR: $*" >&2
-	exit -1
+	exit 255
 }
 
 # note: setvar()s should preceede result() to produce a nice log
@@ -39,7 +39,7 @@ function fail {
 
 function failpoint {
 	if [ -n "$fail" ]; then
-		exit -1
+		exit 255
 	fi
 }
 

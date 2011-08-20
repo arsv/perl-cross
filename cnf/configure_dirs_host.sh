@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This is only included when $mode == 'buildmini'
 require 'targetarch'

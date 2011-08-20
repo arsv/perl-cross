@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function byteorder {
 	mstart "Guessing byte order"

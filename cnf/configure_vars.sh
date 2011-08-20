@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ "$mode" == "buildmini" ]; then
 	V="HOST"

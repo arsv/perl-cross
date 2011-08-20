@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This is called before _gencfg is invoked for the second time
 # to generate tconfig.sh

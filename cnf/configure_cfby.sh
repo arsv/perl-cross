@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Figure out cf_by and related constants
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function addhco {
 	v=`valueof "$1"`
