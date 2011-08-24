@@ -9,6 +9,7 @@ tar -zcvf \!pack.tar.gz\
 	cnf/config*\
 	cnf/hints\
 	extlibs\
+	statars\
 	Makefile\
 	Makefile.config.SH\
 	make_ext_Makefile.pl\
