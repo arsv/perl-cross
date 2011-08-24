@@ -198,6 +198,7 @@ while [ $i -le $# -o -n "$n" ]; do
 			done
 			;;
 		disable-disabled-mods) setvar 'disabledmods' 'undef' ;;
+		all-static) setvar 'allstatic' 1 ;;
 		use) setvaru "use$k" 'define' ;;
 		dont-use) setvaru "use$k" 'undef' ;;
 		set) setvaru "$k" "$v" ;;

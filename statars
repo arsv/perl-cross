@@ -1,0 +1,19 @@
+#!./miniperl
+
+$lib = 'lib/auto/';
+foreach(@ARGV) {
+	$m = $_;
+	s!^(dist|ext|cpan)/!!;
+	s!-!/!g;
+	@f = split m!/!;
+	$f = pop @f;
+	undef $A;
+	foreach $a ($lib.join('/', @f, $f, "$f.a"), $lib."$f/$f.a") {
+		next unless -f $a;
+		$A = $a; last;
+	}
+	die "Can't find .a file for $m\n" unless -f $A;
+	push @a, $A;
+}
+print join ' ', @a;
+print "\n";

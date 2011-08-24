@@ -137,6 +137,8 @@ Use the following options to alter modules list:
 					disabled modules. Without this option,
 					any module found by counfigure can be built
 					manually with "make cpan/Module-Name".
+	--all-static			Build all found XS modules as static
+					unless specified otherwise
 
 config.log contains verbose description of what was tested, and how.
 Check it if configure output looks suspicious.

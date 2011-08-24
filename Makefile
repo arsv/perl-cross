@@ -22,11 +22,12 @@ obj += doop$o doio$o regexec$o utf8$o taint$o deb$o universal$o globals$o perlio
 obj += mathoms$o locale$o pp_pack$o pp_sort$o keywords$o
 
 static_tgt = $(patsubst %,%/pm_to_blib,$(static_ext))
-static_obj = $(shell for i in $(static_ext); do echo $$i | sed -e 's!\(.*[/-]\(.*\)\)!\1/\2.o!g'; done)
 dynamic_tgt = $(patsubst %,%/pm_to_blib,$(dynamic_ext))
 nonxs_tgt = $(patsubst %,%/pm_to_blib,$(nonxs_ext))
 disabled_dynamic_tgt = $(patsubst %,%/pm_to_blib,$(disabled_dynamic_ext))
 disabled_nonxs_tgt = $(patsubst %,%/pm_to_blib,$(disabled_nonxs_ext))
+# perl module names for static mods
+static_pmn = $(shell echo $(static_ext) | sed -e 's!\(cpan\|ext\|dist\)/!!g' -e 's/-/::/g')
 
 ext = $(nonxs_ext) $(dynamic_ext) $(static_ext)
 tgt = $(nonxs_tgt) $(dynamic_tgt) $(static_tgt)
@@ -119,9 +120,10 @@ regen_perly:
 
 # ---[ site/perl ]--------------------------------------------------------------
 
-perl$x: perlmain$o $(obj) libperl$a $(static_tgt) ext.libs
+perl$x: perlmain$o $(obj) libperl$a $(static_tgt) static.list ext.libs
 	$(eval extlibs=$(shell cat ext.libs))
-	$(CC) $(LDFLAGS) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(static_obj) $(LIBS) $(extlibs)
+	$(eval statars=$(shell cat static.list))
+	$(CC) $(LDFLAGS) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(statars) $(LIBS) $(extlibs)
 
 %$o: %.c config.h
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -129,10 +131,13 @@ perl$x: perlmain$o $(obj) libperl$a $(static_tgt) ext.libs
 globals.o: uudmap.h
 
 perlmain.c: lib/ExtUtils/Miniperl.pm | miniperl$X
-	./miniperl_top -MExtUtils::Miniperl -e 'writemain(@ARGV)' DynaLoader $(static_ext) > $@
+	./miniperl_top -MExtUtils::Miniperl -e 'writemain(@ARGV)' DynaLoader $(static_pmn) > $@
 
 ext.libs: $(static_ext) | miniperl$X
 	./miniperl_top extlibs $(static_ext) > $@
+
+static.list: | $(static_tgt) miniperl$X
+	./miniperl_top statars $(static_ext) > $@
 
 # ---[ site/library ]-----------------------------------------------------------
 
@@ -338,5 +343,6 @@ clean-generated-files:
 	-rm -f config.h xconfig.h
 	-rm -f $(UNICOPY)/*
 	-rm -f pod/perlmodlib.pod
+	-rm -f ext.libs static.list
 	-rm -f $(patsubst %,%/ppport.h,$(mkppport_lst))
 	-rm -f cpan/Devel-PPPort/ppport.h cpan/Devel-PPPort/PPPort.pm

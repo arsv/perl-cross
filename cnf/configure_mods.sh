@@ -38,6 +38,9 @@ function extadd {
 	if [ "$1" == "xs" -a -n "$t" -a "$t" != "0" ]; then
 		msg "\tstatic $2"
 		static_ext="$static_ext$2 "
+	elif [ "$1" == "xs" -a -n "$allstatic" ]; then
+		msg "\tstatic $2"
+		static_ext="$static_ext$2 "
 	elif [ "$1" == "xs" ]; then
 		msg "\tdynamic $2"
 		dynamic_ext="$dynamic_ext$2 "

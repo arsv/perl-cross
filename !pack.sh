@@ -2,6 +2,7 @@
 
 tar -zcvf \!pack.tar.gz\
 	cpan/podlators/lib/Pod/Man.pm\
+	cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm\
 	ext/POSIX/Makefile.PL\
 	utils/Makefile\
 	x2p/Makefile\
