@@ -26,4 +26,5 @@ exec $top/miniperl\
 	-I$top/dist/ExtUtils-ParseXS/lib\
 	-I$top/dist/constant/lib\
 	-I$top/cpan/Getopt-Long/lib\
+	-I$top/cpan/Text-Tabs/lib\
 	"$@"
