@@ -154,7 +154,8 @@ while [ $i -le $# -o -n "$n" ]; do
 		siteprefix|sitehtml[13]dir)	setvar $a "$v" ;;
 		siteman[13]dir|vendorman[13]dir)setvar $a "$v" ;;
 		vendorprefix|vendorhtml[13]dir)	setvar $a "$v" ;;
-		build|target|targetarch)	setvar $a "$v" ;;
+		target|targetarch)		setvar $a "$v" ;;
+		build|buildarch)		setvar $a "$v" ;;
 		cc|cpp|ar|ranlib|objdump)	setvar $a "$v" ;;
 		sysroot)			setvar $a "$v" ;;
 		hint|hints)
