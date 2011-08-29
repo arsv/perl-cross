@@ -119,11 +119,10 @@ esac
 # Separate what the user gave into CPU-COMPANY and OS or KERNEL-OS (if any).
 # Here we must recognize all the valid KERNEL-OS combinations.
 maybe_os=`echo $1 | sed 's/^\(.*\)-\([^-]*-[^-]*\)$/\2/'`
-echo "maybe_os=$maybe_os"
 case $maybe_os in
   nto-qnx* | linux-gnu* | linux-dietlibc | linux-newlib* | linux-uclibc* | \
   uclinux-uclibc* | uclinux-gnu* | kfreebsd*-gnu* | knetbsd*-gnu* | netbsd*-gnu* | \
-  storm-chaos* | os2-emx* | rtmk-nova* | linux-androideabi)
+  storm-chaos* | os2-emx* | rtmk-nova* )
     os=-$maybe_os
     basic_machine=`echo $1 | sed 's/^\(.*\)-\([^-]*-[^-]*\)$/\1/'`
     ;;
@@ -1213,7 +1212,6 @@ esac
 
 if [ x"$os" != x"" ]
 then
-echo "os=$os"
 case $os in
         # First match some system type aliases
         # that might get confused with valid system types.
@@ -1260,7 +1258,7 @@ case $os in
 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
 	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
 	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
-	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* | -linux-androideabi )
+	      | -skyos* | -haiku* | -rdos* | -toppers* | -drops* )
 	# Remember, each alternative MUST END IN *, to match a version number.
 		;;
 	-qnx*)
