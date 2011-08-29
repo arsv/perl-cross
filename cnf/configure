@@ -31,11 +31,22 @@ if [ -z "$mode" ]; then
 	else
 		buildarch=`$base/config.sub "$build" 2>>$cfglog`
 	fi
-	if [ -z "$buildarch" ]; then
-		result "unknown"
-		die "Can't guess build platform"
-	else
+	if [ -n "$buildarch" ]; then
 		result "$buildarch"
+	else
+		gccbuild=`gcc -v 2>&1 | grep Target | sed -e 's/Target: *//'`
+		buildarch=`$base/config.sub "$gccbuild" 2>>$cfglog`
+		if [ -n "$gccbuild" ]; then
+			result "$buildarch"
+		else
+			if [ -n "$build" ]; then
+				setvar 'buildarch' "$build"
+			else
+				setvar 'buildarch' 'unknown'
+			fi
+			result "$buildarch"
+			msg "WARNING: Couldn't guess build platform, using '$buildarch'"
+		fi
 	fi
 
 	if [ -z "$target" -o "$target" == "$build" ]; then
@@ -48,15 +59,19 @@ if [ -z "$mode" ]; then
 		mode='cross'
 		mstart "Guessing target architecture"	
 		targetarch=`$base/config.sub "$target" 2>>$cfglog`
-		if [ -z "$targetarch" ]; then
+		if [ -n "$targetarch" ]; then
+			result "$targetarch"
+		else
 			gcctarget=`$target-gcc -v 2>&1 | grep Target | sed -e 's/Target: *//'`
 			targetarch=`$base/config.sub "$gcctarget" 2>>$cfglog`
-			if [ -z "$targetarch" ]; then
-				result "unknown"
-				die "Can't determine target architecture"
+			if [ -n "$targetarch" ]; then
+				result "$targetarch"
+			else
+				setvar 'targetarch' "$target"
+				result "$target"
+				msg "WARNING: Couldn't determine target architecture, using '$target'"
 			fi
 		fi
-		result "$targetarch"
 	fi
 fi
 
