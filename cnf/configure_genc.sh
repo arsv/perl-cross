@@ -91,7 +91,7 @@ default siteman3dir "$man3dir"
 default sitehtml1dir "$html1dir"
 default sitehtml3dir "$html3dir"
 
-default installprefix "$sysroot"
+default installprefix ''
 default_inst html1dir
 default_inst html3dir
 default_inst man1dir
