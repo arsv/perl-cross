@@ -8,7 +8,7 @@ all: a2p$x find2perl s2p
 	$(CC) $(CFLAGS) -DPERL_FOR_X2P -c -o $@ $<
 
 a2p$x: a2p$o hash$o str$o util$o walk$o
-	$(CC) -o $@ $(filter %$o,$^)
+	$(CC) -o $@ $(filter %$o,$^) $(LDFLAGS)
 
 %: %.PL
 	$(PERL) $<
