@@ -119,7 +119,6 @@ if [ "$mode" == 'native' -o "$mode" == 'buildmini' -o "$mode" == "target" ]; the
 	. $base/configure_prog.sh
 	. $base/configure_hinu.sh
 	. $base/configure_cfby.sh
-	. $base/configure_attr.sh
 	. $base/configure_hdrs.sh
 	. $base/configure_type.sh
 	. $base/configure_type_ext.sh
@@ -128,6 +127,7 @@ if [ "$mode" == 'native' -o "$mode" == 'buildmini' -o "$mode" == "target" ]; the
 	. $base/configure_sigs.sh
 	. $base/configure_func.sh
 	. $base/configure_fung.sh
+	. $base/configure_attr.sh
 	. $base/configure_link.sh
 	. $base/configure_dbug.sh
 	if [ "$usethreads" == 'define' ]; then

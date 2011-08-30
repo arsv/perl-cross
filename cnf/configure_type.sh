@@ -58,6 +58,7 @@ function typesize {
 }
 
 check typesize 'char'
+test "$charsize" == 1 || die "ERROR: sizeof(char) != 1"
 check typesize 'short'
 check typesize 'int'
 check typesize 'long'

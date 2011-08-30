@@ -15,6 +15,10 @@ function hashdr {
 	resdef 'yes' 'no' "i_${_hdrname}"
 }
 
+check hashdr 'stdio.h'
+test "$i_stdio" == 'define' ||\
+	die "ERROR: Can't include <stdio.h>, check compiler configuration"
+
 check hashdr 'arpa/inet.h'
 check hashdr 'assert.h'
 check hashdr 'crypt.h'
@@ -52,7 +56,6 @@ check hashdr 'signal.h'
 check hashdr 'stdarg.h'
 check hashdr 'stddef.h'
 check hashdr 'stdint.h'
-check hashdr 'stdio.h'
 check hashdr 'stdlib.h'
 check hashdr 'string.h'
 check hashdr 'strings.h'
