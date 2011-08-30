@@ -564,7 +564,7 @@ default d_sin6_scope_id undef
 default d_sockaddr_sa_len undef
 default d_seekdir undef
 default d_select undef
-default d_sem define
+default d_sem undef
 default d_semctl undef
 default d_semctl_semid_ds undef
 default d_semctl_semun undef
