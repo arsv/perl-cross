@@ -78,9 +78,20 @@ if [ -n "$targetarch" ]; then
 	# Once we get all this $h_*, let's set archname
 	setvardefault archname "$h_arch-$h_base"
 elif [ -n "$target" ]; then
-	usehints 'hint' "$target"
+	log "	got target=$target"
 	setvardefault archname "$target"
-	usehints 'hint' "default"
+
+	case "$mode" in
+		buildmini) h_pref='host' ;;
+		target) h_pref='target' ;;
+		*) h_pref=''
+	esac
+
+	trypphints 'hint' "$h_pref" "$target" "default"
+
+	setvardefault archname "$target"
+else 
+	die "No \$target defined (?!)"
 fi
 
 # Add separator to log file

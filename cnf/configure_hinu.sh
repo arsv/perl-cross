@@ -10,9 +10,13 @@ if [ -n "$targetarch" -a -n "$cctype" ]; then
 		"$targetarch-$cctype" "$h_arch-$h_mach-$cctype" "$h_arch-$cctype" \
 		"$h_type-$cctype" "$h_base-$cctype" "default-$cctype"
 
-	# Add separator to log file
-	log
+elif [ -n "$target" -a -n "$cctype" ]; then
+	msg "Checking which hints to use for cc type $cctype"
+	trypphints 'hintover' "$h_pref"\
+		"$targetarch-$cctype""default-$cctype"
 fi
+# Add separator to log file
+log
 
 # Process -A arguments, if any
 test -n "$n_appendlist" && for((i=0;i<n_appendlist;i++)); do

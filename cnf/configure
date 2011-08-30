@@ -67,8 +67,7 @@ if [ -z "$mode" ]; then
 			if [ -n "$targetarch" ]; then
 				result "$targetarch"
 			else
-				setvar 'targetarch' "$target"
-				result "$target"
+				result "($target)"
 				msg "WARNING: Couldn't determine target architecture, using '$target'"
 			fi
 		fi
