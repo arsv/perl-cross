@@ -123,3 +123,11 @@ if [ -z "$cctype" ]; then
 		fi
 	fi
 fi
+
+if [ "$mode" == 'target' -o "$mode" == 'native' ]; then
+	if [ -n "$sysroot" ]; then
+		msg "Adding --sysroot to {cc,ld}flags"
+		setvar 'ccflags' "--sysroot='$sysroot' $ccflags"
+		setvar 'ldflags' "--sysroot='$sysroot' $ldflags"
+	fi
+fi
