@@ -17,7 +17,7 @@ function hashdr {
 
 check hashdr 'stdio.h'
 test "$i_stdio" == 'define' ||\
-	die "ERROR: Can't include <stdio.h>, check compiler configuration"
+	die "Can't include <stdio.h>, check compiler configuration"
 
 check hashdr 'arpa/inet.h'
 check hashdr 'assert.h'
