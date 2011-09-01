@@ -158,6 +158,9 @@ while [ $i -le $# -o -n "$n" ]; do
 		build|buildarch)		setvar $a "$v" ;;
 		cc|cpp|ar|ranlib|objdump)	setvar $a "$v" ;;
 		sysroot)			setvar $a "$v" ;;
+		ttp|tools-prefix|target-tools-prefix)
+			setvar 'target_tools_prefix' "$v"
+			;;
 		hint|hints)
 			if [ -n "$userhints" ]; then
 				userhints="$userhints,$v"

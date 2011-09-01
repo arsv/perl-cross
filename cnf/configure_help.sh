@@ -30,6 +30,7 @@ interested in and refer to Porting/Glossary for description.
 
 	--build=<machine>	Default prefix for \$HOSTCC etc.
 	--target=<machine>	Same, for primary \$CC
+	--target-tools-prefix=<p>	same, but doesn't affect targetarch etc.
 	--hints=<h1>,<h2>,...	Use specified hints (cnf/hints/<h1> etc.)
 				Does not affect hint selection for modules
 	
