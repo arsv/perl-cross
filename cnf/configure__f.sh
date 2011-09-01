@@ -189,7 +189,7 @@ function try_compile {
 	require 'cc'
 	require '_o'
 	try_dump
-	run $cc $ccflags -c -o try$_o try.c >> $cfglog 2>&1
+	run $cc $ccflags "$@" -c -o try$_o try.c >> $cfglog 2>&1
 }
 
 # an equivalent of try_compile with -Werror, but without

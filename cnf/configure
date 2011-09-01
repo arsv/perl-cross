@@ -135,11 +135,11 @@ if [ "$mode" == 'native' -o "$mode" == 'buildmini' -o "$mode" == "target" ]; the
 		. $base/configure_thrd.sh
 		failpoint
 	fi
+	. $base/configure_misc.sh
 	if [ "$mode" != "buildmini" ]; then
 		. $base/configure_mods.sh
 		failpoint
 	fi
-	. $base/configure_misc.sh
 	. $base/configure_genc.sh
 	failpoint
 	if [ "$mode" == 'target' ]; then

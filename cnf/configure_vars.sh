@@ -24,4 +24,3 @@ setfromvar ldflags LDFLAGS
 setfromvar ar AR
 setfromvar ranlib RANLIB
 setfromvar objdump OBJDUMP
-#appendvar ccflags "$ccdefines"

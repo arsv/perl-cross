@@ -15,3 +15,23 @@ if [ -n "$ldflags" -a "$x_lddlflags" != "user" ]; then
 		esac
 	done
 fi
+
+if not hinted 'uselargefiles'; then
+	# Adding -D_FILE_OFFSET_BITS is mostly harmless, except
+	# when dealing with uClibc that was compiled w/o largefile
+	# support
+	mstart "Checking whether it's ok to enable large file support"
+	case "$ccflags" in
+		*-D_FILE_OFFSET_BITS=*)
+			result "already there"
+			;;
+		*)
+			try_start
+			try_includes "stdio.h"
+			try_compile -D_FILE_OFFSET_BITS=64
+			resdef "yes, enabling it" "no, it's disabled" 'uselargefiles' 
+	esac
+fi
+if [ "$uselargefiles" == 'define' ]; then
+	appendvar 'ccdefines' " -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
+fi
