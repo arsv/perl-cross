@@ -30,8 +30,10 @@ function typesize {
 	_typename=`symbolname "$1"`
 
 	mstart "Checking size of $1"
-	ifhint "${_typename}size" && return 0
+	ifhintsilent "d_${_typename}" && ifhint "${_typename}size" && return 0
 	
+	# Test d_type and typesize separately; this allows hinting typesize
+	# even for types that may be unavailable
 	try_start
 	try_includes $2
 	try_add "$1 foo;"
@@ -39,16 +41,21 @@ function typesize {
 		result 'missing'
 		return 1
 	fi
-
 	setvar "d_${_typename}" "define"
-	if not try_readelf -s > try.out; then
+
+	# Avoid running fragile typesize test unless really necessary
+	ifhint "${_typename}size" && return 0
+
+	if not try_readelf -s > try.out 2>>$cfglog; then
 		result 'unknown'
+		fail "Can't determine sizeof($_typename), use -D{$_typename}size="
 		return 1
 	fi
 
 	result=`grep foo try.out | sed -e 's/.*: [0-9]\+ \+//' -e 's/ .*//'`
 	if [ -z "$result" -o "$result" -le 0 ]; then
 		result "unknown"
+		fail "Can't determine sizeof($_typename)"
 		return 1
 	fi
 
@@ -58,7 +65,6 @@ function typesize {
 }
 
 check typesize 'char'
-test "$charsize" == 1 || die "ERROR: sizeof(char) != 1"
 check typesize 'short'
 check typesize 'int'
 check typesize 'long'
@@ -77,6 +83,7 @@ check typesize 'ssize_t' sys/types.h
 check typesize 'uid_t' sys/types.h
 check typesize 'gid_t' sys/types.h
 check typesize 'fpos_t' stdio.h sys/types.h
+failpoint
 
 check hastype 'time_t' time.h
 check hastype 'clock_t' 'sys/times.h'
