@@ -133,10 +133,10 @@ globals.o: uudmap.h
 perlmain.c: lib/ExtUtils/Miniperl.pm | miniperl$X
 	./miniperl_top -MExtUtils::Miniperl -e 'writemain(@ARGV)' DynaLoader $(static_pmn) > $@
 
-ext.libs: $(static_ext) | miniperl$X
+ext.libs: Makefile.config | $(static_tgt) miniperl$X
 	./miniperl_top extlibs $(static_ext) > $@
 
-static.list: | $(static_tgt) miniperl$X
+static.list: Makefile.config | $(static_tgt) miniperl$X
 	./miniperl_top statars $(static_ext) > $@
 
 # ---[ site/library ]-----------------------------------------------------------
