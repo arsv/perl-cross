@@ -1,27 +1,5 @@
 #!/bin/bash
 
-# hasdef name 'includes'
-function hasdef {
-	_defname=`symbolname "$1"`
-	mstart "Checking whether $1 is defined"
-	ifhintdefined "d_${_defname}" 'yes' 'no' && return 0
-	
-	try_start
-	try_includes $2
-	try_add "#ifndef $1"
-	try_add "#error $1 undefined"
-	try_add "#endif"
-	if try_compile; then
-		setvar "d_${_defname}" "define"
-		result "yes"
-		return 0
-	else
-		setvar "d_${_defname}" "undef"
-		result 'no'
-		return 1
-	fi
-}
-
 # hasfield name struct field 'includes'
 function hasfield {
 	mstart "Checking whether $2 has $3"
@@ -45,9 +23,6 @@ function hasfield {
 		return 1
 	fi
 }
-
-check hasdef DBL_DIG 'float.h limits.h'
-check hasdef LDBL_DIG 'float.h limits.h'
 
 check hasfield d_statfs_f_flags 'struct statfs' f_flags sys/vfs.h
 check hasfield d_tm_tm_zone 'struct tm' tm_zone time.h
