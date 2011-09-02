@@ -85,6 +85,7 @@ extonlyif POSIX "$useposix" == 'true'
 extonlyif Socket "$d_socket" == 'define'
 extonlyif Sys/Syslog "$d_socket" == 'define'
 extonlyif Thread "$usethreads" == 'define'
+extonlyif cpan/List-Util "$usedl" != 'undef'
 extonlyif XS/APItest "$usedl" == 'define'
 extonlyif XS/Typemap "$usedl" == 'define'
 extonlyif VMS-DCLsym "$osname" == "vms"		# XXX: is it correct?

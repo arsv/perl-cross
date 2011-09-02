@@ -104,6 +104,7 @@ while [ $i -le $# -o -n "$n" ]; do
 	# note that $x==1 means $k must be set; the value, $v, may be empty
 	case "$a" in
 		help|regen*|mode|host|target|build|keeplog|[dehrsEKOSV]) x='' ;;
+		all-static|no-*) x='' ;;
 		*) x=1 ;;
 	esac
 	# fetch argument if necessary (--set foo=bar)
@@ -160,6 +161,12 @@ while [ $i -le $# -o -n "$n" ]; do
 		sysroot)			setvar $a "$v" ;;
 		ttp|tools-prefix|target-tools-prefix)
 			setvar 'target_tools_prefix' "$v"
+			;;
+		no-dynaloader|without-dynaloader)
+			setvaru 'usedl' 'undef' 'user'
+			;;
+		with-dynaloader)
+			setvaru 'usedl' 'define' 'user'
 			;;
 		hint|hints)
 			if [ -n "$userhints" ]; then

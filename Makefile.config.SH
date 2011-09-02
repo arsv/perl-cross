@@ -49,6 +49,12 @@ function ifprefixed() {
 	fi
 }
 
+if [ "$usedl" == 'undef' ]; then
+	dynaloader=''
+else
+	dynaloader="DynaLoader"
+fi
+
 cflags='-DPERL_CORE '
 if [ "$usecrosscompile" == "define" ]; then
 cat >> Makefile.config <<END
@@ -82,6 +88,8 @@ O = .host$host_o
 X = $host_exe
 so = $dlext
 
+dynaloader = $dynaloader
+
 extensions: xconfig-pm
 END
 else
@@ -107,6 +115,8 @@ o = $_o
 x = $_exe
 O = $_o
 X = $_exe
+
+dynaloader = $dynaloader
 END
 fi
 

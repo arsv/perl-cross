@@ -29,6 +29,8 @@ disabled_nonxs_tgt = $(patsubst %,%/pm_to_blib,$(disabled_nonxs_ext))
 # perl module names for static mods
 static_pmn = $(shell echo $(static_ext) | sed -e 's!\(cpan\|ext\|dist\)/!!g' -e 's/-/::/g')
 
+dynaloader_o = $(patsubst %,%$o,$(dynaloader))
+
 ext = $(nonxs_ext) $(dynamic_ext) $(static_ext)
 tgt = $(nonxs_tgt) $(dynamic_tgt) $(static_tgt)
 disabled_ext = $(disabled_nonxs_ext) $(disabled_dynamic_ext)
@@ -131,7 +133,7 @@ perl$x: perlmain$o $(obj) libperl$a $(static_tgt) static.list ext.libs
 globals.o: uudmap.h
 
 perlmain.c: lib/ExtUtils/Miniperl.pm | miniperl$X
-	./miniperl_top -MExtUtils::Miniperl -e 'writemain(@ARGV)' DynaLoader $(static_pmn) > $@
+	./miniperl_top -MExtUtils::Miniperl -e 'writemain(@ARGV)' $(dynaloader) $(static_pmn) > $@
 
 ext.libs: Makefile.config | $(static_tgt) miniperl$X
 	./miniperl_top extlibs $(static_ext) > $@
@@ -141,7 +143,7 @@ static.list: Makefile.config | $(static_tgt) miniperl$X
 
 # ---[ site/library ]-----------------------------------------------------------
 
-libperl$a: op$o perl$o $(obj) DynaLoader$o
+libperl$a: op$o perl$o $(obj) $(dynaloader_o)
 	$(AR) cru $@ $(filter %.o,$^)
 	$(RANLIB) $@
 
@@ -221,7 +223,7 @@ makeppport: $(CONFIGPM) | miniperl$X
 
 makefiles: $(ext:pm_to_blib=Makefile)
 
-dynaloader: DynaLoader$o
+dynaloader: $(dynaloader_o)
 
 cpan/Devel-PPPort/PPPort.pm: | miniperl$X
 	cd cpan/Devel-PPPort && ../../miniperl -I../../lib PPPort_pm.PL
