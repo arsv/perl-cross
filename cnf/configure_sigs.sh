@@ -49,9 +49,10 @@ mstart "Checking NSIG value"
 try_start
 try_includes 'signal.h'
 try_add 'configure check sig_count=NSIG'
+try_dump
 if try_preproc; then
-	num=`grep 'configure check sig_count' try.out | sed -e 's/.*=//'`
-	if [ -n "$num" -a "$num" != 0 ]; then
+	num=`grep 'configure check sig_count' try.out | sed -e 's/.*=//' -e 's/[^0-9]//g'`
+	if [ -n "$num" ]; then
 		setvar sig_count "$num"
 		result "$num"
 	else

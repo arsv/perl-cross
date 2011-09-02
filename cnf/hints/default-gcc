@@ -1,1 +1,1 @@
-ccflags="-std=c89 -W"
+ccflags="-W"
