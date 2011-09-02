@@ -16,7 +16,7 @@ if [ "$mode" == 'help' ]; then
 	exit
 fi
 
-if [ -z "$keeplog" ]; then
+if [ -z "$keeplog" -a "$mode" != 'regen' ]; then
 	cat "$cfglog" > "$cfglog_base"
 else
 	cat "$cfglog" >> "$cfglog_base"
@@ -84,7 +84,7 @@ if [ "$mode" == "cross" ]; then
 	msg "Respawning configure for build and target platforms"
 	msg
 	run $0 $hco --keeplog --mode=buildmini --targetarch="$buildarch"\
-		--target-name="$target" --target-arch="$targetarch" --sysroot="$sysroot"\
+		--target-name="$target" --target-arch="$targetarch"\
 		|| die "configure --mode=buildmini failed"
 	msg
        	run $0 "$@" --keeplog --mode=target --target="$target" --targetarch="$targetarch"\
