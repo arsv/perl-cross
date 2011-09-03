@@ -95,3 +95,24 @@ if [ "$d_prctl" == 'define' ]; then
 	try_compile
 	resdef 'yes' 'no' 'd_prctl_set_name'
 fi
+
+
+# checkfpclass func D1 D2 D3 ....
+function checkfpclass {
+	f="$1"; shift
+	v=`valueof "d_$f"`	
+	if [ "$v" == 'define' ]; then
+		mstart "Checking whether $f() constants are defined"
+		if alldefined `echo $* | sed -e 's/\</d_/g'`; then
+			result 'yes'
+		else
+			setvar "d_$f" 'undef'
+			result "no, disabling $f()"
+		fi
+	fi
+}
+
+checkfpclass fpclassify FP_SNAN FP_QNAN FP_INFINITE FP_NORMAL FP_SUBNORMAL FP_ZERO
+checkfpclass fpclass FP_SNAN FP_QNAN FP_NEG_INF FP_POS_INF FP_NEG_INF \
+	FP_NEG_NORM FP_POS_NORM FP_NEG_NORM FP_NEG_DENORM FP_POS_DENORM \
+	FP_NEG_DENORM FP_NEG_ZERO FP_POS_ZERO FP_NEG_ZERO
