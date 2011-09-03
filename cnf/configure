@@ -83,8 +83,9 @@ fi
 if [ "$mode" == "cross" ]; then
 	msg "Respawning configure for build and target platforms"
 	msg
+	test -n "$targetarch" && tarch="$targetarch" || tarch="$target"
 	run $0 $hco --keeplog --mode=buildmini --targetarch="$buildarch"\
-		--target-name="$target" --target-arch="$targetarch"\
+		--target-name="$target" --target-arch="$tarch"\
 		|| die "configure --mode=buildmini failed"
 	msg
        	run $0 "$@" --keeplog --mode=target --target="$target" --targetarch="$targetarch"\
