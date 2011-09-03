@@ -41,8 +41,8 @@ if [ "$usecrosscompile" == 'define' ]; then
 fi
 
 function ifprefixed() {
-	val=`echo "$2" | sed -e "s/^$1-//"`
-	if [ "$1-$val" == "$2" ]; then
+	val=`echo "$2" | sed -e "s/^$1//"`
+	if [ "$1$val" == "$2" ]; then
 		echo "\$(CROSS)$val"
 	else
 		echo "$2"
@@ -57,11 +57,12 @@ fi
 
 cflags='-DPERL_CORE '
 if [ "$usecrosscompile" == "define" ]; then
+test -n "$toolsprefix" && cross="$toolsprefix" || cross="$target_name-"
 cat >> Makefile.config <<END
-CROSS = $target_name-
-CC = `ifprefixed "$target_name" "$cc"`
-AR = `ifprefixed "$target_name" "$ar"`
-RANLIB = `ifprefixed "$target_name" "$ranlib"`
+CROSS = $cross
+CC = `ifprefixed "$cross" "$cc"`
+AR = `ifprefixed "$cross" "$ar"`
+RANLIB = `ifprefixed "$cross" "$ranlib"`
 CFLAGS = $cflags $ccflags $ccdefines $optimize
 LDFLAGS = $ldflags
 LIBS = $libs

@@ -43,8 +43,8 @@ function whichprog {
 	return 1
 }
 
-if [ -n "$target_tools_prefix" ]; then
-	ttp="$target_tools_prefix"
+if [ -n "$toolsprefix" ]; then
+	ttp="$toolsprefix"
 	check whichprog "C compiler" cc 1      ${ttp}gcc ${ttp}cc
 	check whichprog "linker"     ld 1      ${ttp}ld
 	check whichprog "ar"         ar 1      ${ttp}ar

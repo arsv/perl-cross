@@ -160,7 +160,7 @@ while [ $i -le $# -o -n "$n" ]; do
 		cc|cpp|ar|ranlib|objdump)	setvar $a "$v" ;;
 		sysroot)			setvar $a "$v" ;;
 		ttp|tools-prefix|target-tools-prefix)
-			setvar 'target_tools_prefix' "$v"
+			setvar 'toolsprefix' "$v"
 			;;
 		no-dynaloader|without-dynaloader)
 			setvaru 'usedl' 'undef' 'user'

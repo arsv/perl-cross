@@ -1090,6 +1090,7 @@ default timeincl
 default timetype
 default tmpnam_r_proto 0
 default to :
+default toolsprefix
 default touch touch
 default tr tr
 default trnl '\n'
