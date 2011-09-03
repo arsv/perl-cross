@@ -23,6 +23,11 @@ function haslibs {
 }
 
 # hasfunc name args includes
+# WARNING: some compilers do have built-in notions on how certain
+# function should be called, and will produce errors if those functions
+# are called in a "wrong" way. 
+# So far looks like the safest option is to provide type-compatible arguments,
+# i.e., "0" for ints, "NULL" for pointers etc.
 function hasfunc {
 	if [ -n "$4" ] ; then _s="$4"; else _s="d_$1"; fi
 
@@ -32,6 +37,12 @@ function hasfunc {
 
 	try_start
 	try_includes $3
+	case "$2" in
+		*NULL*) case "$3" in
+			*stdlib.h*) ;;
+			*) try_includes "stdlib.h"
+		esac ;;
+	esac
 	try_add "int main(void) { $1($2); return 0; }"
 	try_link
 	resdef 'found' 'not found' "$_s"
@@ -86,22 +97,22 @@ check hasfunc bcopy "NULL,NULL,0" 'stdlib.h string.h'
 check hasfunc bzero "NULL,0" 'stdlib.h string.h'
 check hasfunc chown "NULL,0,0" 'stdlib.h unistd.h'
 check hasfunc chroot "NULL" 'unistd.h'
-check hasfunc chsize
+check hasfunc chsize "0,0"
 check hasfunc class
 check hasfunc clearenv "" 'stdlib.h'
-check hasfunc closedir
+check hasfunc closedir "NULL" 'stdlib.h'
 check hasfunc copysignl "0.0,0.0" 'math.h'
 check hasfunc crypt
 check hasfunc ctermid
 check hasfunc ctime64
 check hasfunc cuserid
-check hasfunc difftime
+check hasfunc difftime "0,0"
 check hasfunc difftime64
 check hasfunc dirfd
 check hasfunc dlopen
 check hasfunc dlerror
 check hasfunc drand48
-check hasfunc dup2
+check hasfunc dup2 "0,0"
 check hasfunc eaccess
 check hasfunc endgrent
 check hasfunc endhostent
@@ -124,15 +135,15 @@ check hasfunc fpclass
 check hasfunc fpclassify
 check hasfunc fpclassl
 check hasfunc frexpl '0,NULL' 'stdlib.h math.h'
-check hasfunc fseeko
-check hasfunc fsetpos
+check hasfunc fseeko 'NULL,0,0'
+check hasfunc fsetpos 'NULL,0'
 check hasfunc fstatfs
 check hasfunc fstatvfs
 check hasfunc fsync
 check hasfunc ftello
 check hasfunc futimes
 check hasfunc getaddrinfo
-check hasfunc getcwd
+check hasfunc getcwd 'NULL,0'
 check hasfunc getespwnam
 check hasfunc getfsstat
 check hasfunc getgrent
@@ -166,7 +177,7 @@ check hasfunc getservbyname
 check hasfunc getservbyport
 check hasfunc getservent
 check hasfunc getspnam
-check hasfunc gettimeofday
+check hasfunc gettimeofday 'NULL,NULL'
 check hasfunc gmtime64
 check hasfunc hasmntopt
 check hasfunc htonl "0" 'stdio.h sys/types.h netinet/in.h arpa/inet.h'
@@ -182,7 +193,7 @@ check hasfunc isnan "0.0" 'math.h'
 check hasfunc isnanl "0.0" 'math.h'
 check hasfunc killpg
 check hasfunc lchown "NULL, 0, 0" 'stdlib.h unistd.h'
-check hasfunc link
+check hasfunc link 'NULL,NULL' 'stdlib.h'
 check hasfunc localeconv
 check hasfunc localtime64
 check hasfunc lockf
@@ -198,12 +209,12 @@ check hasfunc memcmp "NULL, NULL, 0" 'stdlib.h string.h'
 check hasfunc memcpy "NULL, NULL, 0" 'stdlib.h string.h'
 check hasfunc memmove "NULL, NULL, 0" 'stdlib.h string.h'
 check hasfunc memset "NULL, 0, 0" 'stdlib.h string.h'
-check hasfunc mkdir
+check hasfunc mkdir 'NULL, 0' 'stdlib.h'
 check hasfunc mkdtemp
 check hasfunc mkfifo
-check hasfunc mkstemp
+check hasfunc mkstemp 'NULL' 'stdlib.h'
 check hasfunc mkstemps
-check hasfunc mktime
+check hasfunc mktime 'NULL' 'stdlib.h'
 check hasfunc mktime64
 check hasfunc mmap
 check hasfunc modfl "0.0,NULL" 'stdlib.h math.h'
@@ -214,12 +225,12 @@ check hasfunc msgrcv
 check hasfunc msgsnd
 check hasfunc msync
 check hasfunc munmap
-check hasfunc nice
+check hasfunc nice '0'
 check hasfunc nl_langinfo
 check hasfunc open "NULL,0,0" 'stdlib.h sys/types.h sys/stat.h fcntl.h' d_open3
 check hasfunc pathconf
 check hasfunc pause
-check hasfunc pipe
+check hasfunc pipe 'NULL'
 check hasfunc poll
 check hasfunc pthread_atfork
 check hasfunc pthread_attr_setscope
@@ -227,17 +238,17 @@ check hasfunc pthread_yield
 check hasfunc prctl
 check hasfunc rand
 check hasfunc random
-check hasfunc readdir
+check hasfunc readdir 'NULL'
 check hasfunc readlink
 check hasfunc readv
 check hasfunc recvmsg
-check hasfunc rename
+check hasfunc rename 'NULL,NULL'
 check hasfunc rewinddir
-check hasfunc rmdir
+check hasfunc rmdir 'NULL'
 check hasfunc scalbnl "0.0,0" 'math.h'
 check hasfunc sched_yield
 check hasfunc seekdir
-check hasfunc select
+check hasfunc select '0,NULL,NULL,NULL,NULL'
 check hasfunc semctl
 check hasfunc semget
 check hasfunc semop
@@ -266,14 +277,14 @@ check hasfunc setrgid
 check hasfunc setruid
 check hasfunc setservent
 check hasfunc setsid
-check hasfunc setvbuf
+check hasfunc setvbuf 'NULL,NULL,0,0'
 check hasfunc sfreserve "" 'sfio.h'
 check hasfunc shmat
 check hasfunc shmctl
 check hasfunc shmdt
 check hasfunc shmget
 check hasfunc sigaction
-check hasfunc signbit
+check hasfunc signbit '.0' 'math.h'
 check hasfunc sigprocmask
 check hasfunc sigsetjmp "NULL,0" 'stdlib.h setjmp.h'
 check hasfunc snprintf
@@ -289,42 +300,42 @@ check hasfunc strerror "0" 'string.h stdlib.h'
 check hasfunc strftime "NULL,0,NULL,NULL" 'stdlib.h time.h'
 check hasfunc strlcat
 check hasfunc strlcpy
-check hasfunc strtod
-check hasfunc strtol
+check hasfunc strtod 'NULL,NULL'
+check hasfunc strtol 'NULL,NULL,0'
 check hasfunc strtold
 check hasfunc strtoll
 check hasfunc strtoq
-check hasfunc strtoul
-check hasfunc strtoull
+check hasfunc strtoul 'NULL,NULL,0'
+check hasfunc strtoull 'NULL,NULL,0'
 check hasfunc strtouq
 check hasfunc strxfrm
 check hasfunc symlink
 check hasfunc syscall
-check hasfunc sysconf
-check hasfunc system
+check hasfunc sysconf '0'
+check hasfunc system 'NULL'
 check hasfunc tcgetpgrp
 check hasfunc tcsetpgrp
 check hasfunc telldir
-check hasfunc time
+check hasfunc time 'NULL'
 check hasfunc timegm
-check hasfunc times
-check hasfunc truncate
+check hasfunc times 'NULL'
+check hasfunc truncate 'NULL,0'
 check hasfunc ualarm
-check hasfunc umask
+check hasfunc umask '0'
 check hasfunc uname
 check hasfunc unordered
 check hasfunc unsetenv
 check hasfunc usleep
 check hasfunc ustat
 ##check hasfunc vfork
-check hasfunc vprintf
+check hasfunc vprintf 'NULL,0'
 check hasfunc vsnprintf
 check hasfunc wait4
-check hasfunc waitpid
-check hasfunc wcstombs
+check hasfunc waitpid '0,NULL,0'
+check hasfunc wcstombs 'NULL,NULL,0'
 check hasfunc wctomb
 check hasfunc writev
 
-check isvoid closedir "NULL" 'stdlib.h sys/types.h dirent.h'
+check isvoid closedir "NULL" 'sys/types.h dirent.h'
 check hasvar sys_errlist 'stdio.h'
 check hasvar tzname 'time.h'
