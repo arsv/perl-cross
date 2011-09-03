@@ -222,6 +222,7 @@ default cccdlflags '-fPIC'
 default ccdlflags '-Wl,-E'
 default ccflags '-fno-strict-aliasing -pipe'
 default ccflags_uselargefiles ''
+default ccdefines ''
 default ccname
 default ccsymbols
 default ccversion
