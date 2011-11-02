@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -z "$base" ]; then export base=.; else export base; fi
 config='config.bad'
