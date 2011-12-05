@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ ! -f config.sh ]; then
 	echo "config.sh not found" >&2

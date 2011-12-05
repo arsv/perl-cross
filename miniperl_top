@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script can be used to run Makefile.PL 
 # Note that is relies on $0 to tell where lib/ is; typically
