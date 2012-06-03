@@ -452,7 +452,9 @@ default d_inetaton undef
 default d_inetntop undef
 default d_inetpton undef
 default d_int64_t undef
+default d_ipv6_mreq undef
 default d_isascii undef
+default d_isblank undef
 default d_isfinite undef
 default d_isinf undef
 default d_isnan undef
@@ -563,6 +565,7 @@ default d_sched_yield undef
 default d_scm_rights undef
 default d_sin6_scope_id undef
 default d_sockaddr_sa_len undef
+default d_sockaddr_in6 undef
 default d_seekdir undef
 default d_select undef
 default d_sem undef
@@ -831,6 +834,7 @@ default i_sgtty undef
 default i_shadow undef
 default i_socks undef
 default i_stdarg undef
+default i_stdbool undef
 default i_stddef undef
 default i_stdlib undef
 default i_string undef
@@ -885,6 +889,7 @@ default ivdformat '"ld"'
 default known_extensions
 default ksh
 default ld ld
+default ld_can_script undef
 default lddlflags '-shared '
 default ldflags
 default ldflags_uselargefiles
@@ -1065,6 +1070,8 @@ default srand48_r_proto 0
 default srandom_r_proto 0
 default src `cd .. >/dev/null ; pwd`
 default ssizetype
+default st_ino_sign 1
+default st_ino_size 4
 default startperl "$sharpbang$perlpath"
 default startsh '#!/bin/sh'
 default static_ext
@@ -1112,6 +1119,7 @@ default usedl define
 default usedtrace undef
 default usefaststdio undef
 default useithreads undef
+default usekernprocpathname undef
 default uselargefiles define
 default uselongdouble undef
 default usemallocwrap define
@@ -1119,6 +1127,7 @@ default usemorebits undef
 default usemultiplicity undef
 default usemymalloc n
 default usenm false
+default usensgetexecutablepath undef
 default useopcode false
 default useperlio define
 default useposix true
