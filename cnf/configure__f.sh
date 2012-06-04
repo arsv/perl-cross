@@ -179,6 +179,10 @@ function try_dump_out {
 	cat try.out | sed -e 's/^/| /' >> $cfglog
 }
 
+function try_dump_h {
+	cat try.h | sed -e 's/^/| /' >> $cfglog
+}
+
 function try_preproc {
 	require 'cpp'
 	#try_dump
