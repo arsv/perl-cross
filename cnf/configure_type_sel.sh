@@ -123,6 +123,6 @@ setvar uidsign '1'
 if [ "$i_stdbool" == 'define' -a "$d_bool" != "define" ]; then
 	msg "Disabling <stdbool.h> because bool type wasn't usable"
 	setvar i_stdbool undef
-if
+fi
 
 failpoint
