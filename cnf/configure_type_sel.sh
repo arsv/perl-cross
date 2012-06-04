@@ -119,4 +119,10 @@ typeorfallback 'time' 'time_t' 'uint32_t' 'unsigned int'
 typeorfallback 'uid' 'uid_t' 'int'
 setvar uidsign '1'
 
+# Configure checks for "bool" type but uses i_stdbool for the result
+if [ "$i_stdbool" == 'define' -a "$d_bool" != "define" ]; then
+	msg "Disabling <stdbool.h> because bool type wasn't usable"
+	setvar i_stdbool undef
+if
+
 failpoint

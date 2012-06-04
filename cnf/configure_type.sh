@@ -96,3 +96,5 @@ check hastype 'struct msghdr' 'sys/types.h sys/socket.h sys/uio.h'
 check hastype 'struct statfs' 'sys/types.h sys/param.h sys/mount.h sys/vfs.h sys/statfs.h'
 check hastype 'union semun' 'sys/types.h sys/ipc.h sys/sem.h'
 check hastype 'socklen_t' 'sys/types.h sys/socket.h'
+
+check hastype 'bool' 'stdio.h stdbool.h'
