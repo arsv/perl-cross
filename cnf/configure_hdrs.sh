@@ -22,6 +22,7 @@ test "$i_stdio" == 'define' ||\
 check hashdr 'arpa/inet.h'
 check hashdr 'assert.h'
 check hashdr 'crypt.h'
+check hashdr 'ctype.h'
 check hashdr 'dbm.h'
 check hashdr 'dirent.h'
 check hashdr 'dlfcn.h'

@@ -187,6 +187,7 @@ check hasfunc inet_aton
 check hasfunc inetntop
 check hasfunc inetpton
 check hasfunc isascii "'A'" 'stdio.h stdlib.h ctype.h'
+check hasfunc isblank "' '" 'stdio.h stdlib.h ctype.h'
 check hasfunc isfinite "0.0" 'math.h'
 check hasfunc isinf "0.0" 'math.h'
 check hasfunc isnan "0.0" 'math.h'
