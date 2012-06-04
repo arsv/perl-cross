@@ -52,11 +52,11 @@ EOM
 	fi
 fi
 
+mstart "Checking whether it's ok to enable large file support"
 if not hinted 'uselargefiles'; then
 	# Adding -D_FILE_OFFSET_BITS is mostly harmless, except
 	# when dealing with uClibc that was compiled w/o largefile
 	# support
-	mstart "Checking whether it's ok to enable large file support"
 	case "$ccflags" in
 		*-D_FILE_OFFSET_BITS=*)
 			result "already there"
