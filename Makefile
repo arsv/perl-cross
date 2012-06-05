@@ -89,8 +89,8 @@ endif
 
 globals$O: uudmap.h bitcount.h
 
-uudmap.h bitcount.h: generate_uudmap$X
-	./generate_uudmap uudmap.h bitcount.h
+uudmap.h bitcount.h mg_data.h: generate_uudmap$X
+	./generate_uudmap uudmap.h bitcount.h mg_data.h
 
 opmini.c: op.c
 	cp -f $^ $@
@@ -190,6 +190,8 @@ DynaLoader$o: ext/DynaLoader/pm_to_blib
 ext/DynaLoader/pm_to_blib: %/pm_to_blib: %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=static $(STATIC_LDFLAGS)
 
+ext/DynaLoader/Makefile: dist/lib/pm_to_blib
+
 $(static_tgt): %/pm_to_blib: %/Makefile $(nonxs_tgt)
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=static $(STATIC_LDFLAGS)
 
@@ -266,6 +268,8 @@ cpan/ExtUtils-ParseXS/Makefile cpan/ExtUtils-Constant/Makefile: \
 	cd $(dir $@) && $(top)miniperl_top Makefile.PL PERL_CORE=1 PERL=$(top)miniperl_top
 
 cpan/List-Util/pm_to_blib: dynaloader
+
+ext/Pod-Functions/pm_to_blib: cpan/Pod-Simple/pm_to_blib cpan/Pod-Escapes/pm_to_blib
 
 # ---[ modules cleanup & rebuilding ] ------------------------------------------
 

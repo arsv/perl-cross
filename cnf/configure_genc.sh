@@ -226,6 +226,7 @@ default ccdefines ''
 default ccname
 default ccsymbols
 default ccversion
+default charbits 8
 default cf_by unknown
 default cf_email nobody@nowhere.land
 default cf_time "`date`"
