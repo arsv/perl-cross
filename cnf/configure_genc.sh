@@ -252,7 +252,7 @@ default cppstdin "$cpp"
 default cppsymbols
 default crypt_r_proto 0
 default cryptlib
-default csh csh
+default csh ''
 default ctermid_r_proto 0
 default ctime_r_proto 0
 default d_Gconvert 'sprintf((b),"%.*g",(n),(x))'
@@ -311,7 +311,7 @@ default d_copysignl undef
 default d_cplusplus undef
 default d_crypt undef
 default d_crypt_r undef
-default d_csh define
+default d_csh undef
 default d_ctermid undef
 default d_ctermid_r undef
 default d_ctime64 undef
