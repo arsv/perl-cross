@@ -8,6 +8,7 @@ tar -zcvf \!pack.tar.gz\
 	x2p/Makefile\
 	cnf/config*\
 	cnf/hints\
+	cnf/cpan\
 	extlibs\
 	statars\
 	Makefile\

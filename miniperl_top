@@ -28,4 +28,5 @@ exec $top/miniperl\
 	-I$top/cpan/Getopt-Long/lib\
 	-I$top/cpan/Text-Tabs/lib\
 	-I$top/dist/Carp/lib\
+	-I$top/cnf/cpan\
 	"$@"
