@@ -1159,8 +1159,8 @@ default vendorprefix
 default vendorprefixexp
 default vendorscript
 default vendorscriptexp
-default version "5.12.3"
-default version_patchlevel_string 'version 12 subversion 3'
+default version "$PERL_REVISION.$PERL_VERSION.$PERL_SUBVERSION"
+default version_patchlevel_string "version $PERL_VERSION subversion $PERL_SUBVERSION"
 default versiononly undef
 default vi
 default voidflags 15
