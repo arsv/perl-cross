@@ -1,0 +1,10 @@
+--- installman.orig	2012-07-04 15:27:49.802420040 +0300
++++ installman	2012-07-04 15:27:54.475753247 +0300
+@@ -1,7 +1,5 @@
+ #!./perl -w
+ BEGIN {
+-    @INC = qw(lib);
+-
+     # This needs to be at BEGIN time, before any use of Config
+     require './install_lib.pl';
+ }
