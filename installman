@@ -1,6 +1,7 @@
 #!./perl -w
 BEGIN {
     @INC = qw(lib);
+
     # This needs to be at BEGIN time, before any use of Config
     require './install_lib.pl';
 }
