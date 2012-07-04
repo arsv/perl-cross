@@ -287,6 +287,8 @@ cpan/List-Util/pm_to_blib: dynaloader
 
 ext/Pod-Functions/pm_to_blib: cpan/Pod-Simple/pm_to_blib cpan/Pod-Escapes/pm_to_blib
 
+cpan/podlators/pm_to_blib: cnf/diffs/cpan/podlators/lib/Pod/Man.pm.patched
+
 # ---[ modules cleanup & rebuilding ] ------------------------------------------
 
 modules-reset:
@@ -336,7 +338,7 @@ install.perl: installperl | miniperl$X cnf/diffs/installperl.patched \
 	-@test ! -s extras.lst || $(MAKE) extras.install
 
 install.man: installman | miniperl$X cnf/diffs/installman.patched \
-		cnf/diffs/cpan/podlators/lib/Pod/Man.pm.patched cnf/diffs/Porting/pod_lib.pl.patched
+		cnf/diffs/Porting/pod_lib.pl.patched
 	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
 
 install.miniperl: miniperl$X xlib/Config.pm xlib/Config_heavy.pl

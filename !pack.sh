@@ -13,5 +13,4 @@ tar -zcvf \!pack.tar.gz\
 	make_ext_Makefile.pl\
 	configure\
 	miniperl_top\
-	utils/Makefile\
-	x2p/Makefile
+	utils/Makefile
