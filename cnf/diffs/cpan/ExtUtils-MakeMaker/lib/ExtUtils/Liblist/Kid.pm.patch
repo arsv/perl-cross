@@ -1,0 +1,67 @@
+--- Kid.pm.orig	2012-07-04 14:55:02.915805376 +0300
++++ Kid.pm	2012-07-04 14:55:15.322471717 +0300
+@@ -19,9 +19,10 @@
+ use File::Spec;
+ 
+ sub ext {
+-    if    ( $^O eq 'VMS' )     { return &_vms_ext; }
+-    elsif ( $^O eq 'MSWin32' ) { return &_win32_ext; }
+-    else                       { return &_unix_os2_ext; }
++  if   ($Config{usemmcclt}){ return &_cc_ext;       }
++  elsif($^O eq 'VMS')      { return &_vms_ext;      }
++  elsif($^O eq 'MSWin32')  { return &_win32_ext;    }
++  else                     { return &_unix_os2_ext; }
+ }
+ 
+ sub _unix_os2_ext {
+@@ -622,4 +623,50 @@
+     wantarray ? ( $lib, '', $ldlib, '', ( $give_libs ? \@flibs : () ) ) : $lib;
+ }
+ 
++# A direct test for -l validity.
++# Because guessing real file names for -llib options when dealing
++# with a cross compiler is generally a BAD IDEA^tm.
++sub _cc_ext {
++    my($self,$potential_libs, $verbose, $give_libs) = @_;
++    $verbose ||= 0;
++
++    if ($^O =~ 'os2' and $Config{perllibs}) { 
++	# Dynamic libraries are not transitive, so we may need including
++	# the libraries linked against perl.dll again.
++
++	$potential_libs .= " " if $potential_libs;
++	$potential_libs .= $Config{perllibs};
++    }
++    return ("", "", "", "", ($give_libs ? [] : ())) unless $potential_libs;
++    warn "Potential libraries are '$potential_libs':\n" if $verbose;
++
++    my($cc)   = $Config{cc};
++    my($ccflags)   = $Config{ccflags};
++    my($libs) = defined $Config{perllibs} ? $Config{perllibs} : $Config{libs};
++
++    my $try = 'try_mm.c';
++    my $tryx = 'try_mm.x';
++    open(TRY, '>', $try) || die "Can't create MakeMaker test file $try: $!\n";
++    print TRY "int main(void) { return 0; }\n";
++    close(TRY);
++
++    my $testlibs = '';
++    my @testlibs = ();
++    foreach my $thislib (split ' ', $potential_libs) {
++        $testlibs = join(' ', @testlibs);
++	if($thislib =~ /^-L/) {
++		push(@testlibs, $thislib);
++		next
++	};
++	my $cmd = "$cc $ccflags -o $tryx $try $testlibs $thislib";
++	my $ret = system($cmd);
++	next if $ret;
++	push @testlibs, $thislib;
++    }
++    unlink($try);
++    unlink($tryx);
++
++    return (join(' ', @testlibs), '', '', '');
++}
++
+ 1;

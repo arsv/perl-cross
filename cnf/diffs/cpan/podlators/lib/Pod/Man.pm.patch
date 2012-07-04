@@ -1,0 +1,29 @@
+--- Man.pm.orig	2012-07-04 14:39:42.979163032 +0300
++++ Man.pm	2012-07-04 14:36:42.532501138 +0300
+@@ -31,7 +31,6 @@
+ use vars qw(@ISA %ESCAPES $PREAMBLE $VERSION);
+ 
+ use Carp qw(croak);
+-use Encode qw(encode);
+ use Pod::Simple ();
+ 
+ @ISA = qw(Pod::Simple);
+@@ -725,7 +724,7 @@
+ sub output {
+     my ($self, @text) = @_;
+     if ($$self{ENCODE}) {
+-        print { $$self{output_fh} } encode ('UTF-8', join ('', @text));
++        print { $$self{output_fh} } Encode::encode ('UTF-8', join ('', @text));
+     } else {
+         print { $$self{output_fh} } @text;
+     }
+@@ -759,6 +758,9 @@
+             }
+         }
+     }
++    if ($$self{ENCODE}) {
++        require Encode;
++    }
+ 
+     # Determine information for the preamble and then output it.
+     my ($name, $section);

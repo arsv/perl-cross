@@ -38,6 +38,17 @@ disabled_ext = $(disabled_nonxs_ext) $(disabled_dynamic_ext)
 ext_makefiles = $(patsubst %,%/Makefile,$(ext))
 disabled_ext_makefiles = $(pathsubst %,%/Makefile,$(disabled_ext))
 
+# ---[ perl-cross patches ]-----------------------------------------------------
+CROSSPATCHED = $(patsubst cnf/diffs/%.patch,%,$(shell find cnf/diffs -name '*.patch'))
+
+crosspatch: $(CROSSPATCHED)
+
+$(CROSSPATCHED): %: cnf/diffs/%.orig
+
+cnf/diffs/%.orig: cnf/diffs/%.patch
+	cp $* $@ && patch $* cnf/diffs/$*.patch
+
+
 # ---[ common ]-----------------------------------------------------------------
 
 # Do NOT delete any intermediate files
@@ -46,7 +57,7 @@ disabled_ext_makefiles = $(pathsubst %,%/Makefile,$(disabled_ext))
 
 # Force early building of miniperl -- not really necessary, but makes
 # build process more logical (no reason to even try CC if HOSTCC fails)
-all: miniperl$X dynaloader perl$x nonxs_ext utilities extensions translators
+all: crosspatch miniperl$X dynaloader perl$x nonxs_ext utilities extensions translators
 
 config.h: config.sh config_h.SH
 	CONFIG_H=$@ CONFIG_SH=$< ./config_h.SH

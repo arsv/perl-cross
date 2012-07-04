@@ -1,0 +1,11 @@
+--- installperl.orig	2012-07-04 14:21:54.965857939 +0300
++++ installperl	2012-07-04 14:22:22.612523872 +0300
+@@ -3,8 +3,6 @@
+ BEGIN {
+     require 5.004;
+     chdir '..' if !-d 'lib' and -d '../lib';
+-    @INC = 'lib';
+-    $ENV{PERL5LIB} = 'lib';
+ 
+     # This needs to be at BEGIN time, before any use of Config
+     require './install_lib.pl';

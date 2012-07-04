@@ -97,9 +97,6 @@ my %Allowed_Opts = (
     'glossary' => 1,  # --no-glossary  - no glossary file inclusion,
                       #                  for compactness
     'chdir'    => '', # --chdir=dir    - change directory before writing files
-    'config-sh' => 'config.sh',
-    'config-pm' => 'lib/Config.pm',
-    'config-pod' => 'lib/Config.pod'
 );
 
 sub opts {
@@ -132,9 +129,19 @@ if ($Opts{chdir}) {
 my ($Config_SH, $Config_PM, $Config_heavy, $Config_POD);
 my $Glossary = 'Porting/Glossary';
 
-$Config_PM = $Opts{'config-pm'};
-$Config_POD = $Opts{'config-pod'};
-$Config_SH = $Opts{'config-sh'};
+if ($Opts{cross}) {
+  # creating cross-platform config file
+  mkdir "xlib";
+  mkdir "xlib/$Opts{cross}";
+  $Config_PM = "xlib/$Opts{cross}/Config.pm";
+  $Config_POD = "xlib/$Opts{cross}/Config.pod";
+  $Config_SH = "Cross/config-$Opts{cross}.sh";
+}
+else {
+  $Config_PM = "lib/Config.pm";
+  $Config_POD = "lib/Config.pod";
+  $Config_SH = "config.sh";
+}
 ($Config_heavy = $Config_PM) =~ s/\.pm$/_heavy.pl/;
 die "Can't automatically determine name for Config_heavy.pl from '$Config_PM'"
   if $Config_heavy eq $Config_PM;
