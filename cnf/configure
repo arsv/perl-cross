@@ -166,8 +166,16 @@ if [ "$mode" == 'native' ]; then
 	echo "                  ld:  $ld"
 	echo "                  ar:  $ar"
 	echo "              ranlib:  $ranlib"
+	echo
 	echo "              prefix:  $prefix"
+	echo "             sysroot:  $sysroot"
 	echo " installation prefix:  $installprefix"
+	echo "         executables:  $bin"
+	echo "             scripts:  $bin"
+	echo "             privlib:  $privlib"
+	echo "             archlib:  $archlib"
+	echo " section 1 man pages:  $man1dir  (with '$man1ext' extension)"
+	echo " section 3 man pages:  $man3dir  (with '$man3ext' extension)"
 	echo
 elif [ "$mode" == 'cross' ]; then
 	echo "Generating config.h and xconfig.h"
