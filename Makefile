@@ -41,6 +41,9 @@ disabled_ext_makefiles = $(pathsubst %,%/Makefile,$(disabled_ext))
 # ---[ perl-cross patches ]-----------------------------------------------------
 CROSSPATCHED = $(patsubst cnf/diffs/%.patch,%,$(shell find cnf/diffs -name '*.patch'))
 
+# note: it's ok to make this target manually, but generally the patches should be
+# applied automatically without calling it via direct dependencies on the files
+# in $(CROSSPATCHED)
 crosspatch: $(CROSSPATCHED)
 
 $(CROSSPATCHED): %: cnf/diffs/%.orig
@@ -69,7 +72,7 @@ config-pm: $(CONFIGPM)
 
 xconfig-pm: $(XCONFIGPM)
 
-$(XCONFIGPM): tconfig.sh | xlib miniperl$X
+$(XCONFIGPM): tconfig.sh configpm | xlib miniperl$X
 	./miniperl_top configpm --config-sh=tconfig.sh --config-pm=xlib/Config.pm --config-pod=xlib/Config.pod
 
 xlib:
@@ -225,7 +228,7 @@ extensions: cflags $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
 modules: extensions
 
 # Some things needed to make modules
-%/Makefile.PL: | miniperl$X
+%/Makefile.PL: cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist | miniperl$X
 	./miniperl_top make_ext_Makefile.pl $@
 
 cflags: cflags.SH
@@ -325,11 +328,11 @@ META.yml: Porting/makemeta Porting/Maintainers.pl Porting/Maintainers.pm miniper
 
 install: install.perl install.man
 
-install.perl: installperl miniperl$X
+install.perl: installperl | miniperl$X
 	./miniperl_top installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
 	-@test ! -s extras.lst || $(MAKE) extras.install
 
-install.man: installman miniperl$X
+install.man: installman cpan/podlators/lib/Pod | miniperl$X
 	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
 
 install.miniperl: miniperl$X xlib/Config.pm xlib/Config_heavy.pl
