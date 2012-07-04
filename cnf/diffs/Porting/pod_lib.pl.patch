@@ -1,0 +1,11 @@
+--- pod_lib.pl.orig	2012-04-25 03:18:30.000000000 +0300
++++ pod_lib.pl	2012-07-04 16:07:58.722356346 +0300
+@@ -1,7 +1,7 @@
+ #!/usr/bin/perl -w
+ 
+ use strict;
+-use Digest::MD5 'md5';
++use Digest::Perl::MD5 'md5';
+ use File::Find;
+ 
+ # make it clearer when we haven't run to completion, as we can be quite

@@ -46,10 +46,12 @@ CROSSPATCHED = $(patsubst cnf/diffs/%.patch,%,$(shell find cnf/diffs -name '*.pa
 # in $(CROSSPATCHED)
 crosspatch: $(CROSSPATCHED)
 
-$(CROSSPATCHED): %: cnf/diffs/%.orig
+$(CROSSPATCHED): %: | cnf/diffs/%.patched
 
-cnf/diffs/%.orig: cnf/diffs/%.patch
-	cp $* $@ && patch $* cnf/diffs/$*.patch
+cnf/diffs/%.patched: cnf/diffs/%.patch
+	cp $* cnf/diffs/$*.orig
+	patch $* cnf/diffs/$*.patch
+	touch $@
 
 
 # ---[ common ]-----------------------------------------------------------------
@@ -228,7 +230,7 @@ extensions: cflags $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
 modules: extensions
 
 # Some things needed to make modules
-%/Makefile.PL: cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist | miniperl$X
+%/Makefile.PL: | miniperl$X cnf/diffs/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm.patched
 	./miniperl_top make_ext_Makefile.pl $@
 
 cflags: cflags.SH
@@ -328,11 +330,13 @@ META.yml: Porting/makemeta Porting/Maintainers.pl Porting/Maintainers.pm miniper
 
 install: install.perl install.man
 
-install.perl: installperl | miniperl$X
+install.perl: installperl | miniperl$X cnf/diffs/installperl.patched \
+		cnf/diffs/Porting/pod_lib.pl.patched
 	./miniperl_top installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
 	-@test ! -s extras.lst || $(MAKE) extras.install
 
-install.man: installman cpan/podlators/lib/Pod | miniperl$X
+install.man: installman | miniperl$X cnf/diffs/installman.patched \
+		cnf/diffs/cpan/podlators/lib/Pod/Man.pm.patched cnf/diffs/Porting/pod_lib.pl.patched
 	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
 
 install.miniperl: miniperl$X xlib/Config.pm xlib/Config_heavy.pl

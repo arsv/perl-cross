@@ -3,7 +3,7 @@
 # $Id: MD5.pm,v 1.19 2004/02/14 02:25:32 lackas Exp $
 #
 
-package Digest::MD5;
+package Digest::Perl::MD5;
 use strict;
 use integer;
 use Exporter;
