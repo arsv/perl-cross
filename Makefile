@@ -74,7 +74,7 @@ config-pm: $(CONFIGPM)
 
 xconfig-pm: $(XCONFIGPM)
 
-$(XCONFIGPM): tconfig.sh configpm | xlib miniperl$X
+$(XCONFIGPM): tconfig.sh configpm | xlib miniperl$X cnf/diffs/configpm.patched
 	./miniperl_top configpm --config-sh=tconfig.sh --config-pm=xlib/Config.pm --config-pod=xlib/Config.pod
 
 xlib:
