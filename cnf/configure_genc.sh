@@ -79,7 +79,7 @@ default scriptdir "$prefix/bin"
 default otherlibdirs ' '
 default libsdirs ' '
 default privlib "$prefix/lib/perl"
-default archlib "$prefix/lib/perl/arch"
+default archlib "$prefix/lib/perl/$archname"
 default perlpath "$prefix/bin/perl"
 
 default vendorman1dir "$man1dir"
@@ -274,7 +274,7 @@ default d_access undef
 default d_accessx undef
 default d_aintl undef
 default d_alarm undef
-default d_archlib undef
+default d_archlib define
 default d_asctime64 undef
 default d_asctime_r undef
 default d_atolf undef

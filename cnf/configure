@@ -74,12 +74,6 @@ if [ -z "$mode" ]; then
 	fi
 fi
 
-if [ "$mode" == "cross" -o "$mode" == "native" -o "$mode" == "target" ]; then
-	. $base/configure_dirs_targ.sh
-elif [ "$mode" == "buildmini" ]; then
-	. $base/configure_dirs_host.sh
-fi
-
 if [ "$mode" == "cross" ]; then
 	msg "Respawning configure for build and target platforms"
 	msg
