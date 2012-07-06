@@ -162,7 +162,6 @@ if [ "$mode" == 'native' ]; then
 	echo "              ranlib:  $ranlib"
 	echo
 	echo "              prefix:  $prefix"
-	echo "             sysroot:  $sysroot"
 	echo " installation prefix:  $installprefix"
 	echo "         executables:  $bin"
 	echo "             scripts:  $bin"
