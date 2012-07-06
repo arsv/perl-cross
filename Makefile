@@ -44,12 +44,12 @@ CROSSPATCHED = $(patsubst cnf/diffs/%.patch,%,$(shell find cnf/diffs -name '*.pa
 # note: it's ok to make this target manually, but generally the patches should be
 # applied automatically without calling it via direct dependencies on the files
 # in $(CROSSPATCHED)
-crosspatch: $(CROSSPATCHED)
+crosspatch: $(patsubst %,cnf/diffs/%.patched,$(CROSSPATCHED))
 
-$(CROSSPATCHED): %: | cnf/diffs/%.patched
+$(CROSSPATCHED): %: cnf/diffs/%.patched
 
 cnf/diffs/%.patched: cnf/diffs/%.patch
-	cp $* cnf/diffs/$*.orig
+	test -f cnf/diffs/$*.orig && cp cnf/diffs/$*.orig $* || cp $* cnf/diffs/$*.orig
 	patch $* cnf/diffs/$*.patch
 	touch $@
 
