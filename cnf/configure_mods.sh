@@ -90,7 +90,6 @@ extonlyif XS/APItest "$usedl" == 'define'
 extonlyif XS/Typemap "$usedl" == 'define'
 extonlyif VMS-DCLsym "$osname" == "vms"		# XXX: is it correct?
 extonlyif VMS-Stdio "$osname" == "vms"
-extonlyif Sys-Hostname "true" == "false"	# XXX: MakeMaker fails here
 
 for d in ext cpan dist; do
 	msg "Looking for extensions recursively under $d/"
