@@ -46,13 +46,12 @@ CROSSPATCHED = $(patsubst cnf/diffs/%.patch,%,$(shell find cnf/diffs -name '*.pa
 # in $(CROSSPATCHED)
 crosspatch: $(patsubst %,cnf/diffs/%.patched,$(CROSSPATCHED))
 
-$(CROSSPATCHED): %: cnf/diffs/%.patched
+$(CROSSPATCHED): %: | cnf/diffs/%.patched
 
 cnf/diffs/%.patched: cnf/diffs/%.patch
 	test -f cnf/diffs/$*.orig && cp cnf/diffs/$*.orig $* || cp $* cnf/diffs/$*.orig
 	patch $* cnf/diffs/$*.patch
 	touch $@
-
 
 # ---[ common ]-----------------------------------------------------------------
 
