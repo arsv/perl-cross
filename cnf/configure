@@ -126,7 +126,8 @@ if [ "$mode" == 'native' -o "$mode" == 'buildmini' -o "$mode" == "target" ]; the
 	. $base/configure_attr.sh
 	. $base/configure_link.sh
 	. $base/configure_dbug.sh
-	if [ "$usethreads" == 'define' ]; then
+	if [ "$usethreads" == 'define' -o "$useithreads" == 'define' -o "$use5005threads" == 'define' ]; then
+		test "$usethreads" == 'define' || setvar 'usethreads' 'define'
 		. $base/configure_thrd.sh
 		failpoint
 	fi
