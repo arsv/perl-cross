@@ -1,5 +1,5 @@
---- installperl.orig	2012-07-04 14:21:54.965857939 +0300
-+++ installperl	2012-07-04 14:22:22.612523872 +0300
+--- installperl.orig	2012-07-05 16:13:54.707081412 +0300
++++ installperl	2012-07-05 23:18:25.347179588 +0300
 @@ -3,8 +3,6 @@
  BEGIN {
      require 5.004;
@@ -9,3 +9,12 @@
  
      # This needs to be at BEGIN time, before any use of Config
      require './install_lib.pl';
+@@ -150,7 +148,7 @@
+ }
+ 
+ # Exclude nonxs extensions that are not architecture dependent
+-my @nonxs = grep(!/^Errno$/, split(' ', $Config{'nonxs_ext'}));
++my @nonxs = map { s{.*/}{}; s{-}{/}g; $_ } grep(!/^Errno$/, split(' ', $Config{'nonxs_ext'}));
+ 
+ my @ext_dirs = qw(cpan dist ext);
+ foreach my $ext_dir (@ext_dirs) {
