@@ -13,10 +13,11 @@
 $spec = shift;
 $spec =~ s'/Makefile\.PL$'';	# cpan/Archive-Extract
 $fromname = get_fromname($spec);
-$mname = $fromname;
-$mname =~ s!^lib/!!;
-$mname =~ s/\.pm$//;
-$mname =~ s!/!::!g;
+
+$dirname = $spec;
+$dirname =~ s!^[^/]+/!!;
+$dirname =~ s!-!::!g;
+$mname = $dirname;
 
 if($mname eq 'podlators') {
 	warn "Creating specific $spec/Makefile.PL for podlators\n";
