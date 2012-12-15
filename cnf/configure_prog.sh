@@ -46,14 +46,14 @@ function whichprog {
 if [ -n "$toolsprefix" ]; then
 	ttp="$toolsprefix"
 	check whichprog "C compiler" cc 1      ${ttp}gcc ${ttp}cc
-	check whichprog "linker"     ld 1      ${ttp}ld
+	check whichprog "linker"     ld 1      ${ttp}gcc
 	check whichprog "ar"         ar 1      ${ttp}ar
 	check whichprog "ranlib"     ranlib 0  ${ttp}ranlib
 	check whichprog "readelf"    readelf 1 ${ttp}readelf
 	check whichprog "objdump"    objdump 1 ${ttp}objdump
 else 
 	check whichprog "C compiler" cc 1      ${pf1}gcc ${pf1}cc ${pf2}gcc
-	check whichprog "linker"     ld 1      ${pf1}ld ${pf2}ld
+	check whichprog "linker"     ld 1      ${pf1}gcc ${pf1}cc ${pf2}gcc ${pf1}ld ${pf2}ld
 	check whichprog "ar"         ar 1      ${pf1}ar ${pf2}ar
 	check whichprog "ranlib"     ranlib 0  ${pf1}ranlib ${pf2}ranlib
 	check whichprog "readelf"    readelf 1 ${pf1}readelf ${pf2}readelf readelf
