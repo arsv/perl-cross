@@ -106,3 +106,20 @@ if [ -z "$disabledmods" ]; then
 	# see configure_genc for its only effect within configure
 	disabledmods='define'
 fi
+
+# Now, a dirty hack to make tests work.
+# Some of the tests use $Config{'extensions'} to decide whether to do their thing or not.
+# The original Configure has neither directory nor module names in $extensions.
+# Instead, it uses weird old mid-road format, "File/Glob" for what should have been
+# either File::Glob or ext/File-Glob.
+# Fortunately, $extensions is not used anywhere during the build process,
+# only ${nonxs,static,dynamic}_ext are, so we're ok leaving whatever is expected in $extensions
+# without changing anything else.
+if nothinted 'extensions'; then
+	x=''
+	for e in $static_ext $dynamic_ext $nonxs_ext; do
+		e=`echo "$e" | sed -e 's!^[^/]\+/!!' -e 's!-!/!g'`
+		test -z "$x" && x="$e" || x="$x $e"	
+	done
+	setvar extensions "$x"
+fi
