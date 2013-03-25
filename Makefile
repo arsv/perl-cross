@@ -345,6 +345,12 @@ extra.pods: | miniperl$X
 	    echo "pod/perl"$$nx".pod" >> extra.pods ; \
 	done
 
+# ---[ test ]-------------------------------------------------------------------
+
+.PHONY: test
+test:
+	cd t/ && ln -sf ../perl . && ./perl harness
+
 # ---[ install ]----------------------------------------------------------------
 .PHONY: install install.perl install.pod
 
