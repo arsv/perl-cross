@@ -50,7 +50,7 @@ $(CROSSPATCHED): %: | cnf/diffs/%.patched
 
 cnf/diffs/%.patched: cnf/diffs/%.patch
 	test -f cnf/diffs/$*.orig && cp cnf/diffs/$*.orig $* || cp $* cnf/diffs/$*.orig
-	patch $* cnf/diffs/$*.patch
+	patch -p0 $* cnf/diffs/$*.patch
 	touch $@
 
 # ---[ common ]-----------------------------------------------------------------
