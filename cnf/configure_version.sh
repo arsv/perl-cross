@@ -8,7 +8,7 @@ function setverpart {
 }
 
 msg "Getting the current patchlevel..."
-setifndef package 'perl'
+setifndef package 'perl5'
 if [ -r patchlevel.h ]; then
 	setverpart revision PERL_REVISION
 	setverpart patchlevel PERL_VERSION
