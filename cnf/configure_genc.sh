@@ -1176,8 +1176,8 @@ default zip zip
 default usemmcclt 'define'
 
 if [ "$mode" == "buildmini" ]; then
-	required target_name
-	required target_arch
+	default target_name
+	default target_arch
 	default sysroot
 fi
 

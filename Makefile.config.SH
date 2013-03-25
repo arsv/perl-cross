@@ -49,6 +49,7 @@ function ifprefixed() {
 	fi
 }
 
+perlversion="$PERL_REVISION$PERL_VERSION$PERL_SUBVERSION"
 if [ "$usedl" == 'undef' ]; then
 	dynaloader=''
 else
@@ -89,6 +90,7 @@ O = .host$host_o
 X = $host_exe
 so = $dlext
 
+perlversion = $perlversion
 dynaloader = $dynaloader
 
 extensions: xconfig-pm
@@ -107,6 +109,7 @@ HOSTCFLAGS = \$(CFLAGS)
 HOSTCFMINI = \$(HOSTCFLAGS) -DPERL_EXTERNAL_GLOB
 HOSTLDFLAGS = \$(LDFLAGS)
 HOSTLIBS = \$(LIBS)
+perlversion = $perlversion
 
 # suffixes for static library, object and executable files
 # lowercase for target platform or native build, uppercase
@@ -117,6 +120,7 @@ x = $_exe
 O = $_o
 X = $_exe
 
+perlversion = $perlversion
 dynaloader = $dynaloader
 END
 fi

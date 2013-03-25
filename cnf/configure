@@ -24,7 +24,13 @@ fi
 rm -f "$cfglog"
 cfglog="$cfglog_base"
 
-if [ -z "$mode" ]; then
+
+# Possible modes are: (none), native, cross, buildmini, target
+# Default mode, (none), means -z $mode -a -z $target
+# $build is needed for (none), native, buildmini, and for cross to pass it to buildmini
+# $target is needed for cross and target
+
+if [ -z "$buildarch" -a "$mode" != "target" ]; then
 	mstart "Guessing build platform"
 	if [ "x$build" == "x" ]; then
 		buildarch=`$base/config.guess 2>>$cfglog`
@@ -48,38 +54,52 @@ if [ -z "$mode" ]; then
 			msg "WARNING: Couldn't guess build platform, using '$buildarch'"
 		fi
 	fi
+fi
+# past this point $build/$buildarch are non-empty unless we're in target mode
 
+if [ -z "$mode" ]; then
 	if [ -z "$target" -o "$target" == "$build" ]; then
 		msg "Assuming native build"
 		mode='native'
-		targetarch="$buildarch"
-		target="$build"
 	else
 		msg "Assuming cross-compilation for '$target'"
 		mode='cross'
-		mstart "Guessing target architecture"	
-		targetarch=`$base/config.sub "$target" 2>>$cfglog`
+	fi
+fi
+# past this point $mode can't be empty
+
+if [ "$mode" == "buildmini" -o "$mode" == "native" ]; then
+	targetarch="$buildarch"
+	target="$build"
+fi
+
+if [ -n "$target" -a -z "$targetarch" ]; then
+	mstart "Guessing target architecture"	
+	targetarch=`$base/config.sub "$target" 2>>$cfglog`
+	if [ -n "$targetarch" ]; then
+		result "$targetarch"
+	else
+		gcctarget=`$target-gcc -v 2>&1 | grep Target | sed -e 's/Target: *//'`
+		targetarch=`$base/config.sub "$gcctarget" 2>>$cfglog`
 		if [ -n "$targetarch" ]; then
 			result "$targetarch"
 		else
-			gcctarget=`$target-gcc -v 2>&1 | grep Target | sed -e 's/Target: *//'`
-			targetarch=`$base/config.sub "$gcctarget" 2>>$cfglog`
-			if [ -n "$targetarch" ]; then
-				result "$targetarch"
-			else
-				result "($target)"
-				msg "WARNING: Couldn't determine target architecture, using '$target'"
-			fi
+			result "($target)"
+			targetarch="$target"
+			msg "WARNING: Couldn't determine target architecture, using '$target'"
 		fi
+	fi
+elif [ -z "$target" ]; then
+	if [ "$mode" == 'cross' -o "$mode" == 'target' ]; then
+		die "--target must be specified for a cross build"
 	fi
 fi
 
 if [ "$mode" == "cross" ]; then
 	msg "Respawning configure for build and target platforms"
 	msg
-	test -n "$targetarch" && tarch="$targetarch" || tarch="$target"
-	run $0 $hco --keeplog --mode=buildmini --targetarch="$buildarch"\
-		--target-name="$target" --target-arch="$tarch"\
+	run $0 $hco --keeplog --mode=buildmini --build="$build" --buildarch="$buildarch"\
+		--target-name="$target" --target-arch="$targetarch"\
 		|| die "configure --mode=buildmini failed"
 	msg
        	run $0 "$@" --keeplog --mode=target --target="$target" --targetarch="$targetarch"\
@@ -92,6 +112,9 @@ elif [ "$mode" == "buildmini" ]; then
 	if [ "x$build" != "x" ]; then pf1="$build-"; else pf1=""; fi
 	pf2="$build-"
 	config='xconfig.sh'
+	if [ -z "$target_name" ]; then
+		msg "Warning: buildmini without --target-name; miniperl installation will not be possible"
+	fi
 elif [ "$mode" == "target" ]; then
 	targetlabel=`archlabel "$target" "$targetarch"`
 	msg "Configuring primary perl executable for $targetlabel"

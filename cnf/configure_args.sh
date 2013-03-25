@@ -146,7 +146,7 @@ while [ $i -le $# -o -n "$n" ]; do
 
 	# process the options
 	case "$a" in
-		mode) test -z "$mode" && setvar $a "$v" || die "Can't set mode twice!" ;;
+		mode) setvar $a "$v" ;;
 		help) setvar "mode" "help" ;;
 		regen|regenerate) setvar "mode" "regen" ;;
 		keeplog) setvar "$a" 1 ;;

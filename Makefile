@@ -318,7 +318,7 @@ modules.list: $(CONFIGPM) $(MODLISTS) cflags
 	./modconfig_all
 
 # ---[ pods ]-------------------------------------------------------------------
-perltoc_pod_prereqs = extra.pods pod/perl5160delta.pod pod/perlapi.pod pod/perlintern.pod pod/perlmodlib.pod pod/perluniprops.pod
+perltoc_pod_prereqs = extra.pods pod/perl$(perlversion)delta.pod pod/perlapi.pod pod/perlintern.pod pod/perlmodlib.pod pod/perluniprops.pod
 
 pods: pod/perltoc.pod
 
@@ -333,8 +333,8 @@ pod/perlintern.pod: autodoc.pl embed.fnc | miniperl$X
 pod/perlmodlib.pod: pod/perlmodlib.PL MANIFEST | miniperl$X
 	./miniperl_top pod/perlmodlib.PL -q
 
-pod/perl5160delta.pod: pod/perldelta.pod
-	ln -sf perldelta.pod pod/perl5160delta.pod
+pod/perl$(perlversion)delta.pod: pod/perldelta.pod
+	ln -sf perldelta.pod pod/perl$(perlversion)delta.pod
 
 extra.pods: | miniperl$X
 	-@test ! -f extra.pods || rm -f `cat extra.pods`
@@ -362,11 +362,14 @@ install.man: installman pod/perltoc.pod | miniperl$X cnf/diffs/installman.patche
 		cnf/diffs/Porting/pod_lib.pl.patched
 	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
 
+ifdef target_name
 install.miniperl: miniperl$X xlib/Config.pm xlib/Config_heavy.pl
 	install -D -m 0755 miniperl $(hostbin)/$(target_name)-miniperl$X
-	-ln -s $(target_name)-miniperl$X $(hostbin)/$(target_arch)-miniperl$X 
+	test -n "$(target_arch)" -a "$(target_arch)" != "$(target_name)" &&\
+		ln -s $(target_name)-miniperl$X $(hostbin)/$(target_arch)-miniperl$X || true
 	install -D -m 0644 xlib/Config.pm $(hostprefix)/$(target_arch)/lib/perl/Config.pm
 	install -D -m 0644 xlib/Config_heavy.pl $(hostprefix)/$(target_arch)/lib/perl/Config_heavy.pl
+endif
 
 # ---[ clean ]------------------------------------------------------------------
 .PHONY: clean clean-obj clean-generated-files clean-subdirs clean-modules
