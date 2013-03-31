@@ -1,27 +1,5 @@
 #!/bin/bash
 
-# haslibs symbol libs...
-function haslibs {
-	require 'cc'
-	mstart "Checking libraries"
-	ifhint $1 && return
-
-	try_start
-	try_add "int main(void) { return 0; }"
-
-	_libs=""
-	_libv="$1"
-	shift
-	for l in $*; do
-		if try_link_libs $L $l; then
-			_libs="$_libs $l"
-		fi
-	done
-
-	setvar "$_libv" "$_libs"
-	result "$_libs"
-}
-
 # hasfunc name args includes
 # WARNING: some compilers do have built-in notions on how certain
 # function should be called, and will produce errors if those functions
@@ -77,12 +55,6 @@ function isvoid {
 	not try_compile
 	resdef 'yes' 'no' "d_void_$1"
 }
-
-if [ "$usethreads" == 'define' ]; then
-	check haslibs libs $libswanted $try_libs $try_libs_thread
-else
-	check haslibs libs $libswanted $try_libs
-fi
 
 check hasfunc _fwalk
 check hasfunc access "NULL,0" 'stdlib.h unistd.h'

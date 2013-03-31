@@ -977,7 +977,7 @@ default perl
 default perl5
 default perl_patchlevel
 default perladmin 'nobody@nowhere.land'
-default perllibs
+default perllibs "$libs"
 default pg pg
 default phostname hostname
 default pidtype pid_t

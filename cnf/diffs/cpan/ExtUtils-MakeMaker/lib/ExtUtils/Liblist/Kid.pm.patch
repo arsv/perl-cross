@@ -61,7 +61,7 @@
 +    unlink($try);
 +    unlink($tryx);
 +
-+    return (join(' ', @testlibs), '', '', '');
++    return (join(' ', @testlibs), '', join(' ', @testlibs), '');
 +}
 +
  1;

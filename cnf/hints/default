@@ -7,5 +7,4 @@ disable_win32=1
 disable_win32api_file=1
 disable_win32core=1
 # libraries to test
-try_libs='-lm -lcrypt -ldl'
-try_libs_thread='-lpthread'
+libswanted='m crypt pthread sfio socket inet nsl nm ndbm gdbm dbm db malloc dl dld ld sun sec util c cposix posix ucb BSD gdbm_compat'

@@ -27,7 +27,7 @@ if [ "$usecrosscompile" == 'define' ]; then
 	hostldflags="$ldflags"
 	hostar="$ar"
 	hostranlib="$ranlib"
-	hostlibs="$libs"
+	hostlibs="$perllibs"
 	host_o="$_o"
 	host_exe="$_exe"
 	hostbin="$bin"
@@ -66,7 +66,7 @@ AR = `ifprefixed "$cross" "$ar"`
 RANLIB = `ifprefixed "$cross" "$ranlib"`
 CFLAGS = $cflags $ccflags $ccdefines $optimize
 LDFLAGS = $ldflags
-LIBS = $libs
+LIBS = $perllibs
 
 HOSTCC = $hostcc
 HOSTCFLAGS = $cflags -DUSE_CROSS_COMPILE $hostccflags $hostccdefines
@@ -102,7 +102,7 @@ AR = $ar
 RANLIB = $ranlib
 CFLAGS = $cflags $ccflags $ccdefines $optimize
 LDFLAGS = $ldflags
-LIBS = $libs
+LIBS = $perllibs
 
 HOSTCC = \$(CC)
 HOSTCFLAGS = \$(CFLAGS)

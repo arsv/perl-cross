@@ -7,4 +7,3 @@ d_clock=define
 # From the original linux.sh
 d_lstat=define
 usemallocwrap=define
-libswanted="$libswanted gdbm_compat"

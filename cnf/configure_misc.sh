@@ -72,10 +72,7 @@ if [ "$uselargefiles" == 'define' ]; then
 	appendvar 'ccdefines' " -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
 	log
 fi
-if [ "$usedl" == 'undef' -a -z "$allstatic" ]; then
-	msg "DynaLoader is disabled, making all modules static"
-	setvar 'allstatic' 1
-fi
+
 if [ "$usethreads" == 'define' ]; then
 	mstart 'Looking whether to use interpreter threads'
 	if [ "$useithreads" == 'define' ]; then
