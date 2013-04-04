@@ -322,7 +322,7 @@ perltoc_pod_prereqs = extra.pods pod/perl$(perlversion)delta.pod pod/perlapi.pod
 
 pods: pod/perltoc.pod
 
-pod/perltoc.pod: $(perltoc_pod_prereqs) pod/buildtoc | miniperl$X cnf/diffs/Porting/pod_lib.pl.patched
+pod/perltoc.pod: $(perltoc_pod_prereqs) pod/buildtoc | miniperl$X
 	./miniperl_top -f pod/buildtoc -q
 
 pod/perlapi.pod: pod/perlintern.pod
@@ -359,13 +359,11 @@ META.yml: Porting/makemeta Porting/Maintainers.pl Porting/Maintainers.pm miniper
 
 install: install.perl install.man
 
-install.perl: installperl | miniperl$X cnf/diffs/installperl.patched \
-		cnf/diffs/Porting/pod_lib.pl.patched
+install.perl: installperl | miniperl$X cnf/diffs/installperl.patched
 	./miniperl_top installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
 	-@test ! -s extras.lst || $(MAKE) extras.install
 
-install.man: installman pod/perltoc.pod | miniperl$X cnf/diffs/installman.patched \
-		cnf/diffs/Porting/pod_lib.pl.patched
+install.man: installman pod/perltoc.pod | miniperl$X cnf/diffs/installman.patched
 	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
 
 ifdef target_name
