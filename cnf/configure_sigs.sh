@@ -43,6 +43,7 @@ for sig in HUP INT QUIT ILL TRAP ABRT BUS FPE KILL USR1\
 	fi
 done
 [ -z "$siginit" ] || siginit="$siginit, 0"
+[ -z "$signumi" ] || signumi="$signumi, 0"
 
 # try to get NSIG value
 mstart "Checking NSIG value"
