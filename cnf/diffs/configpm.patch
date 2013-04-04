@@ -1,5 +1,17 @@
---- configpm.orig	2012-07-04 15:12:57.769110295 +0300
-+++ configpm	2012-06-03 23:34:07.626441679 +0300
+--- configpm.orig	2013-03-04 17:16:21.000000000 +0200
++++ configpm	2013-04-04 12:25:09.699708320 +0300
+@@ -57,9 +57,9 @@
+ # wonderfully easy to instrument, and no longer exists.
+ $Common{$_} = $_ foreach qw(dlext so);
+ 
+-# names of things which may need to have slashes changed to double-colons
++# modules lists -- config.sh uses different format for these
+ my %Extensions = map {($_,$_)}
+-                 qw(dynamic_ext static_ext extensions known_extensions);
++	 qw(dynamic_ext static_ext extensions known_extensions nonxs_ext);
+ 
+ # The plan is that this information is used by ExtUtils::MakeMaker to generate
+ # Makefile dependencies, rather than hardcoding a list, which has become out
 @@ -97,6 +97,9 @@
      'glossary' => 1,  # --no-glossary  - no glossary file inclusion,
                        #                  for compactness
@@ -33,3 +45,13 @@
  ($Config_heavy = $Config_PM) =~ s/\.pm$/_heavy.pl/;
  die "Can't automatically determine name for Config_heavy.pl from '$Config_PM'"
    if $Config_heavy eq $Config_PM;
+@@ -334,7 +327,8 @@
+     $in_v = $val !~ /$quote\n/;
+     next if $in_v;
+ 
+-    s,/,::,g if $Extensions{$name};
++    $val =~ s{[a-zA-Z]+/}{}g if $Extensions{$name};
++    $val =~ s{-}{/}g if $Extensions{$name};
+ 
+     $val =~ s/$quote\n?\z//;
+ 

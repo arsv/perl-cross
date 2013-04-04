@@ -8,7 +8,9 @@ function extdir {
 		if [ "$L" == "DynaLoader" ]; then
 			# do nothing, it's DynaLoader
 			true
-		elif [ -f "$i/$L.c" -o -f "$i/$L.xs" ]; then
+		# just checking $i/$L.xs is NOT enough, since some extensions
+		# like cpan/List-Util have .xs files with different names
+		elif ls "$i" | grep -qE '.(xs|c)$'; then
 			extadd "xs" "$i"
 		elif [ -f "$i/Makefile.PL" -o -f "$i/Makefile" -o -d "$i/lib" -o -f "$i/$L.pm" ]; then
 			extadd "noxs" "$i"
@@ -22,6 +24,7 @@ function extadd {
 		msg "\tskipping $2"
 		return
 	fi
+	test "$1" == 'xs' && appendvar 'known_extensions' "$2"
 	o=`valueof "only_$s"`
 	if [ -n "$onlyext" -a -z "$o" ]; then
 		msg "\tskipping $2"
@@ -74,6 +77,9 @@ function extonlyif {
 
 msg "Looking which extensions should be disabled"
 
+test -n "$useposix" || setvar 'useposix' 'define'
+test -n "$useopcode" || setvar 'useopcode' 'define'
+
 extonlyif DB_File "$i_db" == 'define'
 extonlyif GDBM_File "$i_gdbm" == 'define'
 extonlyif NDBM_File "$i_ndbm" == 'define'
@@ -107,19 +113,14 @@ if [ -z "$disabledmods" ]; then
 	disabledmods='define'
 fi
 
-# Now, a dirty hack to make tests work.
 # Some of the tests use $Config{'extensions'} to decide whether to do their thing or not.
 # The original Configure has neither directory nor module names in $extensions.
 # Instead, it uses weird old mid-road format, "File/Glob" for what should have been
 # either File::Glob or ext/File-Glob.
-# Fortunately, $extensions is not used anywhere during the build process,
-# only ${nonxs,static,dynamic}_ext are, so we're ok leaving whatever is expected in $extensions
-# without changing anything else.
+# Since config.sh is used to generate Makefile, not having directory names there doesn't
+# sound like a good idea at all. Fortunately, most things that look up $extensions
+# do it via $Config. So the solution is to filter config.sh variables later in ../configpm
+# to achieve the desired format in $Config while still keeping directory names in config.sh.
 if nothinted 'extensions'; then
-	x=''
-	for e in $static_ext $dynamic_ext $nonxs_ext; do
-		e=`echo "$e" | sed -e 's!^[^/]\+/!!' -e 's!-!/!g'`
-		test -z "$x" && x="$e" || x="$x $e"	
-	done
-	setvar extensions "$x"
+	setvar extensions "$static_ext $dynamic_ext $nonxs_ext"
 fi
