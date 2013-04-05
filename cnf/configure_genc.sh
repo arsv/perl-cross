@@ -162,6 +162,10 @@ const archlibexp "$archlib"
 const privlibexp "$privlib"
 const binexp "$bin"
 
+default libpth "/lib /usr/lib /usr/local/lib"
+default glibpth "$libpth"
+default plibpth
+
 required PERL_API_REVISION
 required PERL_API_SUBVERSION
 required PERL_API_VERSION
@@ -795,7 +799,6 @@ default getservent_r_proto 0
 default getspnam_r_proto 0
 default gidformat '"lu"'
 default gidsign 1
-default glibpth
 default gmake gmake
 default gmtime_r_proto 0
 default gnulibc_version
@@ -915,7 +918,6 @@ default less less
 default lib_ext .a
 default libc
 default libperl libperl.a
-default libpth
 default libs
 default libsfiles
 default libsfound
@@ -996,7 +998,6 @@ default perllibs "$libs"
 default pg pg
 default phostname hostname
 default pidtype pid_t
-default plibpth
 default pmake
 default pr
 default procselfexe '"/proc/self/exe"'
