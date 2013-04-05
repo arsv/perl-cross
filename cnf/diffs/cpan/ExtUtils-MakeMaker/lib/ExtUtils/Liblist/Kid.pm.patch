@@ -14,7 +14,7 @@
  }
  
  sub _unix_os2_ext {
-@@ -622,4 +623,50 @@
+@@ -622,4 +623,51 @@
      wantarray ? ( $lib, '', $ldlib, '', ( $give_libs ? \@flibs : () ) ) : $lib;
  }
  
@@ -55,6 +55,7 @@
 +	};
 +	my $cmd = "$cc $ccflags -o $tryx $try $testlibs $thislib";
 +	my $ret = system($cmd);
++	warn "Note (probably harmless): " . "No library found for $thislib\n" if $ret;
 +	next if $ret;
 +	push @testlibs, $thislib;
 +    }
