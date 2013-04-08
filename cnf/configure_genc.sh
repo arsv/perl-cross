@@ -535,7 +535,7 @@ default d_ndbm_h_uses_prototypes
 default d_ndbm_h_uses_prototypes define
 default d_nice undef
 default d_nl_langinfo undef
-default d_nv_preserves_uv define
+default d_nv_preserves_uv undef
 default d_nv_zero_is_allbits_zero define
 default d_off64_t undef
 default d_old_pthread_create_joinable undef
@@ -974,7 +974,7 @@ default nvEUformat '"E"'
 default nvFUformat '"F"'
 default nvGUformat '"G"'
 default nv_overflows_integers_at '256.0*256.0*256.0*256.0*256.0*256.0*2.0*2.0*2.0*2.0*2.0'
-default nv_preserves_uv_bits 32
+default nv_preserves_uv_bits 0
 default nveformat '"e"'
 default nvfformat '"f"'
 default nvgformat '"g"'
