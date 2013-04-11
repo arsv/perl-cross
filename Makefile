@@ -352,7 +352,7 @@ extra.pods: | miniperl$X
 
 .PHONY: test
 test:
-	cd t/ && ln -sf ../perl . && ./perl harness
+	cd t/ && ln -sf ../perl . && LD_LIBRARY_PATH=$(PWD) ./perl harness
 
 # ---[ install ]----------------------------------------------------------------
 .PHONY: install install.perl install.pod
