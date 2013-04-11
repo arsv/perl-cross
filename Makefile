@@ -137,10 +137,10 @@ regen_perly:
 
 # ---[ site/perl ]--------------------------------------------------------------
 
-perl$x: perlmain$o $(obj) libperl$a $(static_tgt) static.list ext.libs
+perl$x: perlmain$o $(LIBPERL) $(static_tgt) static.list ext.libs
 	$(eval extlibs=$(shell cat ext.libs))
 	$(eval statars=$(shell cat static.list))
-	$(CC) $(LDFLAGS) -o $@ -Wl,-E $(filter %$o,$^) $(filter %$a,$^) $(statars) $(LIBS) $(extlibs)
+	$(CC) $(LDFLAGS) -o $@ -Wl,-E $(filter %$o,$^) $(LIBPERL_LINK) $(statars) $(LIBS) $(extlibs)
 
 %$o: %.c config.h
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -161,6 +161,9 @@ static.list: Makefile.config | $(static_tgt) miniperl$X
 libperl$a: op$o perl$o $(obj) $(dynaloader_o)
 	$(AR) cru $@ $(filter %$o,$^)
 	$(RANLIB) $@
+
+libperl$l: op$o perl$o $(obj) $(dynaloader_o) 
+	$(CC) $(LDDLFLAGS) -o $@ $(filter %$o,$^) $(LIBS)
 
 perl.o: git_version.h
 
@@ -189,28 +192,28 @@ lib/buildcustomize.pl: write_buildcustomize.pl | miniperl$X
 # perl build chain. Some host-specific functionality is lost.
 # Check miniperl_top to see how it works.
 $(nonxs_tgt) $(disabled_nonxs_tgt): %/pm_to_blib: %/Makefile
-	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a
+	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL)
 
 DynaLoader$o: ext/DynaLoader/pm_to_blib
 	@if [ ! -f ext/DynaLoader/DynaLoader$o ]; then rm $<; echo "Stale pm_to_blib, please re-run make"; false; fi
 	cp ext/DynaLoader/DynaLoader$o $@
 
 ext/DynaLoader/pm_to_blib: %/pm_to_blib: %/Makefile
-	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=static $(STATIC_LDFLAGS)
+	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static $(STATIC_LDFLAGS)
 
 ext/DynaLoader/Makefile: dist/lib/pm_to_blib
 
 $(static_tgt): %/pm_to_blib: %/Makefile $(nonxs_tgt)
-	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=static $(STATIC_LDFLAGS)
+	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static $(STATIC_LDFLAGS)
 
 $(dynamic_tgt) $(disabled_dynamic_tgt): %/pm_to_blib: %/Makefile
-	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=libperl.a LINKTYPE=dynamic
+	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=dynamic
 
 %/Makefile: %/Makefile.PL preplibrary cflags | $(XSUBPP) miniperl$X
 	$(eval top=$(shell echo $(dir $@) | sed -e 's![^/]\+!..!g'))
 	cd $(dir $@) && $(top)miniperl_top -I$(top)lib Makefile.PL \
 	 INSTALLDIRS=perl INSTALLMAN1DIR=none INSTALLMAN3DIR=none \
-	 PERL_CORE=1 LIBPERL_A=libperl.a PERL_CORE=1 PERL="$(top)miniperl_top"
+	 PERL_CORE=1 LIBPERL_A=$(LIBPERL) PERL_CORE=1 PERL="$(top)miniperl_top"
 
 # Allow building modules by typing "make cpan/Module-Name"
 $(static_ext) $(dynamic_ext) $(nonxs_ext) $(disabled_dynamic_ext) $(disabled_nonxs_ext): %: %/pm_to_blib

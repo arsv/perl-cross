@@ -56,7 +56,9 @@ else
 	dynaloader="DynaLoader"
 fi
 
-cflags='-DPERL_CORE '
+cflags="-DPERL_CORE $ccflags $ccdefines $optimize"
+test "$useshrplib" == 'define' && cflags="$cflags $cccdlflags"
+
 if [ "$usecrosscompile" == "define" ]; then
 test -n "$toolsprefix" && cross="$toolsprefix" || cross="$target_name-"
 cat >> Makefile.config <<END
@@ -64,12 +66,13 @@ CROSS = $cross
 CC = `ifprefixed "$cross" "$cc"`
 AR = `ifprefixed "$cross" "$ar"`
 RANLIB = `ifprefixed "$cross" "$ranlib"`
-CFLAGS = $cflags $ccflags $ccdefines $optimize
+CFLAGS = $cflags
 LDFLAGS = $ldflags
+LDDLFLAGS = $lddlflags
 LIBS = $perllibs
 
 HOSTCC = $hostcc
-HOSTCFLAGS = $cflags -DUSE_CROSS_COMPILE $hostccflags $hostccdefines
+HOSTCFLAGS = -DPERL_CORE -DUSE_CROSS_COMPILE $hostccflags $hostccdefines
 HOSTCFMINI = \$(HOSTCFLAGS) -DPERL_EXTERNAL_GLOB
 HOSTLDFLAGS = $hostldflags
 HOSTLIBS = $hostlibs
@@ -86,12 +89,10 @@ sysroot = $sysroot
 a = $_a
 o = $_o
 x =
+l = .so
 O = .host$host_o
 X = $host_exe
 so = $dlext
-
-perlversion = $perlversion
-dynaloader = $dynaloader
 
 extensions: xconfig-pm
 END
@@ -100,8 +101,9 @@ cat >> Makefile.config <<END
 CC = $cc
 AR = $ar
 RANLIB = $ranlib
-CFLAGS = $cflags $ccflags $ccdefines $optimize
+CFLAGS = $cflags
 LDFLAGS = $ldflags
+LDDLFLAGS = $lddlflags
 LIBS = $perllibs
 
 HOSTCC = \$(CC)
@@ -117,14 +119,29 @@ perlversion = $perlversion
 a = $_a
 o = $_o
 x = $_exe
+l = .so
 O = $_o
 X = $_exe
+END
+fi
+
+cat >> Makefile.config <<END
 
 perlversion = $perlversion
 dynaloader = $dynaloader
 END
-fi
 
+if [ "$useshrplib" == 'define' ]; then
+cat >> Makefile.config <<END
+LIBPERL = libperl\$l
+LIBPERL_LINK = -Wl,-rpath,\$(archlib)/CORE \$(LIBPERL)
+END
+else
+cat >> Makefile.config <<END
+LIBPERL = libperl\$a
+LIBPERL_LINK = \$(LIBPERL)
+END
+fi
 
 cat >> Makefile.config <<END
 
