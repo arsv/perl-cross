@@ -6,6 +6,7 @@ tar -zcf \!pack.tar.gz\
 	cnf/hints\
 	cnf/diffs\
 	cnf/cpan\
+	cnf/stub\
 	extlibs\
 	statars\
 	Makefile\

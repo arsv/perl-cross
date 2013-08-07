@@ -1,0 +1,17 @@
+Do not load XS modules which aren't used anyway.
+See also IPC::Cmd and File::Temp in cnf/stub/.
+
+TODO: stub both modules to avoid modifying a file that
+ends up on the target.
+
+--- dist/ExtUtils-CBuilder/lib/ExtUtils/CBuilder/Base.pm	2013-08-07 21:03:39.915680156 +0300
++++ dist/ExtUtils-CBuilder/lib/ExtUtils/CBuilder/Base.pm	2013-08-07 21:19:18.532322082 +0300
+@@ -6,8 +6,6 @@
+ use Cwd ();
+ use Config;
+ use Text::ParseWords;
+-use IO::File;
+-use Data::Dumper;$Data::Dumper::Indent=1;
+ use IPC::Cmd qw(can_run);
+ use File::Temp qw(tempfile);
+ 

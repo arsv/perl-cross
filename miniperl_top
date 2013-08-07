@@ -13,6 +13,7 @@ if [ -f $top/lib/buildcustomize.pl ]; then
 	exit 1
 fi
 exec $top/miniperl\
+	-I$top/cnf/stub\
 	-I$top/cnf/cpan\
 	-I$top/lib\
 	-I$top/cpan/AutoLoader/lib\
