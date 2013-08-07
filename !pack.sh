@@ -1,6 +1,6 @@
 #!/bin/sh
 
-tar -zcvf \!pack.tar.gz\
+tar -zcf \!pack.tar.gz\
 	x2p/Makefile\
 	cnf/config*\
 	cnf/hints\
