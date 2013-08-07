@@ -51,7 +51,7 @@ if [ -n "$userhints" ]; then
 		usehints 'hint' "$h"
 	done
 fi
-	
+
 # For i686-pc-linux-gnu, try such hints:
 #	i686-pc-linux-gnu	(complete target arch)
 #	a/i686-pc		(architecture/machine name)
@@ -92,6 +92,15 @@ elif [ -n "$target" ]; then
 	setvardefault archname "$target"
 else 
 	die "No \$target defined (?!)"
+fi
+
+# Check whether we'll need to append anything to archname
+# configure_version must be included somewhere before this point
+# Note: this breaks "set only if not set by this point" rule,
+# but allows using -Darchname *and* -Duseversionedarchname at the same time
+if [ "$useversionedarchname" == 'define' ]; then
+	msg "Using versioned archname ($archname-$api_versionstring)"
+	setvar 'archname' "$archame-$api_versionstring"
 fi
 
 # Add separator to log file
