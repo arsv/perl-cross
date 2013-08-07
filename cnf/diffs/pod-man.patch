@@ -1,5 +1,5 @@
---- Man.pm.orig	2012-07-04 14:39:42.979163032 +0300
-+++ Man.pm	2012-07-04 14:36:42.532501138 +0300
+--- cpan/podlators/lib/Pod/Man.pm.orig	2012-07-04 14:39:42.979163032 +0300
++++ cpan/podlators/lib/Pod/Man.pm	2012-07-04 14:36:42.532501138 +0300
 @@ -31,7 +31,6 @@
  use vars qw(@ISA %ESCAPES $PREAMBLE $VERSION);
  

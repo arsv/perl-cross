@@ -39,19 +39,18 @@ ext_makefiles = $(patsubst %,%/Makefile,$(ext))
 disabled_ext_makefiles = $(pathsubst %,%/Makefile,$(disabled_ext))
 
 # ---[ perl-cross patches ]-----------------------------------------------------
-CROSSPATCHED = $(patsubst cnf/diffs/%.patch,%,$(shell find cnf/diffs -name '*.patch'))
+# Note: the files are patched in-place, and so do not make valid make-rules
+# Because of this, they are only applied loosely, allowing the user to intervene
+# if need be.
+CROSSPATCHES = $(shell find cnf/diffs -name '*.patch')
+CROSSPATCHED = $(patsubst %.patch,%.applied,$(CROSSPATCHES))
 
-# note: it's ok to make this target manually, but generally the patches should be
-# applied automatically without calling it via direct dependencies on the files
-# in $(CROSSPATCHED)
-crosspatch: $(patsubst %,cnf/diffs/%.patched,$(CROSSPATCHED))
+crosspatch: $(CROSSPATCHED)
 
-$(CROSSPATCHED): %: | cnf/diffs/%.patched
-
-cnf/diffs/%.patched: cnf/diffs/%.patch
-	test -f cnf/diffs/$*.orig && cp cnf/diffs/$*.orig $* || cp $* cnf/diffs/$*.orig
-	patch -p0 $* cnf/diffs/$*.patch
-	touch $@
+# Original version are not saved anymore; patch generally takes care of this,
+# and if that fails, reaching for the source tarball is the safest option.
+$(CROSSPATCHED): %.applied: %.patch
+	patch -p0 -i $< && touch $@
 
 # ---[ common ]-----------------------------------------------------------------
 
@@ -73,7 +72,7 @@ config-pm: $(CONFIGPM)
 
 xconfig-pm: $(XCONFIGPM)
 
-$(XCONFIGPM): tconfig.sh configpm | xlib miniperl$X cnf/diffs/configpm.patched
+$(XCONFIGPM): tconfig.sh configpm | xlib miniperl$X
 	./miniperl_top configpm --config-sh=tconfig.sh --config-pm=xlib/Config.pm --config-pod=xlib/Config.pod
 
 xlib:
@@ -225,7 +224,7 @@ extensions: cflags $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
 modules: extensions
 
 # Some things needed to make modules
-%/Makefile.PL: | miniperl$X cnf/diffs/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm.patched
+%/Makefile.PL: | miniperl$X
 	./miniperl_top make_ext_Makefile.pl $@
 
 cflags: cflags.SH
@@ -280,8 +279,6 @@ cpan/ExtUtils-ParseXS/Makefile cpan/ExtUtils-Constant/Makefile: \
 cpan/List-Util/pm_to_blib: dynaloader
 
 ext/Pod-Functions/pm_to_blib: cpan/Pod-Simple/pm_to_blib cpan/Pod-Escapes/pm_to_blib
-
-cpan/podlators/pm_to_blib: cnf/diffs/cpan/podlators/lib/Pod/Man.pm.patched
 
 uni.data: $(CONFIGPM) lib/unicore/mktables | miniperl$X
 	./miniperl_top lib/unicore/mktables -w -C lib/unicore -P pod -maketest -makelist -p
@@ -362,11 +359,11 @@ META.yml: Porting/makemeta Porting/Maintainers.pl Porting/Maintainers.pm miniper
 
 install: install.perl install.man
 
-install.perl: installperl | miniperl$X cnf/diffs/installperl.patched
+install.perl: installperl | miniperl$X
 	./miniperl_top installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
 	-@test ! -s extras.lst || $(MAKE) extras.install
 
-install.man: installman pod/perltoc.pod | miniperl$X cnf/diffs/installman.patched
+install.man: installman pod/perltoc.pod | miniperl$X
 	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
 
 ifdef target_name

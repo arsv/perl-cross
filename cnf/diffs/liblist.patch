@@ -1,5 +1,5 @@
---- Kid.pm.orig	2012-07-04 14:55:02.915805376 +0300
-+++ Kid.pm	2012-07-04 14:55:15.322471717 +0300
+--- cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm	2012-07-04 14:55:02.915805376 +0300
++++ cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm	2012-07-04 14:55:15.322471717 +0300
 @@ -19,9 +19,10 @@
  use File::Spec;
  
