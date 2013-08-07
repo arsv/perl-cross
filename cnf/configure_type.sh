@@ -97,4 +97,10 @@ check hastype 'struct statfs' 'sys/types.h sys/param.h sys/mount.h sys/vfs.h sys
 check hastype 'union semun' 'sys/types.h sys/ipc.h sys/sem.h'
 check hastype 'socklen_t' 'sys/types.h sys/socket.h'
 
+# These checks are simplified compared to what Configure does.
+check hastype 'ip_mreq' 'sys/types.h sys/socket.h netinet/in.h'
+check hastype 'ip_mreq_source' 'sys/types.h sys/socket.h netinet/in.h'
+check hastype 'ipv6_mreq' 'sys/types.h sys/socket.h netinet/in.h'
+check hastype 'ipv6_mreq_source' 'sys/types.h sys/socket.h netinet/in.h'
+
 check hastype 'bool' 'stdio.h stdbool.h'

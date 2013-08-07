@@ -474,7 +474,10 @@ default d_inetaton undef
 default d_inetntop undef
 default d_inetpton undef
 default d_int64_t undef
+default d_ip_mreq undef
+default d_ip_mreq_source undef
 default d_ipv6_mreq undef
+default d_ipv6_mreq_source undef
 default d_isascii undef
 default d_isblank undef
 default d_isfinite undef
