@@ -82,7 +82,7 @@ default bin "$prefix/bin"
 default scriptdir "$prefix/bin"
 default otherlibdirs ' '
 default libsdirs ' '
-default privlib "$prefix/lib/$package"
+default privlib "$prefix/lib/$package/$version"
 default archlib "$prefix/lib/$package/$version/$archname"
 default perlpath "$prefix/bin/perl"
 
