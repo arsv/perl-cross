@@ -232,6 +232,7 @@ default awk awk
 default baserev 5.0
 default bash
 default bison bison
+default bootstrap_charset undef
 default byacc byacc
 default byteorder
 default c
