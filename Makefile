@@ -47,6 +47,10 @@ CROSSPATCHED = $(patsubst %.patch,%.applied,$(CROSSPATCHES))
 
 crosspatch: $(CROSSPATCHED)
 
+# a minor fix for buildroot, force crosspatching when running "make perl modules"
+# instead of "make all"
+perl$x: crosspatch
+
 # Original version are not saved anymore; patch generally takes care of this,
 # and if that fails, reaching for the source tarball is the safest option.
 $(CROSSPATCHED): %.applied: %.patch
@@ -166,10 +170,10 @@ libperl$l: op$o perl$o $(obj) $(dynaloader_o)
 
 perl.o: git_version.h
 
-preplibrary: miniperl$X $(CONFIGPM) lib/re.pm
+preplibrary: | miniperl$X $(CONFIGPM) lib/re.pm
 
 configpod: $(CONFIGPOD)
-$(CONFIGPM_FROM_CONFIG_SH) $(CONFIGPOD): config.sh configpm Porting/Glossary lib/Config_git.pl | miniperl$X
+$(CONFIGPM_FROM_CONFIG_SH) $(CONFIGPOD): config.sh Porting/Glossary lib/Config_git.pl | miniperl$X configpm
 	./miniperl_top configpm
 
 # Both git_version.h and lib/Config_git.pl are built
@@ -190,25 +194,25 @@ lib/buildcustomize.pl: write_buildcustomize.pl | miniperl$X
 # The rules below replace make_ext script used in the original
 # perl build chain. Some host-specific functionality is lost.
 # Check miniperl_top to see how it works.
-$(nonxs_tgt) $(disabled_nonxs_tgt): %/pm_to_blib: %/Makefile
+$(nonxs_tgt) $(disabled_nonxs_tgt): %/pm_to_blib: | %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL)
 
-DynaLoader$o: ext/DynaLoader/pm_to_blib
+DynaLoader$o: | ext/DynaLoader/pm_to_blib
 	@if [ ! -f ext/DynaLoader/DynaLoader$o ]; then rm $<; echo "Stale pm_to_blib, please re-run make"; false; fi
 	cp ext/DynaLoader/DynaLoader$o $@
 
-ext/DynaLoader/pm_to_blib: %/pm_to_blib: %/Makefile
+ext/DynaLoader/pm_to_blib: %/pm_to_blib: | %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static $(STATIC_LDFLAGS)
 
-ext/DynaLoader/Makefile: dist/lib/pm_to_blib
+ext/DynaLoader/Makefile: config.h | dist/lib/pm_to_blib
 
-$(static_tgt): %/pm_to_blib: %/Makefile $(nonxs_tgt)
+$(static_tgt): %/pm_to_blib: | %/Makefile $(nonxs_tgt)
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static $(STATIC_LDFLAGS)
 
-$(dynamic_tgt) $(disabled_dynamic_tgt): %/pm_to_blib: %/Makefile
+$(dynamic_tgt) $(disabled_dynamic_tgt): %/pm_to_blib: | %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=dynamic
 
-%/Makefile: %/Makefile.PL preplibrary cflags | $(XSUBPP) miniperl$X
+%/Makefile: %/Makefile.PL preplibrary cflags config.h | $(XSUBPP) miniperl$X
 	$(eval top=$(shell echo $(dir $@) | sed -e 's![^/]\+!..!g'))
 	cd $(dir $@) && $(top)miniperl_top -I$(top)lib Makefile.PL \
 	 INSTALLDIRS=perl INSTALLMAN1DIR=none INSTALLMAN3DIR=none \
@@ -220,7 +224,7 @@ $(static_ext) $(dynamic_ext) $(nonxs_ext) $(disabled_dynamic_ext) $(disabled_non
 nonxs_ext: $(nonxs_tgt)
 dynamic_ext: $(dynamic_tgt)
 static_ext: $(static_tgt)
-extensions: cflags $(dynamic_tgt) $(static_tgt) $(nonxs_tgt)
+extensions: cflags $(nonxs_tgt) $(dynamic_tgt) $(static_tgt)
 modules: extensions
 
 # Some things needed to make modules
@@ -276,11 +280,17 @@ cpan/ExtUtils-ParseXS/Makefile cpan/ExtUtils-Constant/Makefile: \
 	$(eval top=$(shell echo $(dir $@) | sed -e 's![^/]\+!..!g'))
 	cd $(dir $@) && $(top)miniperl_top Makefile.PL PERL_CORE=1 PERL=$(top)miniperl_top
 
-cpan/List-Util/pm_to_blib: dynaloader
+cpan/List-Util/pm_to_blib: | dynaloader
 
-ext/Pod-Functions/pm_to_blib: cpan/Pod-Simple/pm_to_blib cpan/Pod-Escapes/pm_to_blib
+ext/Pod-Functions/pm_to_blib: | cpan/Pod-Simple/pm_to_blib
 
-uni.data: $(CONFIGPM) lib/unicore/mktables | miniperl$X
+cpan/Pod-Simple/pm_to_blib: | cpan/Pod-Escapes/pm_to_blib
+
+$(dynamic_tgt): | dist/ExtUtils-CBuilder/pm_to_blib
+
+dist/ExtUtils-CBuilder/pm_to_blib: | cpan/Perl-OSType/pm_to_blib cpan/Text-ParseWords/pm_to_blib
+
+uni.data: $(CONFIGPM) lib/unicore/mktables | miniperl$X dist/base/pm_to_blib
 	./miniperl_top lib/unicore/mktables -w -C lib/unicore -P pod -maketest -makelist -p
 
 unidatafiles $(unidatafiles) pod/perluniprops.pod: uni.data
@@ -307,7 +317,7 @@ translators: miniperl$X $(CONFIGPM) dist/Cwd/pm_to_blib
 	$(MAKE) -C x2p all
 
 # ---[ modules lists ]----------------------------------------------------------
-modules.done: modules.list uni.data
+modules.done: modules.list | uni.data
 	echo -n > modules.done
 	-cat $< | (while read i; do $(MAKE) -C $$i && echo $$i >> modules.done; done)
 
@@ -376,8 +386,9 @@ install.miniperl: miniperl$X xlib/Config.pm xlib/Config_heavy.pl
 endif
 
 # ---[ clean ]------------------------------------------------------------------
+# clean-modules must go BEFORE clean-generated-files because it depends on config.h!
 .PHONY: clean clean-obj clean-generated-files clean-subdirs clean-modules
-clean: clean-obj clean-generated-files clean-subdirs clean-modules
+clean: clean-obj clean-modules clean-generated-files clean-subdirs
 
 clean-obj:
 	-test -n "$o" && rm -f *$o
@@ -387,8 +398,8 @@ clean-subdirs:
 	@for i in utils x2p; do $(MAKE) -C $$i clean; done
 
 # assuming modules w/o Makefiles were never built and need no cleaning
-clean-modules:
-	@for i in $(ext) $(disabled_ext); do test -f $$i/Makefile && $(MAKE) $$i/Makefile && $(MAKE) -C $$i clean || true; done
+clean-modules: config.h
+	@for i in $(ext) $(disabled_ext); do test -f $$i/Makefile && touch $$i/Makefile && $(MAKE) -C $$i clean || true; done
 
 clean-generated-files:
 	-rm -f uudmap.h opmini.c generate_uudmap$X bitcount.h $(CONFIGPM)
