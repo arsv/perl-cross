@@ -1018,6 +1018,7 @@ default ranlib ranlib
 default rd_nodata -1
 default readdir64_r_proto 0
 default readdir_r_proto 0
+default revision
 default rm rm
 default rm_try
 default rmail
