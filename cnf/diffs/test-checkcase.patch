@@ -1,0 +1,16 @@
+perl-cross tree has both Configure and configure, which causes
+checkcase.t to fail. Skip them.
+
+diff --git a/t/porting/checkcase.t b/t/porting/checkcase.t
+index 3c05e22..8e27794 100644
+--- t/porting/checkcase.t
++++ t/porting/checkcase.t
+@@ -21,6 +21,8 @@ find({no_chdir => 1, wanted => sub {
+ 
+ 	   # Special exemption for Makefile, makefile
+ 	   return if $name =~ m!\A(?:x2p/)?[Mm]akefile\z!;
++	   # same for Configure, configure in perl-cross
++	   return if $name =~ m!\A[Cc]onfigure\z!;
+ 
+ 	   if ($name eq '.git') {
+ 	       # Don't scan the .git directory, as its contents are outside
