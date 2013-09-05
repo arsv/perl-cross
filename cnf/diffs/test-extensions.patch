@@ -1,0 +1,70 @@
+Make tests aware that Config{extensions} may contain flat directory
+names like PerlIO-scalar instead of PerlIO/scalar.
+
+From François Perrad <francois.perrad@gadz.org>
+
+diff --git a/t/io/crlf.t b/t/io/crlf.t
+index ff0f208..caf290f 100644
+--- t/io/crlf.t
++++ t/io/crlf.t
+@@ -31,7 +31,7 @@ my $file = tempfile();
+     SKIP:
+     {
+ 	skip_if_miniperl("miniperl can't rely on loading PerlIO::scalar");
+-	skip("no PerlIO::scalar") unless $Config{extensions} =~ m!\bPerlIO/scalar\b!;
++	skip("no PerlIO::scalar") unless $Config{extensions} =~ m!\bPerlIO[/-]scalar\b!;
+ 	require PerlIO::scalar;
+ 	my $fcontents = join "", map {"$_\015\012"} "a".."zzz";
+ 	open my $fh, "<:crlf", \$fcontents;
+diff --git a/t/lib/commonsense.t b/t/lib/commonsense.t
+index 27fd302..1b8e51d 100644
+--- t/lib/commonsense.t
++++ t/lib/commonsense.t
+@@ -12,7 +12,7 @@ if (($Config{'extensions'} !~ /\bIO\b/) ){
+   BAIL_OUT("Perl configured without IO module");
+ }
+ # hey, DOS users do not need this kind of common sense ;-)
+-if ($^O ne 'dos' && ($Config{'extensions'} !~ /\bFile\/Glob\b/) ){
++if ($^O ne 'dos' && ($Config{'extensions'} !~ /\bFile[\/-]Glob\b/) ){
+   BAIL_OUT("Perl configured without File::Glob module");
+ }
+ 
+diff --git a/t/op/eval.t b/t/op/eval.t
+index e9a6996..6e03fd9 100644
+--- t/op/eval.t
++++ t/op/eval.t
+@@ -473,7 +473,7 @@ SKIP: {
+     skip_if_miniperl('no dynamic loading on miniperl, no Devel::Peek', 2);
+     require Config;
+     skip('Devel::Peek was not built', 2)
+-	unless $Config::Config{extensions} =~ /\bDevel\/Peek\b/;
++	unless $Config::Config{extensions} =~ /\bDevel[\/-]Peek\b/;
+ 
+     my $tempfile = tempfile();
+     open $prog, ">", $tempfile or die "Can't create test file";
+diff --git a/t/op/goto_xs.t b/t/op/goto_xs.t
+index fbdd2dd..45274c7 100644
+--- t/op/goto_xs.t
++++ t/op/goto_xs.t
+@@ -90,7 +90,7 @@ is($ret, $value, 'goto &$function_ref; from a sub called without arglist');
+ 
+ BEGIN {
+     use Config;
+-    if ($Config{extensions} =~ m{XS/APItest}) {
++    if ($Config{extensions} =~ m{XS[/-]APItest}) {
+ 	eval q[use XS::APItest qw(mycroak); 1]
+ 	    or die "use XS::APItest: $@\n";
+     }
+diff --git a/t/op/taint.t b/t/op/taint.t
+index 9cea740..5740228 100644
+--- t/op/taint.t
++++ t/op/taint.t
+@@ -32,7 +32,7 @@ BEGIN {
+       $ENV{PATH} = $ENV{PATH};
+       $ENV{TERM} = $ENV{TERM} ne ''? $ENV{TERM} : 'dummy';
+   }
+-  if ($Config{'extensions'} =~ /\bIPC\/SysV\b/
++  if ($Config{'extensions'} =~ /\bIPC[\/-]SysV\b/
+       && ($Config{d_shm} || $Config{d_msg})) {
+       eval { require IPC::SysV };
+       unless ($@) {
