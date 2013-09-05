@@ -227,16 +227,16 @@ This module is only usefull for
 
 =over 4
 
-=item
+=item *
 
 computers where you cannot install C<Digest::MD5> (e.g. lack of a C-Compiler)
 
-=item
+=item *
 
 encrypting only small amounts of data (less than one million bytes). I use it to
 hash passwords.
 
-=item
+=item *
 
 educational purposes
 
@@ -324,13 +324,13 @@ This implementation of the MD5 algorithm has some limitations:
 
 =over 4
 
-=item
+=item *
 
 It's slow, very slow. I've done my very best but Digest::MD5 is still about 100 times faster.
 You can only encrypt Data up to one million bytes in an acceptable time. But it's very usefull
 for encrypting small amounts of data like passwords.
 
-=item
+=item *
 
 You can only encrypt up to 2^32 bits = 512 MB on 32bit archs. But You should
 use C<Digest::MD5> for those amounts of data anyway.
@@ -341,7 +341,7 @@ use C<Digest::MD5> for those amounts of data anyway.
 
 L<Digest::MD5>
 
-L<md5(1)>
+md5(5)
 
 RFC 1321
 
@@ -363,7 +363,7 @@ covered by the following copyright:
 
 =over 4
 
-=item
+=item *
 
 Copyright (C) 1991-1992, RSA Data Security, Inc. Created 1991. All
 rights reserved.
