@@ -1,5 +1,5 @@
---- configpm	2013-03-04 17:16:21.000000000 +0200
-+++ configpm	2013-04-04 12:25:09.699708320 +0300
+--- configpm	2013-09-06 00:39:39.348808737 +0300
++++ configpm	2013-09-06 00:39:51.555475081 +0300
 @@ -57,9 +57,9 @@
  # wonderfully easy to instrument, and no longer exists.
  $Common{$_} = $_ foreach qw(dlext so);
@@ -45,7 +45,7 @@
  ($Config_heavy = $Config_PM) =~ s/\.pm$/_heavy.pl/;
  die "Can't automatically determine name for Config_heavy.pl from '$Config_PM'"
    if $Config_heavy eq $Config_PM;
-@@ -334,7 +327,8 @@
+@@ -337,7 +330,8 @@
      $in_v = $val !~ /$quote\n/;
      next if $in_v;
  
