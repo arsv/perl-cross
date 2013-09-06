@@ -70,7 +70,7 @@ else
 fi
 	
 # It's a bit more complicated in original Configure, but let's
-# assume that if there's clock_t defined that's what times() returns.
+# assume that if there's clock_t defined then that's what times() returns.
 if [ "$d_times" == 'define' ]; then
 	mstart "Looking what times() may return"
 	logvars d_clock_t

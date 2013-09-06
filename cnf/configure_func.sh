@@ -4,7 +4,7 @@
 # WARNING: some compilers do have built-in notions on how certain
 # function should be called, and will produce errors if those functions
 # are called in a "wrong" way. 
-# So far looks like the safest option is to provide type-compatible arguments,
+# So far it looks like the safest option is to provide type-compatible arguments,
 # i.e., "0" for ints, "NULL" for pointers etc.
 function hasfunc {
 	if [ -n "$4" ] ; then _s="$4"; else _s="d_$1"; fi
@@ -28,7 +28,7 @@ function hasfunc {
 
 # hasvar name includes [symbol]
 # We use try_link here instead of try_compile to be sure we have the
-# variable in question not only declared but also present in libraries we use.
+# variable in question not only declared but also present somewhere in the libraries.
 function hasvar {
 	if [ -n "$4" ] ; then _s="$4"; else _s="d_$1"; fi
 

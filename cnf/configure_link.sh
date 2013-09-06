@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Names of some variables in original configure are shortened
+# Names of some variables in Configure are shortened
 # (e.g. i_niin for <netinet/in.h>), and it breaks strict pattern
-# used here. To resolve this, we'll "link" new names to old shorter
-# (pull possibly set value from one to another).
+# used here. To resolve this, we will "link" new names to the old,
+# shorter ones by copying their values.
 
 # It's possible to make has* functions set several variables at once,
 # but this complicates hint/cache reporting and processing.

@@ -2,7 +2,7 @@
 
 # We can't really check if header is there (gcc reports no errors for (some?) missing
 # headers). And, in fact, we need not to. All we want to know is whether it's
-# safe to include this header, i.e., won't it break compilation.
+# safe to include this header, i.e., that it won't break compilation.
 
 function hashdr {
 	_hdrname=`symbolname "$1"`
