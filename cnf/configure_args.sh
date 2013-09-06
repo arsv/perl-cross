@@ -183,7 +183,7 @@ while [ $i -le $# -o -n "$n" ]; do
 			;;
 		host-*)
 			what=`echo "$a" | sed -e 's/^host-//'`
-			hco="$hco --$what='$v'"
+			hco="$hco --$what=$v"
 			;;
 		target-*|with-*)
 			what=`echo "$a" | sed -e 's/^[^-]\+-//' -e 's/-/_/g'`
