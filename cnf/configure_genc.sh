@@ -652,7 +652,7 @@ default d_socket undef
 default d_socklen_t undef
 default d_sockpair undef
 default d_socks5_init undef
-default d_sprintf_returns_strlen undef
+default d_sprintf_returns_strlen define
 default d_sqrtl undef
 default d_srand48_r undef
 default d_srandom_r undef
@@ -817,7 +817,7 @@ default hint 'default'
 default hostcat 'cat /etc/hosts'
 default i_arpainet undef
 default i_assert undef
-default i_bsdioctl undef
+default i_bsdioctl
 default i_crypt undef
 default i_db undef
 default i_dbm undef
