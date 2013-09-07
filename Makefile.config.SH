@@ -23,7 +23,6 @@ if [ "$usecrosscompile" == 'define' ]; then
 	. ./xconfig.sh
 	hostcc="$cc"
 	hostccflags="$ccflags"
-	hostccdefines="$ccdefines"
 	hostldflags="$ldflags"
 	hostar="$ar"
 	hostranlib="$ranlib"
@@ -56,7 +55,7 @@ else
 	dynaloader="DynaLoader"
 fi
 
-cflags="-DPERL_CORE $ccflags $ccdefines $optimize"
+cflags="-DPERL_CORE $ccflags $optimize"
 test "$useshrplib" == 'define' && cflags="$cflags $cccdlflags"
 
 if [ "$usecrosscompile" == "define" ]; then
@@ -72,7 +71,7 @@ LDDLFLAGS = $lddlflags
 LIBS = $perllibs
 
 HOSTCC = $hostcc
-HOSTCFLAGS = -DPERL_CORE -DUSE_CROSS_COMPILE $hostccflags $hostccdefines
+HOSTCFLAGS = -DPERL_CORE -DUSE_CROSS_COMPILE $hostccflags
 HOSTCFMINI = \$(HOSTCFLAGS) -DPERL_EXTERNAL_GLOB
 HOSTLDFLAGS = $hostldflags
 HOSTLIBS = $hostlibs

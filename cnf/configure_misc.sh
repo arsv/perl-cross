@@ -69,7 +69,7 @@ if not hinted 'uselargefiles'; then
 	esac
 fi
 if [ "$uselargefiles" == 'define' ]; then
-	appendvar 'ccdefines' " -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
+	appendvar 'ccflags' " -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
 	log
 fi
 

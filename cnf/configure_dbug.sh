@@ -23,11 +23,11 @@ esac
 mstart "Checking whether to use -DDEBUGGING"
 case "$DEBUGGING" in
 	both|define)
-		case "$ccdefines" in 
+		case "$ccflags" in 
 			*-DDEBUGGING*)
 				result "already there" ;;
 			*)
-				appendvar ccdefines '-DDEBUGGING'
+				appendvar ccflags '-DDEBUGGING'
 				result "yes" ;;
 		esac ;;
 	*)
