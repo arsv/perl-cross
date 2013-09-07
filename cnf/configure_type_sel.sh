@@ -172,4 +172,23 @@ if not hinted "d_nv_preserves_uv"; then
 	resdef "apparently so" "probably no" d_nv_preserves_uv
 fi
 
+# nv_overflows_integers_at is a property of nvtype alone, it doesn't depend on uvtype at all.
+# Assuming IEEE 754 floats here once again.
+mstart "Checking integer capacity of nv"
+if not hinted "nv_overflows_integers_at"; then
+	case "$nvsize" in
+		10)	setvar nv_overflows_integers_at '256.0*256.0*256.0*256.0*256.0*256.0*256.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0'
+			result "long double"
+			;;
+		8)	setvar nv_overflows_integers_at '256.0*256.0*256.0*256.0*256.0*256.0*2.0*2.0*2.0*2.0*2.0'
+			result "double"
+			;;
+		4)	setvar nv_overflows_integers_at '256.0*256.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0'
+			result "float"
+			;;
+		*)	result "unknown"
+			;;
+	esac
+fi
+
 failpoint

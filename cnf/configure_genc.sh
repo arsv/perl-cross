@@ -978,7 +978,7 @@ default nroff nroff
 default nvEUformat '"E"'
 default nvFUformat '"F"'
 default nvGUformat '"G"'
-default nv_overflows_integers_at '256.0*256.0*256.0*256.0*256.0*256.0*2.0*2.0*2.0*2.0*2.0'
+default nv_overflows_integers_at 0
 default nv_preserves_uv_bits 0
 default nveformat '"e"'
 default nvfformat '"f"'
