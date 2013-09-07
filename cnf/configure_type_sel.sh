@@ -125,4 +125,51 @@ if [ "$i_stdbool" == 'define' -a "$d_bool" != "define" ]; then
 	setvar i_stdbool undef
 fi
 
+# The following code may be wrong, but there's no way to
+# tell for sure without running on-target tests.
+# And "undef" as a safe default fails op/range.t on some targets.
+# So try to make a guess.
+#
+# Note that in reality there's not that much choice here, since
+# nvtype is almost invariably an IEEE 754 double (8 bytes) or long double (10 bytes),
+# while uvtype is either 4-byte of 8-byte unsigned integer.
+#
+# Quite surprisingly, perl seems to be content with nv_preserves_uv_bits=0
+# in all cases. However, given the floating-point type selection above,
+# it's seems to be safe to assume preserved bits match IEEE 754 definitions as well.
+#
+# Signedness of uvtype doesn't generally matter, except when it's long double vs 64bit int.
+# However, uvtype should always be unsigned, and the code above makes sure it is.
+mstart "Guessing nv_preserves_uv_bits value"
+if not hinted "nv_preserves_uv_bits"; then
+	case "$nvsize:$uvsize" in
+		4:*)
+			setvar nv_preserves_uv_bits 16
+			result "$nv_preserves_uv_bits"
+			;;
+		*:4)
+			setvar nv_preserves_uv_bits 32
+			result "$nv_preserves_uv_bits"
+			;;
+		8:8)
+			setvar nv_preserves_uv_bits 53
+			result "$nv_preserves_uv_bits"
+			;;
+		10:8)
+			setvar nv_preserves_uv_bits 64
+			result "$nv_preserves_uv_bits"
+			;;
+		*)
+			setvar nv_preserves_uv_bits 0
+			result "no idea"
+			;;
+	esac
+fi
+
+mstart "Deciding whether nv preserves full uv"
+if not hinted "d_nv_preserves_uv"; then
+	test $nv_preserves_uv_bits -gt 0 -a $[8*uvsize] == $nv_preserves_uv_bits
+	resdef "apparently so" "probably no" d_nv_preserves_uv
+fi
+
 failpoint
