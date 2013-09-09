@@ -71,7 +71,6 @@ default package perl5
 default version "$PERL_REVISION.$PERL_VERSION.$PERL_SUBVERSION"
 
 default prefix "/usr"
-default sharedir "$prefix/share"
 default html1dir "$sharedir/doc/perl/html"
 default html3dir "$sharedir/doc/perl/html"
 default man1dir "$sharedir/man/man1"
@@ -112,12 +111,7 @@ default installprefix ''
 default_inst html1dir
 default_inst html3dir
 default_inst man1dir
-default_inst man1ext
 default_inst man3dir
-default_inst man3ext
-default_inst scriptdir
-default_inst otherlibdirs
-default_inst libsdirs
 default_inst archlib
 default_inst bin
 default_inst html1dir
@@ -165,6 +159,17 @@ const binexp "$bin"
 default libpth "/lib /usr/lib /usr/local/lib"
 default glibpth "$libpth"
 default plibpth
+
+default Author
+default Date '$Date'
+default Header
+default Id '$Id'
+default Locker
+default Log '$Log'
+default RCSfile '$RCSfile'
+default Revision '$Revision'
+default Source
+default State
 
 required PERL_API_REVISION
 required PERL_API_SUBVERSION
@@ -214,7 +219,6 @@ required lseeksize
 required lseektype
 required shortsize
 
-default Mcc Mcc
 default PERL_PATCHLEVEL
 default _a .a
 default _exe
@@ -535,7 +539,7 @@ default d_msgsnd undef
 default d_msync undef
 default d_munmap undef
 default d_mymalloc undef
-default d_ndbm_h_uses_prototypes
+default d_ndbm undef
 default d_ndbm_h_uses_prototypes define
 default d_nice undef
 default d_nl_langinfo undef
@@ -1089,7 +1093,6 @@ default static_ext
 default stdchar char
 default stdio_base
 default stdio_bufsiz
-default stdio_bufsize
 default stdio_cnt
 default stdio_filbuf
 default stdio_ptr
@@ -1101,6 +1104,7 @@ default subversion
 default sysman
 default tail
 default tar
+default targetarch
 default tbl
 default tee
 default test test
@@ -1108,7 +1112,6 @@ default timeincl
 default timetype
 default tmpnam_r_proto 0
 default to :
-default toolsprefix
 default touch touch
 default tr tr
 default trnl '\n'
@@ -1150,6 +1153,7 @@ default usesitecustomize undef
 default usesocks undef
 default usethreads undef
 default usevendorprefix undef
+default useversionedarchname undef
 default usevfork false
 default usrinc
 default uuname
