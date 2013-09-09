@@ -45,12 +45,6 @@ function tryphints {
 }
 
 msg "Checking which hints to use"
-if [ -n "$userhints" ]; then
-	for h in `echo "$userhints" | sed -e 's/,/ /g'`; do
-		tryhints 'hint' "$h"
-	done
-fi
-
 # For i686-pc-linux-gnu, try such hints:
 #	i686-pc-linux-gnu	(complete target arch)
 #	a/i686-pc		(architecture/machine name)
@@ -95,6 +89,12 @@ elif [ -n "$target" ]; then
 	setvardefault archname "$target"
 else 
 	die "No \$target defined (?!)"
+fi
+
+if [ -n "$userhints" ]; then
+	for h in `echo "$userhints" | sed -e 's/,/ /g'`; do
+		tryhints 'hint' "$h"
+	done
 fi
 
 # Check whether we'll need to append anything to archname
