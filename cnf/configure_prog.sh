@@ -172,6 +172,22 @@ if not hinted "extern_C"; then
 	esac
 fi
 
+mstart "Checking whether target executable format is ELF"
+if not hinted 'bin_ELF'; then
+	try_start
+	try_cat <<END
+int main(void) { return 0; }
+END
+	if try_link; then
+		_r=`file try$_e | grep ELF`;
+		test -n "$_r"
+		resdef 'yes' 'no' 'bin_ELF'
+	else
+		setvar 'bin_ELF' 'undef'
+		result "not sure"
+	fi
+fi
+
 if [ "$mode" == 'target' -o "$mode" == 'native' ]; then
 	if [ -n "$sysroot" ]; then
 		msg "Adding --sysroot to {cc,ld}flags"

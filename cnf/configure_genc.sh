@@ -235,6 +235,7 @@ default asctime_r_proto  0
 default awk awk
 default baserev 5.0
 default bash
+default bin_ELF define
 default bison bison
 default bootstrap_charset undef
 default byacc byacc
