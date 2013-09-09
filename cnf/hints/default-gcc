@@ -1,1 +1,1 @@
-ccflags="-W"
+ccflags+="-W"

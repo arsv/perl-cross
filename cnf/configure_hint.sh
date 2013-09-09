@@ -5,50 +5,49 @@
 # in hint files, but this will break things (say, overwrite variables
 # set by user). So we use sed to make those lines look like
 #	hint "var" "value"
-# The first, not the last occurence of a variable is effective.
-# That's why more specific hint files are tried first.
+# Unlike pretty much any other place in cnf/, the last assignment is
+# effective here.
 
-function usehints {
-	hintfunc="$1"
-	hintfile="$base/hints/$2"
+function tryhints {
+	hintfile="$base/hints/$1"
 	if [ -f "$hintfile" ]; then
 		msg "	using $hintfile"
-		sed -e "/^\([A-Za-z0-9_]\+\)=/s//$hintfunc \1 /" "$hintfile" > config.hint.tmp
+		sed -e "/^\([A-Za-z0-9_]\+\)+=/s//happend \1 /" \
+		    -e "/^\([A-Za-z0-9_]\+\)=/s//hint \1 /"\
+			"$hintfile" > config.hint.tmp
 		. ./config.hint.tmp
 		rm -f config.hint.tmp
 	else
-		log "	no hints for $2"
+		log "	no hints for $1"
 	fi
 }
 
 function hint {
-	eval _value="\"\$$1\""
-	if [ -z "$_value" ]; then
+	_v=`valueof "$1"`
+	test -z "$_v" && setvaru "$1" "$2" 'hinted'
+}
+
+function happend {
+	_v=`valueof "$1"`
+	_s=`valueof "x_$1"`
+	if [ -z "$_v" ]; then
 		setvaru "$1" "$2" 'hinted'
+	elif [ "$_s" == 'hinted' ]; then
+		appendvar "$1" "$2"
 	fi
 }
 
-function hintover {
-	eval _value="\"\$$1\""
-	eval _source="\"\$x_$1\""
-	if [ -z "$_value" -o "$_source" == 'hinted' ]; then
-		setvaru "$1" "$2" 'hinted'
-	fi
-}
-
-function trypphints {
-	hh="$1"; shift
-	hp="$1"; shift
-	for ha in $@; do
-		test -n "$hp" && usehints "$hh" "$hp-$ha"
-		usehints "$hh" "$ha"
-	done
+# trypphints prefix hint
+# tries hint then prefix-hint
+function tryphints {
+	test -n "$2" && tryhints "$2"
+	test -n "$1" -a -n "$2" && tryhints "$1-$2"
 }
 
 msg "Checking which hints to use"
 if [ -n "$userhints" ]; then
 	for h in `echo "$userhints" | sed -e 's/,/ /g'`; do
-		usehints 'hint' "$h"
+		tryhints 'hint' "$h"
 	done
 fi
 
@@ -71,9 +70,12 @@ if [ -n "$targetarch" ]; then
 		*) h_pref=''
 	esac
 
-	trypphints 'hint' "$h_pref"\
-		"$targetarch" "$h_arch-$h_mach" "$h_arch" \
-		"$h_type" "$h_base" "default"
+	tryphints "$h_pref" 'default'
+	tryphints "$h_pref" "$h_base"
+	tryphints "$h_pref" "$h_type"
+	tryphints "$h_pref" "$h_arch"
+	tryphints "$h_pref" "$h_arch-$h_mach"
+	tryphints "$h_pref" "$targetarch"
 
 	# Once we get all this $h_*, let's set archname
 	setvardefault archname "$h_arch-$h_base"
@@ -87,7 +89,8 @@ elif [ -n "$target" ]; then
 		*) h_pref=''
 	esac
 
-	trypphints 'hint' "$h_pref" "$target" "default"
+	tryphints "$h_pref" 'default'
+	tryphints "$h_pref" "$target"
 
 	setvardefault archname "$target"
 else 

@@ -6,14 +6,16 @@
 
 if [ -n "$targetarch" -a -n "$cctype" ]; then
 	msg "Checking which hints to use for cc type $cctype"
-	trypphints 'hintover' "$h_pref"\
-		"$targetarch-$cctype" "$h_arch-$h_mach-$cctype" "$h_arch-$cctype" \
-		"$h_type-$cctype" "$h_base-$cctype" "default-$cctype"
-
+	tryphints "$h_pref" "default-$cctype"
+	tryphints "$h_pref" "$h_base-$cctype"
+	tryphints "$h_pref" "$h_type-$cctype"
+	tryphints "$h_pref" "$h_arch-$cctype"
+	tryphints "$h_pref" "$h_arch-$h_mach-$cctype"
+	tryphints "$h_pref" "$targetarch-$cctype"
 elif [ -n "$target" -a -n "$cctype" ]; then
 	msg "Checking which hints to use for cc type $cctype"
-	trypphints 'hintover' "$h_pref"\
-		"$targetarch-$cctype""default-$cctype"
+	tryphints "$h_pref" "default-$cctype"
+	tryphints "$h_pref" "$targetarch-$cctype"
 fi
 # Add separator to log file
 log

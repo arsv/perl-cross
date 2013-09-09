@@ -28,5 +28,5 @@ sizetsize=4
 ssizetsize=4
 fpostsize=8
 cccdlflags=
-ccdefines="-DSIGHUP=0 -DSIGQUIT=0"
+ccflags+="-DSIGHUP=0 -DSIGQUIT=0"
 d_attribute_malloc=undef
