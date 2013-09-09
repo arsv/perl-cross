@@ -134,6 +134,44 @@ if [ -z "$cctype" ]; then
 	fi
 fi
 
+mstart "Checking whether $cc is a C++ compiler"
+if not hinted 'd_cplusplus'; then
+	try_start
+	try_cat <<END
+#if defined(__cplusplus)
+YES
+#endif
+END
+	try_dump
+	if not run $cc $ccflags -E try.c > try.out 2>>$cfglog; then
+		setvar 'd_cplusplus' 'undef'
+		result "probably no"
+	else
+		_r=`grep -v '^#' try.out | grep . | head -1 | grep '^YES'`
+		if [ -n "$_r" ]; then
+			setvar 'd_cplusplus' 'define'
+			result "yes"
+		else
+			setvar 'd_cplusplus' 'undef'
+			result 'no'
+		fi
+	fi
+fi
+
+mstart "Deciding how to declare external symbols"
+if not hinted "extern_C"; then
+	case "$d_cplusplus" in
+		define)
+			setvar "extern_C" 'extern "C"'
+			result "$extern_C"
+			;;
+		*)
+			setvar "extern_C" 'extern'
+			result "$extern_C"
+			;;
+	esac
+fi
+
 if [ "$mode" == 'target' -o "$mode" == 'native' ]; then
 	if [ -n "$sysroot" ]; then
 		msg "Adding --sysroot to {cc,ld}flags"
