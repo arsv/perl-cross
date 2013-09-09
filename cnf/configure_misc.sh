@@ -52,27 +52,6 @@ EOM
 	fi
 fi
 
-mstart "Checking whether it's ok to enable large file support"
-if not hinted 'uselargefiles'; then
-	# Adding -D_FILE_OFFSET_BITS is mostly harmless, except
-	# when dealing with uClibc that was compiled w/o largefile
-	# support
-	case "$ccflags" in
-		*-D_FILE_OFFSET_BITS=*)
-			result "already there"
-			;;
-		*)
-			try_start
-			try_includes "stdio.h"
-			try_compile -D_FILE_OFFSET_BITS=64
-			resdef "yes, enabling it" "no, it's disabled" 'uselargefiles' 
-	esac
-fi
-if [ "$uselargefiles" == 'define' ]; then
-	appendvar 'ccflags' " -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
-	log
-fi
-
 if [ "$usethreads" == 'define' ]; then
 	mstart 'Looking whether to use interpreter threads'
 	if [ "$useithreads" == 'define' ]; then

@@ -195,3 +195,28 @@ if [ "$mode" == 'target' -o "$mode" == 'native' ]; then
 		setvar 'ldflags' "--sysroot='$sysroot' $ldflags"
 	fi
 fi
+
+
+# Set up largefile support, if needed.
+# This must be done very early since it affects $ccflags, and thus the compiler behavior
+# including type sizes.
+mstart "Checking whether it's ok to enable large file support"
+if not hinted 'uselargefiles'; then
+	# Adding -D_FILE_OFFSET_BITS is mostly harmless, except
+	# when dealing with uClibc that was compiled w/o largefile
+	# support
+	case "$ccflags" in
+		*-D_FILE_OFFSET_BITS=*)
+			result "already there"
+			;;
+		*)
+			try_start
+			try_includes "stdio.h"
+			try_compile -D_FILE_OFFSET_BITS=64
+			resdef "yes, enabling it" "no, it's disabled" 'uselargefiles' 
+	esac
+fi
+if [ "$uselargefiles" == 'define' ]; then
+	appendvar 'ccflags' " -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
+	log
+fi
