@@ -68,3 +68,16 @@ index 9cea740..5740228 100644
        && ($Config{d_shm} || $Config{d_msg})) {
        eval { require IPC::SysV };
        unless ($@) {
+diff --git a/t/TEST b/t/TEST
+index 00d8159..47d0b5a 100755
+--- t/TEST
++++ t/TEST
+@@ -402,7 +402,7 @@ sub _tests_from_manifest {
+ 	while (<MANI>) {
+ 	    if (m!^((?:cpan|dist|ext)/(\S+)/+(?:[^/\s]+\.t|test\.pl)|lib/\S+?(?:\.t|test\.pl))\s!) {
+ 		my $t = $1;
+-		my $extension = $2;
++		my $extension = "$1/$2";
+ 		if (!$::core || $t =~ m!^lib/[a-z]!) {
+ 		    if (defined $extension) {
+ 			$extension =~ s!/t(:?/\S+)*$!!;
