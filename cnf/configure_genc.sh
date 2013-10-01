@@ -71,6 +71,7 @@ default package perl5
 default version "$PERL_REVISION.$PERL_VERSION.$PERL_SUBVERSION"
 
 default prefix "/usr"
+default sharedir "$prefix/share"
 default html1dir "$sharedir/doc/perl/html"
 default html3dir "$sharedir/doc/perl/html"
 default man1dir "$sharedir/man/man1"
