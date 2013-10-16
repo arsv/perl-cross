@@ -1,0 +1,48 @@
+package TestInit;
+
+sub import {
+	my $chdir;
+	my $setopt;
+
+	foreach (@_) {
+		if($_ eq 'A') {
+			require File::Spec::Functions;
+			# Forcibly untaint this.
+			@INC = map { $_ = File::Spec::Functions::rel2abs($_); /(.*)/; $1 } @INC;
+			$^X = File::Spec::Functions::rel2abs($^X);
+		} elsif($_ eq 'T') {
+			$chdir = '..';
+			unshift(@INC, './lib');
+		} elsif($_ eq 'NC') {
+			delete $ENV{PERL_CORE}
+		}
+	}
+
+	# See TestInit.pm in the perl tree for explaination.
+	unless($setopt) {
+		if (-f 't/TEST' && -f 'MANIFEST' && -d 'lib' && -d 'ext') {
+			if ($0 =~ s!^((?:ext|dist|cpan)[\\/][^\\/]+)[\\/](.*\.t)$!$2!) {
+				$chdir = $1;
+				$setopt = 1;
+				$^X =~ s!^\.([\\/])!..$1..$1!;
+			} else {
+				$chdir = 't';
+				unshift(@INC, '../lib');
+				$setopt = $0 =~ m!^lib/!;
+			}
+		} else {
+			unshift(@INC, '../lib');
+		}
+	}
+
+	chdir($chdir) or die "Can't chdir($chdir): $!"
+		if defined($chdir) && !(-f 't/TEST' && -f 'MANIFEST' && -d 'lib' && -d 'ext');
+
+	if($setopt) {
+		my $lib = join $sep, @INC;
+		$lib .= substr($ENV{PERL5LIB}, 0, 0) if exists $ENV{PERL5LIB};
+		$ENV{PERL5LIB} = $lib;
+	}
+}
+
+1;

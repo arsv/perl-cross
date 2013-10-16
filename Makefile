@@ -384,10 +384,19 @@ install.miniperl: miniperl$X xlib/Config.pm xlib/Config_heavy.pl
 	install -D -m 0644 xlib/Config_heavy.pl $(hostprefix)/$(target_arch)/lib/perl/Config_heavy.pl
 endif
 
+# ---[ testpack ]---------------------------------------------------------------
+.PHONY: testpack
+testpack: TESTPACK.tar.gz
+
+TESTPACK.list: | miniperl$X TESTPACK.px
+	./miniperl$X TESTPACK.px TESTPACK.list TESTPACK
+TESTPACK.tar.gz: TESTPACK.list
+	tar -zcvf $@ -T $<
+
 # ---[ clean ]------------------------------------------------------------------
 # clean-modules must go BEFORE clean-generated-files because it depends on config.h!
-.PHONY: clean clean-obj clean-generated-files clean-subdirs clean-modules
-clean: clean-obj clean-modules clean-generated-files clean-subdirs
+.PHONY: clean clean-obj clean-generated-files clean-subdirs clean-modules clean-testpack
+clean: clean-obj clean-modules clean-generated-files clean-subdirs clean-testpack
 
 clean-obj:
 	-test -n "$o" && rm -f *$o
@@ -410,3 +419,7 @@ clean-generated-files:
 	-rm -f ext.libs static.list
 	-rm -f $(patsubst %,%/ppport.h,$(mkppport_lst))
 	-rm -f cpan/Devel-PPPort/ppport.h cpan/Devel-PPPort/PPPort.pm
+
+clean-testpack:
+	-rm -fr TESTPACK
+	-rm -f TESTPACK.list
