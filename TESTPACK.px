@@ -9,6 +9,7 @@ $DIR = shift || 'TESTPACK';
 	'dist/ExtUtils-Install',
 	'dist/ExtUtils-ParseXS',
 	'cpan/ExtUtils-MakeMaker',
+	'cpan/ExtUtils-Constant',
 	'cpan/File-CheckTree',
 	'cpan/CPANPLUS',
 	'cpan/CPANPLUS-Dist-Build',
@@ -31,7 +32,7 @@ while(<CONFIG>) {
 	$perlpath = $1 if m!^perlpath='(.*)'!;
 }
 close(CONFIG);
-%extensions = map { s!/!-!g; $_ => 1 } @extensions;
+%extensions = map { $_ => 1 } @extensions;
 
 mkdir($DIR);
 open(LIST, '>', $LIST) || die;
@@ -42,9 +43,9 @@ open(MANI, '<', 'MANIFEST') || die;
 while(<MANI>) {
 	chomp;
 	if(m!^(((cpan|dist|ext)/([^/]+))(/\S+)?/[^/\s]+\.t|test\.pl)\s!) {
-		copytest($1) if ($extensions{$4} || ($2 eq 'ext/DynaLoader')) && !$exclude{$1} && !$exclude{$2};
+		copytest($1) if ($extensions{$2} || ($2 eq 'ext/DynaLoader')) && !$exclude{$1} && !$exclude{$2};
 	} elsif(m!^(((cpan|dist|ext|lib)/(\S+))/t/\S+)\s!) {
-		copyfile($1) if $extensions{$4};
+		copyfile($1) if $extensions{$2};
 	} elsif(m!^(lib/\S+/([^/\s]+\.t|test\.pl))\s!) {
 		copytest($1);
 	} elsif(m!^(.*CompTestUtils\.pm)\s*$!) {
@@ -60,25 +61,25 @@ copyfile('regen/keywords.pl');
 copyfile('regen/regen_lib.pl');
 copyfile('embed.fnc');
 copyfile('ext/Pod-Functions/Functions_pm.PL');
-copyfile('cpan/Filter-Util-Call/filter-util.pl') if $extensions{'Filter-Util-Call'};
+copyfile('cpan/Filter-Util-Call/filter-util.pl') if $extensions{'cpan/Filter-Util-Call'};
 copyfile('config_h.SH');
 copyfile('EXTERN.h');
 copyfile('lib/dbm_filter_util.pl');
 copyfile('lib/unicore/TestProp.pl');
-copyfile('ext/Tie-Memoize/lib/Tie/Memoize.pm') if $extensions{'Tie-Memoize'};
+copyfile('ext/Tie-Memoize/lib/Tie/Memoize.pm') if $extensions{'ext/Tie-Memoize'};
 copyfile('regen/opcodes');
 copyfile('dist/IO/Makefile.PL');
 copyfile('lib/XS');
-copyfile('ext/IPC-Open3/Makefile') if $extensions{'IPC-Open3'};
-copyfile('cpan/Pod-Parser/podselect.PL') if $extensions{'Pod-Parser'};
+copyfile('ext/IPC-Open3/Makefile') if $extensions{'ext/IPC-Open3'};
+copyfile('cpan/Pod-Parser/podselect.PL') if $extensions{'cpan/Pod-Parser'};
 copyfile('ext/POSIX/POSIX.xs');
 unlink("$DIR/cpan/Test-Harness/MANIFEST.CUMMULATIVE");
 makelink('../../MANIFEST', "cpan/Test-Harness/MANIFEST.CUMMULATIVE");
 makelink('../../MANIFEST', "cpan/Test-Harness/MANIFEST");
 
-copyfile('ext/POSIX/Makefile.PL') if $extensions{'POSIX'};
-copyfile('cpan/Digest-MD5/README') if $extensions{'Digest-MD5'};
-copyfile('cpan/Digest-MD5/MD5.xs') if $extensions{'Digest-MD5'};
+copyfile('ext/POSIX/Makefile.PL') if $extensions{'ext/POSIX'};
+copyfile('cpan/Digest-MD5/README') if $extensions{'cpan/Digest-MD5'};
+copyfile('cpan/Digest-MD5/MD5.xs') if $extensions{'cpan/Digest-MD5'};
 
 makelink('../../t/test.pl', "ext/re/test.pl");
 makelink('../../t/test.pl', "ext/B/test.pl");
@@ -87,10 +88,10 @@ copyfile('lib/unicore/PropertyAliases.txt');
 copyfile('lib/unicore/PropValueAliases.txt');
 
 copyrec('cpan/IO-Compress/examples');
-copyrec('cpan/Test-Harness/t/lib/TAP/Harness') if $extensions{'Test-Harness'};
+copyrec('cpan/Test-Harness/t/lib/TAP/Harness') if $extensions{'cpan/Test-Harness'};
 
 makedir("cpan/Digest-SHA/src");
-makedir("cpan/List-Util/blib") if $extensions{'List-Util'};
+makedir("cpan/List-Util/blib") if $extensions{'cpan/List-Util'};
 unlink("$DIR/t/perl");
 makelink($perlpath, "t/perl");
 makelink('t/perl', "perl");
