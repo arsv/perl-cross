@@ -24,7 +24,7 @@ function extadd {
 		msg "\tskipping $2"
 		return
 	fi
-	test "$1" == 'xs' && appendvar 'known_extensions' "$2"
+	test "$1" == 'xs' && appendvarsilent 'known_extensions' "$2"
 	o=`valueof "only_$s"`
 	if [ -n "$onlyext" -a -z "$o" ]; then
 		msg "\tskipping $2"
@@ -75,6 +75,13 @@ function extonlyif {
 
 }
 
+function settrimspaces {
+	_k="$1"
+	_v="$2"
+	_v=`echo "$_v" | sed -e 's/\s\+/ /g' -e 's/^\s\+//' -e 's/\s\+$//'`
+	setvar $1 "$_v"
+}
+
 msg "Looking which extensions should be disabled"
 
 test -n "$useposix" || setvar 'useposix' 'define'
@@ -107,6 +114,10 @@ msg "Static modules: $static_ext"
 msg "Non-XS modules: $nonxs_ext"
 msg "Dynamic modules: $dynamic_ext"
 
+settrimspaces 'static_ext' "$static_ext"
+settrimspaces 'nonxs_ext' "$nonxs_ext"
+settrimspaces 'dynamic_ext' "$dynamic_ext"
+
 if [ -z "$disabledmods" ]; then
 	# see configure_args on how to undef it
 	# see configure_genc for its only effect within configure
@@ -114,20 +125,11 @@ if [ -z "$disabledmods" ]; then
 fi
 
 # Some of the tests use $Config{'extensions'} to decide whether to do their thing or not.
-# The original Configure has neither directory nor module names in $extensions.
-# Instead, it uses weird old mid-road format, "File/Glob" for what should have been
+# The original Configure has neither directory nor module names there.
+# Instead, it uses weird old mid-road format, "File/Glob", for what should have been
 # either File::Glob or ext/File-Glob.
-# Since config.sh is used to generate Makefile, not having directory names there doesn't
-# sound like a good idea at all. Fortunately, $extensions are not used to generate any Makefiles;
-# there are $dynamic_ext and $nonxs_ext for that purporse.
-# So the solution is to have the traditional perl style list in $extensions, and
-# directory names in ${static,dynamic,nonxs}_ext
-msg "All extensions: "
-if not hinted 'extensions'; then
-	e=''
-	for i in $static_ext $dynamic_ext $nonxs_ext; do
-		test -n "$e" && e="$e $j" || e="$j"
-	done
-	setvar extensions "$e"
-	result "$extensions"
-fi
+#
+# perl-cross keeps full directory names in ${...}_ext and $extensions,
+# and does the conversion in configpm. This keeps things simple when writing
+# Makefiles and so on, and at the same time doesn't break tests later.
+settrimspaces 'extensions' "$static_ext $dynamic_ext $nonxs_ext"

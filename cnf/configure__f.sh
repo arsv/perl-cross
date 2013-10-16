@@ -348,3 +348,8 @@ function appendvar {
 		setvar "$1" "$2"
 	fi
 }
+
+function appendvarsilent {
+	v=`valueof "$1"`
+	test -n "$v" && eval $1="'$v $2'" || eval $1="'$2'"
+}
