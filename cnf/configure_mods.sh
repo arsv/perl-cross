@@ -122,11 +122,10 @@ fi
 # there are $dynamic_ext and $nonxs_ext for that purporse.
 # So the solution is to have the traditional perl style list in $extensions, and
 # directory names in ${static,dynamic,nonxs}_ext
-msg "Extensions: "
+msg "All extensions: "
 if not hinted 'extensions'; then
 	e=''
-	for i in $dynamic_ext $nonxs_ext; do
-		j=`echo "$i" | sed -e 's!^[^/]*/!!' -e 's!-!/!g'`
+	for i in $static_ext $dynamic_ext $nonxs_ext; do
 		test -n "$e" && e="$e $j" || e="$j"
 	done
 	setvar extensions "$e"
