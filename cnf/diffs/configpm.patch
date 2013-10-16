@@ -1,5 +1,5 @@
---- configpm	2013-08-12 05:44:47.000000000 +0300
-+++ configpm	2013-10-16 16:55:12.573315615 +0300
+--- a/configpm	2013-08-12 05:44:47.000000000 +0300
++++ b/configpm	2013-10-16 16:55:12.573315615 +0300
 @@ -57,9 +57,9 @@
  # wonderfully easy to instrument, and no longer exists.
  $Common{$_} = $_ foreach qw(dlext so);

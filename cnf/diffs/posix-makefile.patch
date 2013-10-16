@@ -1,5 +1,5 @@
---- ext/POSIX/Makefile.PL	2012-07-04 14:58:40.702466285 +0300
-+++ ext/POSIX/Makefile.PL	2012-07-04 14:58:21.489133459 +0300
+--- a/ext/POSIX/Makefile.PL	2012-07-04 14:58:40.702466285 +0300
++++ b/ext/POSIX/Makefile.PL	2012-07-04 14:58:21.489133459 +0300
 @@ -1,4 +1,9 @@
  # Expect this line to be read by t/posix.t, don't change it
 +

@@ -54,7 +54,7 @@ perl$x: crosspatch
 # Original version are not saved anymore; patch generally takes care of this,
 # and if that fails, reaching for the source tarball is the safest option.
 $(CROSSPATCHED): %.applied: %.patch
-	patch -p0 -i $< && touch $@
+	patch -p1 -i $< && touch $@
 
 # ---[ common ]-----------------------------------------------------------------
 

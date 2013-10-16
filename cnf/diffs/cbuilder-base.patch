@@ -4,8 +4,8 @@ See also IPC::Cmd and File::Temp in cnf/stub/.
 TODO: stub both modules to avoid modifying a file that
 ends up on the target.
 
---- dist/ExtUtils-CBuilder/lib/ExtUtils/CBuilder/Base.pm	2013-08-07 21:03:39.915680156 +0300
-+++ dist/ExtUtils-CBuilder/lib/ExtUtils/CBuilder/Base.pm	2013-08-07 21:19:18.532322082 +0300
+--- a/dist/ExtUtils-CBuilder/lib/ExtUtils/CBuilder/Base.pm	2013-08-07 21:03:39.915680156 +0300
++++ b/dist/ExtUtils-CBuilder/lib/ExtUtils/CBuilder/Base.pm	2013-08-07 21:19:18.532322082 +0300
 @@ -6,8 +6,6 @@
  use Cwd ();
  use Config;
