@@ -14,4 +14,6 @@ tar -zcf \!pack.tar.gz\
 	make_ext_Makefile.pl\
 	configure\
 	miniperl_top\
-	utils/Makefile
+	utils/Makefile\
+	TESTPACK.px\
+	TestInit.pm.testpack
