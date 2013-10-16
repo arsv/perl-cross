@@ -118,9 +118,17 @@ fi
 # Instead, it uses weird old mid-road format, "File/Glob" for what should have been
 # either File::Glob or ext/File-Glob.
 # Since config.sh is used to generate Makefile, not having directory names there doesn't
-# sound like a good idea at all. Fortunately, most things that look up $extensions
-# do it via $Config. So the solution is to filter config.sh variables later in ../configpm
-# to achieve the desired format in $Config while still keeping directory names in config.sh.
-if nothinted 'extensions'; then
-	setvar extensions "$static_ext $dynamic_ext $nonxs_ext"
+# sound like a good idea at all. Fortunately, $extensions are not used to generate any Makefiles;
+# there are $dynamic_ext and $nonxs_ext for that purporse.
+# So the solution is to have the traditional perl style list in $extensions, and
+# directory names in ${static,dynamic,nonxs}_ext
+msg "Extensions: "
+if not hinted 'extensions'; then
+	e=''
+	for i in $dynamic_ext $nonxs_ext; do
+		j=`echo "$i" | sed -e 's!^[^/]*/!!' -e 's!-!/!g'`
+		test -n "$e" && e="$e $j" || e="$j"
+	done
+	setvar extensions "$e"
+	result "$extensions"
 fi

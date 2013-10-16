@@ -45,13 +45,3 @@
  ($Config_heavy = $Config_PM) =~ s/\.pm$/_heavy.pl/;
  die "Can't automatically determine name for Config_heavy.pl from '$Config_PM'"
    if $Config_heavy eq $Config_PM;
-@@ -337,7 +330,8 @@
-     $in_v = $val !~ /$quote\n/;
-     next if $in_v;
- 
--    s,/,::,g if $Extensions{$name};
-+    $val =~ s{[a-zA-Z]+/}{}g if $Extensions{$name};
-+    $val =~ s{-}{/}g if $Extensions{$name};
- 
-     $val =~ s/$quote\n?\z//;
- 

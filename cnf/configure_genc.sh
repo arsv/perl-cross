@@ -772,7 +772,7 @@ default eunicefix ':'
 default exe_ext
 default expr
 default expr expr
-default extensions "$dynamic_ext$nonxs_ext"
+default extensions
 default extern_C 'extern'
 default extras
 default fflushNULL define
