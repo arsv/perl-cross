@@ -49,7 +49,7 @@ crosspatch: $(CROSSPATCHED)
 
 # a minor fix for buildroot, force crosspatching when running "make perl modules"
 # instead of "make all"
-perl$x: crosspatch
+miniperlmain$O: crosspatch
 
 # Original version are not saved anymore; patch generally takes care of this,
 # and if that fails, reaching for the source tarball is the safest option.
