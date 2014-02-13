@@ -9,12 +9,3 @@
  
      # This needs to be at BEGIN time, before any use of Config
      require './install_lib.pl';
-@@ -150,7 +148,7 @@
- }
- 
- # Exclude nonxs extensions that are not architecture dependent
--my @nonxs = grep(!/^Errno$/, split(' ', $Config{'nonxs_ext'}));
-+my @nonxs = map { s{.*/}{}; s{-}{/}g; $_ } grep(!/^Errno$/, split(' ', $Config{'nonxs_ext'}));
- 
- my @ext_dirs = qw(cpan dist ext);
- foreach my $ext_dir (@ext_dirs) {
