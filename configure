@@ -1,4 +1,39 @@
 #!/bin/bash
 
-export base='cnf'
+root=`dirname "$0"`
+
+function earlydie() {
+	echo "$@" >&2
+	exit 1
+}
+
+test -f "$root/MANIFEST" || earlydie "Can't find MANIFEST, perl-cross is not deployed properly."
+
+if [ -n "$root" -a "$root" != "." -a ! -f "MANIFEST" ]; then
+	echo "No MANIFEST found. Assuming out-of-source build."
+	echo "Symlinking source files..."
+
+	# perl distribution files are all listed in MANIFEST
+	cat "$root/MANIFEST" | sed -e 's/\s.*//' | while read i; do
+		d=`dirname "$i"`
+		mkdir -p "$d"
+		test "$d" != "." && u=`echo "$d" | sed -e 's![^/]\+!..!g' -e 's!$!/!'` || u=''
+		ln -sf "$u$root/$i" "$i" || earlydie "Symlinking failed."
+	done
+	# perl-cross files are not in MANIFEST
+	for i in cnf TESTPACK.px extlibs statars TestInit.pm.testpack \
+			make_ext_Makefile.pl miniperl_top Makefile.config.SH \
+			Makefile configure; do
+		ln -sf "$root/$i" "./$i" || earlydie "Symlinking failed."
+	done
+	for i in x2p/Makefile utils/Makefile; do
+		ln -sf "../$root/$i" "$i" || earlydie "Symlinking failed."
+	done
+	# Make extra sure MANIFEST gets symlinked
+	test -f "MANIFEST" || ln -sf "$root/MANIFEST" "./MANIFEST"
+
+	echo "Symlinking done, proceeding with configure."
+fi
+
+export base="cnf"
 $base/configure "$@"

@@ -53,8 +53,10 @@ miniperlmain$O: crosspatch
 
 # Original version are not saved anymore; patch generally takes care of this,
 # and if that fails, reaching for the source tarball is the safest option.
+# When building out of source tree, --follow-symlinks is needed
+# to do copy-on-write
 $(CROSSPATCHED): %.applied: %.patch
-	patch -p1 -i $< && touch $@
+	patch --follow-symlinks -p1 -i $< && touch $@
 
 # ---[ common ]-----------------------------------------------------------------
 
