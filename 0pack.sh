@@ -19,6 +19,7 @@ PV=5.8.2
 
 tar -cf perl-cross.tar\
 	--exclude README.rst\
+	--exclude LICENSE\
 	--exclude Artistic\
 	--exclude Copying\
 	--exclude 0pack.sh\
