@@ -161,12 +161,7 @@ static.list: Makefile.config | $(static_tgt) miniperl$X
 
 # ---[ site/library ]-----------------------------------------------------------
 
-libperl$a: op$o perl$o $(obj) $(dynaloader_o)
-	$(AR) cru $@ $(filter %$o,$^)
-	$(RANLIB) $@
-
-libperl$l: op$o perl$o $(obj) $(dynaloader_o) 
-	$(CC) $(LDDLFLAGS) -o $@ $(filter %$o,$^) $(LIBS)
+$(LIBPERL): op$o perl$o $(obj) $(dynaloader_o)
 
 perl.o: git_version.h
 

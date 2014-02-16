@@ -130,15 +130,24 @@ perlversion = $perlversion
 dynaloader = $dynaloader
 END
 
-if [ "$useshrplib" == 'define' ]; then
 cat >> Makefile.config <<END
-LIBPERL = libperl\$l
-LIBPERL_LINK = -Wl,-rpath,\$(archlib)/CORE \$(LIBPERL)
+LIBPERL = $libperl
+END
+
+if [ "$useshrplib" == 'define' ]; then
+cat >> Makefile.config <<"END"
+LIBPERL_LINK = -Wl,-rpath,$(archlib)/CORE $(LIBPERL)
+
+$(LIBPERL):
+	$(CC) $(LDDLFLAGS) -o $@ $(filter %$o,$^) $(LIBS)
 END
 else
-cat >> Makefile.config <<END
-LIBPERL = libperl\$a
-LIBPERL_LINK = \$(LIBPERL)
+cat >> Makefile.config <<"END"
+LIBPERL_LINK = $(LIBPERL)
+
+$(LIBPERL):
+	$(AR) cru $@ $(filter %$o,$^)
+	$(RANLIB) $@
 END
 fi
 
