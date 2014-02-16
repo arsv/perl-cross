@@ -152,7 +152,7 @@ default_inst sitehtml3dir
 default_inst sitelib 
 default_inst siteman1dir
 default_inst siteman3dir
-default_inst sitescriptdir sitescript
+default_inst sitescript
 default_inst vendorarch
 default_inst vendorbin
 default_inst vendorhtml1dir
@@ -160,7 +160,7 @@ default_inst vendorhtml3dir
 default_inst vendorlib
 default_inst vendorman1dir
 default_inst vendorman3dir
-default_inst vendorscriptdir vendorscript
+default_inst vendorscript
 default installstyle lib/perl5
 default installusrbinperl define
 
