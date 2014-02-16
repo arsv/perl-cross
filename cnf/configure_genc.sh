@@ -24,6 +24,17 @@ if [ -z "$cleanonly" ]; then
 		fi
 	}
 
+	function default_if_defined {
+		v=`valueof "$1"`
+		if [ "$v" = "define" ]; then
+			log "$1 is set, setting $2"
+			default "$2" "$3"
+		else
+			log "$1 is not set, setting $2"
+			default "$2" "$4"
+		fi
+	}
+
 	function default_inst {
 		if [ -n "$2" ]; then
 			z="$2"
@@ -61,6 +72,7 @@ else
 	# clean up the environment
 
 	function default { unset -v "$1"; }
+	function default_if_defined { unset -v "$1"; }
 	function default_inst { unset -v "$1"; }
 	function required { unset -v "$1"; }
 	function const { unset -v "$1"; }
@@ -98,6 +110,20 @@ default sitebinexp "$sitebin"
 default sitelibexp "$sitelib"
 default siteprefixexp "$siteprefix"
 default sitescriptexp "$sitescript"
+
+default usevendorprefix undef
+default_if_defined usevendorprefix vendorprefix "$prefix"
+default_if_defined usevendorprefix vendorbin "$vendorprefix/bin"
+default_if_defined usevendorprefix vendorlib_stem "$vendorprefix/lib/$package/vendor_perl"
+default_if_defined usevendorprefix vendorlib "$vendorlib_stem/$version"
+default_if_defined usevendorprefix vendorarch "$vendorlib_stem/$version/$archname"
+default_if_defined usevendorprefix vendorscript "$vendorprefix/bin"
+
+default vendorbinexp "$vendorbin"
+default vendorlibexp "$vendorlib"
+default vendorarchexp "$vendorarch"
+default vendorprefixexp "$vendorprefix"
+default vendorscriptexp "$vendorscript"
 
 default vendorman1dir "$man1dir"
 default vendorman3dir "$man3dir"
@@ -726,10 +752,10 @@ default d_unsetenv undef
 default d_usleep undef
 default d_usleepproto define
 default d_ustat undef
-default d_vendorarch undef
-default d_vendorbin undef
-default d_vendorlib undef
-default d_vendorscript undef
+default_if_defined usevendorprefix d_vendorarch define undef
+default_if_defined usevendorprefix d_vendorbin define undef
+default_if_defined usevendorprefix d_vendorlib define undef
+default_if_defined usevendorprefix d_vendorscript define undef
 default d_vfork undef
 default d_void_closedir undef
 default d_voidsig undef
@@ -1155,7 +1181,6 @@ default useshrplib false
 default usesitecustomize undef
 default usesocks undef
 default usethreads undef
-default usevendorprefix undef
 default useversionedarchname undef
 default usevfork false
 default usrinc
@@ -1165,17 +1190,6 @@ default uvoformat '"lo"'
 default uvuformat '"lu"'
 default uvxformat '"lx"'
 default vaproto 'define'
-default vendorarch
-default vendorarchexp
-default vendorbin
-default vendorbinexp
-default vendorlib
-default vendorlib_stem
-default vendorlibexp
-default vendorprefix
-default vendorprefixexp
-default vendorscript
-default vendorscriptexp
 default version_patchlevel_string "version $PERL_VERSION subversion $PERL_SUBVERSION"
 default versiononly undef
 default vi
