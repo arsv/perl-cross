@@ -241,6 +241,8 @@ makefiles: $(ext:pm_to_blib=Makefile)
 
 dynaloader: $(dynaloader_o)
 
+cpan/Devel-PPPort/pm_to_blib: dynaloader
+
 cpan/Devel-PPPort/PPPort.pm: cpan/Devel-PPPort/pm_to_blib
 
 cpan/Devel-PPPort/ppport.h: cpan/Devel-PPPort/PPPort.pm | miniperl$X
