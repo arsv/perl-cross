@@ -15,7 +15,7 @@
 #
 # Tar with --xform option support is expected.
 
-PV=5.8.2
+PV=5.18.2
 
 tar -cf perl-cross.tar\
 	--exclude README.rst\
