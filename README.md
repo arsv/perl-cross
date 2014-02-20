@@ -26,7 +26,7 @@ Typical cross-build for a uclibc system on a Geode board:
 	make DESTDIR=... install
 ```
 
-See [configure usage](https://github.com/arsv/perl-cross/wiki/Configure_usage) page
+See [configure usage](https://github.com/arsv/perl-cross/wiki/Usage) page
 for a complete list of available configure options.
 
 Most of the documentation is available
