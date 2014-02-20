@@ -18,7 +18,7 @@
 PV=5.18.2
 
 tar -cf perl-cross.tar\
-	--exclude README.rst\
+	--exclude README.md\
 	--exclude LICENSE\
 	--exclude Artistic\
 	--exclude Copying\
