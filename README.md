@@ -13,18 +13,18 @@ Unlike the products of GNU autoconf, it sacrifices portability for readability;
 it will likely only run on a relatively sane GNU system with GNU binutils.
 
 Typical native build:
-``
+```
 	./configure
 	make
 	make DESTDIR=... install
-``
+```
 
 Typical cross-build for a uclibc system on a Geode board:
-``
+```
 	./configure --target=i586-pc-linux-uclibc
 	make
 	make DESTDIR=... install
-``
+```
 
 See [configure usage](https://github.com/arsv/perl-cross/wiki/Configure_usage) page
 for a complete list of available configure options.
