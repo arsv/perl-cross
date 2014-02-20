@@ -12,8 +12,7 @@ It is advised to use the exact perl version perl-cross was intended for,
   i.e. perl-5.16.3 for perl-5.16.3-cross-0.7.4.</p>
 
 <p>For older releases, check <a href="https://github.com/arsv/perl-cross/tree/releases">GitHub releases
-branch</a> or
-<a href="https://developer.berlios.de/project/showfiles.php?group_id=12304">BerliOS project downloads page</a></p>
+branch</a>.</p>
 
 <h2>Changelog</h2>
 
