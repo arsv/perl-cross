@@ -1,0 +1,148 @@
+html {
+	background: #F0F0F0;
+	margin: 0px;
+	padding: 0px;
+}
+
+h1 {
+	margin: 0px 0px 20px 0px;
+}
+
+body {
+	width: 700px;
+	background: #FFFFFF;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	margin: 0px auto;
+	padding: 20px 30px;
+	font-size: 14px;
+	font-family: sans-serif;
+}
+
+p {
+	text-align: justify;
+}
+
+a {
+	color: #27658E;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+div.navbar {
+	height: 30px;
+	max-height: 30px;
+	width: 700px;
+	border: 1px solid black;
+	margin-left: -50px;
+	background: #4683CE;
+	padding: 0px 50px;
+	margin-bottom: 25px;
+}
+
+div.navbar a {
+	display: block;
+	float: left;
+	height: 36px;
+	padding: 0px 15px;
+	font-size: 17px;
+	margin-top: -4px;
+	line-height: 36px;
+	text-decoration: none;
+	margin-right: 5px;
+	color: #FFFFFF;
+	line-height: 36px;
+}
+
+div.navbar a:hover {
+	border: 1px solid black;
+	line-height: 34px;
+	padding: 0px 14px;
+}
+div.navbar a.current {
+	border: 1px solid black;
+	background: white;
+	color: #4683CE;
+	line-height: 35px;
+	padding: 0px 19px;
+}
+
+div.warn {
+	width: 500px;
+	border: 1px solid #4683CE;
+	padding: 10px 30px;
+	margin: 5px auto;
+	text-align: center;
+	font-size: 12px;
+}
+
+div.warn div {
+	font-size: 14px;
+	font-weight: bold;
+	margin: 5px 0px;
+}
+
+div.warn strong {
+	font-size: 140%;
+	font-weight: bold;
+	display: block;
+	margin: 5px;
+}
+
+div.warn blockquote {
+	display: inline-block;
+	text-align: left;
+	margin: 5px;
+}
+
+dl {
+	margin-left: 30px;
+}
+dl dt {
+	font-family: monospace;
+	font-size: 14px;
+	margin-top: 0px;
+	margin-bottom: 1px;
+}
+dl dd {
+	margin-bottom: 5px;
+	text-align: justify;
+	margin-right: 40px;
+}
+tt {
+	font-family: monospace;
+	font-size: 14px;
+	white-space: nowrap;
+}
+dl dd ul.fixtab li tt:first-child {
+	display: inline-block;
+	width: 200px;
+}
+dl dd ul.fixtabshort li tt:first-child {
+	display: inline-block;
+	width: 50px;
+}
+dl dd ul.fixtabshort li {
+	margin-left: 100px;
+	text-indent: -60px;
+}
+dl dd ul.fixtab, dl dd ul.fixtabshort {
+	list-style-type: none;
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
+dl dd ul {
+	margin: 0px;
+}
+
+div.dllink {
+	border: 1px solid #4683CE;
+	padding: 10px;
+	width: 90%;
+	margin: 10px auto;
+}
+
