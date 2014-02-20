@@ -4,8 +4,8 @@
 as well as some auxilliary files for the standard <b>perl</b> distribution intended to
 allow cross-compiling perl in a relatively straighforward way.</p>
 
-<div class="warn"><b>perl-cross is not a part of perl distribution,
-it's a third-party tool in an eternal-alpha stage.</b>
+<div class="warn">perl-cross is not a part of perl distribution,
+it's a third-party tool in an eternal-alpha stage.
 <div>Use at your own risk!</div>
 If you can use Configure from the vanilla distribution, you probably <i>should</i> use Configure;
 <b>perl-cross</b> is for the cases when Configure just can't make it.</div>
