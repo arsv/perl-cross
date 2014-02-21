@@ -3,8 +3,8 @@
 <p>Current version of perl-cross is 0.8.4. It's intended to be used with perl-5.18.2.
 Download it here:</p>
 <div class="dllink">
-	<a href="https://github.com/arsv/perl-cross/blob/releases/perl-5.18.2-cross-0.8.4.tar.gz"
-	 >https://github.com/arsv/perl-cross/blob/releases/perl-5.18.2-cross-0.8.4.tar.gz</a>
+	<a href="https://raw.github.com/arsv/perl-cross/releases/perl-5.18.2-cross-0.8.4.tar.gz"
+	 >https://raw.github.com/arsv/perl-cross/releases/perl-5.18.2-cross-0.8.4.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
