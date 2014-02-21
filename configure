@@ -32,6 +32,14 @@ if [ -n "$root" -a "$root" != "." -a ! -f "MANIFEST" ]; then
 	# Make extra sure MANIFEST gets symlinked
 	test -f "MANIFEST" || ln -sf "$root/MANIFEST" "./MANIFEST"
 
+	# Dereference any files that will be patched with crosspatch.
+	# A better alternative is patch --follow-symlinks,
+	# but --follow-symlinks is not widely supported and even when it is,
+	# man page discourages its use.
+	sed -ne '/^+++ /{s/^+++ //;s/\s.*//;s@^[^/]\+/@@;p}' cnf/diffs/* | while read i; do
+		cp -a "$i" "$i.tmp" && rm -f "$i" && cp "$i.tmp" "$i" && rm -f "$i.tmp"
+	done
+
 	echo "Symlinking done, proceeding with configure."
 fi
 
