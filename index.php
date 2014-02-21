@@ -60,7 +60,7 @@ to tweak it (I hope it's tweakable enough).</p>
 
 <h2>Authors</h2>
 
-<p>Alex Suykov <tt>&lt;axs@ukr.net&gt;</tt>.<br>
+<p>Alex Suykov <tt>&lt;alex.suykov@gmail.com&gt;</tt>.<br>
 Feel free to ask questions, most of the time I'll try to help.</p>
 
 <p>Several other people contributed patches and suggestions.</p>
