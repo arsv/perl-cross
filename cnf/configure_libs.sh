@@ -43,9 +43,9 @@ if not hinted 'perllibs'; then
 	# should be linked with.
 	# The whole idea is wrong, wrong, wrong, but it's tied to MakeMaker.
 	# Unlike Configure, we're picking libs presumably needed for perl
-	# (Configure uses all except for those it know are not needed)
-	# This allows adding anything to $libswanted without introducing unnecessary perl
-	# dependencies. When perl itself needs something unusual, $perllibs value should be hinted.
+	# (Configure uses all except for those it knows are not needed)
+	# This allows adding anything to $libswanted without introducing unnecessary perl dependencies.
+	# When perl itself needs something unusual, $perllibs value should be hinted.
 	_libs=''
 	for i in $libs; do
 		case "$i" in 
