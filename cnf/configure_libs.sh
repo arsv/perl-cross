@@ -53,7 +53,7 @@ if not hinted 'perllibs'; then
 				appendvar '_libs' "$i" ;;
 			-ldl)
 				test "$usedl" != 'undef' && appendvar '_libs' "$i" ;;
-			-lpthreads)
+			-lpthread)
 				test "$usethreads" != 'undef' && appendvar '_libs' "$i" ;;
 			# For a static build, -lgdbm and friends are assumed to be in ext.libs
 		esac
