@@ -156,8 +156,8 @@ check hasfunc htonl "0" 'stdio.h sys/types.h netinet/in.h arpa/inet.h'
 check hasfunc ilogbl
 check hasfunc index "NULL,0" 'stdlib.h string.h strings.h'
 check hasfunc inet_aton
-check hasfunc inetntop
-check hasfunc inetpton
+check hasfunc inet_ntop
+check hasfunc inet_pton
 check hasfunc isascii "'A'" 'stdio.h stdlib.h ctype.h'
 check hasfunc isblank "' '" 'stdio.h stdlib.h ctype.h'
 check hasfunc isfinite "0.0" 'math.h'

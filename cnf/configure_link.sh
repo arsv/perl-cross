@@ -47,6 +47,8 @@ linkvar d_getsbyport d_getservbyport
 linkvar d_getsent d_getservent
 linkvar d_gettimeod d_gettimeofday
 linkvar d_inetaton d_inet_aton
+linkvar d_inetntop d_inet_ntop
+linkvar d_inetpton d_inet_pton
 linkvar d_locconv d_localeconv
 linkvar d_setgrps d_setgroups
 linkvar d_sethent d_sethostent
