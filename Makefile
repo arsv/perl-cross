@@ -12,6 +12,9 @@ STATIC = static
 XSUBPP = lib/ExtUtils/xsubpp
 # For autodoc.pl below
 MANIFEST_CH = $(shell sed -e 's/\s.*//' MANIFEST | grep '\.[ch]$$')
+# cpan/Pod-Perldoc/Makefile does not accept PERL_CORE=1 in MM command line,
+# it needs the value to be in $ENV
+export PERL_CORE=1
 
 POD1 = $(wildcard pod/*.pod)
 MAN1 = $(patsubst pod/%.pod,man/man1/%$(man1ext),$(POD1))
@@ -19,7 +22,7 @@ MAN1 = $(patsubst pod/%.pod,man/man1/%$(man1ext),$(POD1))
 obj += $(madlyobj) $(mallocobj) gv$o toke$o perly$o pad$o regcomp$o dump$o util$o mg$o reentr$o mro$o
 obj += hv$o av$o run$o pp_hot$o sv$o pp$o scope$o pp_ctl$o pp_sys$o
 obj += doop$o doio$o regexec$o utf8$o taint$o deb$o universal$o globals$o perlio$o perlapi$o numeric$o
-obj += mathoms$o locale$o pp_pack$o pp_sort$o keywords$o
+obj += mathoms$o locale$o pp_pack$o pp_sort$o keywords$o caretx$o
 
 static_tgt = $(patsubst %,%/pm_to_blib,$(static_ext))
 dynamic_tgt = $(patsubst %,%/pm_to_blib,$(dynamic_ext))
@@ -122,8 +125,8 @@ perlmini.c: perl.c
 perlmini$O: perlmini.c
 	$(HOSTCC) $(HOSTCFLAGS) -DPERL_IS_MINIPERL -c -o $@ $<
 	
-lib/ExtUtils/Miniperl.pm: miniperlmain.c minimod.pl $(CONFIGPM) | miniperl$X
-	./miniperl_top minimod.pl > lib/ExtUtils/Miniperl.pm
+#lib/ExtUtils/Miniperl.pm: miniperlmain.c minimod.pl $(CONFIGPM) | miniperl$X
+#	./miniperl_top minimod.pl > lib/ExtUtils/Miniperl.pm
 
 # We don't want to regenerate perly.c and perly.h, but they might
 # appear out-of-date after a patch is applied or a new distribution is
@@ -150,8 +153,10 @@ perl$x: perlmain$o $(LIBPERL) $(static_tgt) static.list ext.libs
 
 globals.o: uudmap.h
 
-perlmain.c: lib/ExtUtils/Miniperl.pm | miniperl$X
-	./miniperl_top -MExtUtils::Miniperl -e 'writemain(@ARGV)' $(dynaloader) $(static_pmn) > $@
+#perlmain.c: lib/ExtUtils/Miniperl.pm | miniperl$X
+#	./miniperl_top -MExtUtils::Miniperl -e 'writemain(@ARGV)' $(dynaloader) $(static_pmn) > $@
+perlmain.c: ext/ExtUtils-Miniperl/pm_to_blib | miniperl$X
+	./miniperl_top -MExtUtils::Miniperl -e 'writemain(\"$@", @ARGV)' $(dynaloader) $(static_pmn)
 
 ext.libs: Makefile.config | $(static_tgt) miniperl$X
 	./miniperl_top extlibs $(static_ext) > $@
@@ -309,7 +314,7 @@ modules-clean: clean-modules
 utilities: miniperl$X $(CONFIGPM)
 	$(MAKE) -C utils all
 
-translators: miniperl$X $(CONFIGPM) dist/Cwd/pm_to_blib
+translators: miniperl$X $(CONFIGPM)
 	$(MAKE) -C x2p all
 
 # ---[ modules lists ]----------------------------------------------------------

@@ -1,14 +1,16 @@
+default: all
+
 TOP = ..
 include $(TOP)/Makefile.config
 PERL = $(TOP)/miniperl_top
 
 plextract = c2ph config_data corelist cpan h2ph h2xs instmodsh json_pp perlbug perldoc\
-	perlivp pl2pm prove ptar ptardiff ptargrep cpanp-run-perl cpanp cpan2dist shasum\
+	perlivp pl2pm prove ptar ptardiff ptargrep shasum\
 	splain libnetcfg piconv enc2xs xsubpp pod2html zipdetails
 
 all: $(plextract) 
 
-%: %.PL ../config.sh
+$(plextract): %: %.PL ../config.sh
 	$(PERL) $<
 
 perlbug: ../patchlevel.h

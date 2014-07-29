@@ -1,0 +1,19 @@
+perl-cross assumes the sources use xconfig.h with -DUSE_CROSS_COMPILE
+With perl 5.20.0, it's no longer true. Regardless of what mainline perl
+uses, let's stick with the old xconfig.h way for now.
+
+--- a/perl.h
++++ b/perl.h
+@@ -25,7 +25,11 @@
+ #ifdef PERL_MICRO
+ #   include "uconfig.h"
+ #else
+-#   include "config.h"
++#   ifndef USE_CROSS_COMPILE
++#       include "config.h"
++#   else
++#       include "xconfig.h"
++#   endif
+ #endif
+ 
+ /* See L<perlguts/"The Perl API"> for detailed notes on

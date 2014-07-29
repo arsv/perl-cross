@@ -1,5 +1,5 @@
---- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm	2012-07-04 14:55:02.915805376 +0300
-+++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm	2012-07-04 14:55:15.322471717 +0300
+--- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm
++++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm
 @@ -19,9 +19,10 @@
  use File::Spec;
  
@@ -14,7 +14,7 @@
  }
  
  sub _unix_os2_ext {
-@@ -623,4 +624,51 @@
+@@ -631,4 +632,51 @@
      wantarray ? ( $lib, '', $ldlib, '', ( $give_libs ? \@flibs : () ) ) : $lib;
  }
  

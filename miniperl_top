@@ -17,12 +17,15 @@ exec $top/miniperl\
 	-I$top/cnf/cpan\
 	-I$top/lib\
 	-I$top/cpan/AutoLoader/lib\
-	-I$top/dist/Cwd -I$top/dist/Cwd/lib\
+	-I$top/dist/Exporter/lib\
+	-I$top/dist/Cwd\
+	-I$top/dist/Cwd/lib\
 	-I$top/dist/ExtUtils-Command/lib\
 	-I$top/dist/ExtUtils-Install/lib\
 	-I$top/cpan/ExtUtils-MakeMaker/lib\
 	-I$top/dist/ExtUtils-Manifest/lib\
 	-I$top/cpan/File-Path/lib\
+	-I$top/ext/File-Find/lib\
 	-I$top/ext/re\
 	-I$top/cpan/ExtUtils-Constant/lib\
 	-I$top/dist/ExtUtils-ParseXS/lib\
@@ -30,4 +33,5 @@ exec $top/miniperl\
 	-I$top/cpan/Getopt-Long/lib\
 	-I$top/cpan/Text-Tabs/lib\
 	-I$top/dist/Carp/lib\
+	-I$top/cpan/podlators/lib\
 	"$@"

@@ -1,10 +1,11 @@
---- a/installman	2012-07-04 15:27:49.802420040 +0300
-+++ b/installman	2012-07-04 15:27:54.475753247 +0300
-@@ -1,7 +1,5 @@
+--- a/installman
++++ b/installman
+@@ -1,8 +1,6 @@
  #!./perl -w
+ 
  BEGIN {
 -    @INC = qw(lib);
 -
      # This needs to be at BEGIN time, before any use of Config
+     # install_lib itself loads and imports Config into main::
      require './install_lib.pl';
- }

@@ -105,7 +105,10 @@ sub get_fromname
 
 	return $leaf1 if $leaf1 eq 'podlators';
 
-	foreach("$leaf1.pm", "$leaf2.pm", "lib/$base1/$leaf1.pm", "lib/$base2.pm") {
+	my @locations = ("$leaf1.pm", "$leaf2.pm", "lib/$base1/$leaf1.pm", "lib/$base2.pm");
+	unshift @locations, 'lib/IO/Compress/Base.pm' if $base1 eq 'IO-Compress';	# %$#%&$#%!!
+
+	foreach(@locations) {
 		#warn "\tTrying $spec/$_\n";
 		return $_ if -f "$spec/$_";
 	}
