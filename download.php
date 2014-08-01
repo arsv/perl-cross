@@ -1,15 +1,14 @@
 <? include "_head.php" ?>
 
-<p>Current version of perl-cross is 0.8.5. It's intended to be used with perl-5.18.2.
+<p>Current version of perl-cross is 0.9. It's intended to be used with perl-5.20.0.
 Download it here:</p>
 <div class="dllink">
-	<a href="https://raw.github.com/arsv/perl-cross/releases/perl-5.18.2-cross-0.8.5.tar.gz"
-	 >https://raw.github.com/arsv/perl-cross/releases/perl-5.18.2-cross-0.8.5.tar.gz</a>
+	<a href="https://raw.github.com/arsv/perl-cross/releases/perl-5.20.0-cross-0.9.tar.gz"
+	 >https://raw.github.com/arsv/perl-cross/releases/perl-5.20.0-cross-0.9.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
-It is advised to use the exact perl version perl-cross was intended for,
-  i.e. perl-5.16.3 for perl-5.16.3-cross-0.7.4.</p>
+Use the exact perl version perl-cross was intended for, i.e. perl-5.20.0 for perl-5.20.0-cross-0.9.</p>
 
 <p>For older releases, check <a href="https://github.com/arsv/perl-cross/tree/releases">GitHub releases
 branch</a>.</p>
@@ -17,6 +16,10 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
+	<li>0.9 (2014-08-01)<ul>
+		<li>perl-5.20.0</li>
+	</ul></li>
+
 	<li>0.8.5 (2014-02-23)<ul>
 		<li>out-of-source builds with absolute path to the source</li>
 		<li>patch --follow-symlinks is not used anymore</li>
