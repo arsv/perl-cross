@@ -125,9 +125,6 @@ perlmini.c: perl.c
 perlmini$O: perlmini.c
 	$(HOSTCC) $(HOSTCFLAGS) -DPERL_IS_MINIPERL -c -o $@ $<
 	
-#lib/ExtUtils/Miniperl.pm: miniperlmain.c minimod.pl $(CONFIGPM) | miniperl$X
-#	./miniperl_top minimod.pl > lib/ExtUtils/Miniperl.pm
-
 # We don't want to regenerate perly.c and perly.h, but they might
 # appear out-of-date after a patch is applied or a new distribution is
 # made.
@@ -153,8 +150,6 @@ perl$x: perlmain$o $(LIBPERL) $(static_tgt) static.list ext.libs
 
 globals.o: uudmap.h
 
-#perlmain.c: lib/ExtUtils/Miniperl.pm | miniperl$X
-#	./miniperl_top -MExtUtils::Miniperl -e 'writemain(@ARGV)' $(dynaloader) $(static_pmn) > $@
 perlmain.c: ext/ExtUtils-Miniperl/pm_to_blib | miniperl$X
 	./miniperl_top -MExtUtils::Miniperl -e 'writemain(\"$@", @ARGV)' $(dynaloader) $(static_pmn)
 
