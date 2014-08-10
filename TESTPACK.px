@@ -78,7 +78,6 @@ makelink('../../MANIFEST', "cpan/Test-Harness/MANIFEST.CUMMULATIVE");
 makelink('../../MANIFEST', "cpan/Test-Harness/MANIFEST");
 
 copyfile('ext/POSIX/Makefile.PL') if $extensions{'ext/POSIX'};
-copyfile('cpan/Digest-MD5/README') if $extensions{'cpan/Digest-MD5'};
 copyfile('cpan/Digest-MD5/MD5.xs') if $extensions{'cpan/Digest-MD5'};
 
 makelink('../../t/test.pl', "ext/re/test.pl");
@@ -87,7 +86,6 @@ makelink('../../t/test.pl', "ext/B/test.pl");
 copyfile('lib/unicore/PropertyAliases.txt');
 copyfile('lib/unicore/PropValueAliases.txt');
 
-copyrec('cpan/IO-Compress/examples');
 copyrec('cpan/Test-Harness/t/lib/TAP/Harness') if $extensions{'cpan/Test-Harness'};
 
 makedir("cpan/Digest-SHA/src");
