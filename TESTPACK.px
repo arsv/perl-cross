@@ -5,14 +5,11 @@ $DIR = shift || 'TESTPACK';
 
 %exclude = map { $_ => 1 } (
 	'cpan/Pod-Parser/t/pod/find.t',
-	'cpan/CPANPLUS-Dist-Build/t/02_CPANPLUS-Dist-Build.t',
 	'dist/ExtUtils-Install',
 	'dist/ExtUtils-ParseXS',
 	'cpan/ExtUtils-MakeMaker',
 	'cpan/ExtUtils-Constant',
 	'cpan/File-CheckTree',
-	'cpan/CPANPLUS',
-	'cpan/CPANPLUS-Dist-Build',
 	'ext/XS-Typemap',
 	'cpan/libnet',
 	'ext/XS-APItest',
