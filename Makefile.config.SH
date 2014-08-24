@@ -135,11 +135,11 @@ LIBPERL = $libperl
 END
 
 if [ "$useshrplib" == 'define' ]; then
-cat >> Makefile.config <<END
-LIBPERL_LINK = -Wl,-rpath,\$(archlib)/CORE \$(LIBPERL)
+cat >> Makefile.config <<"END"
+LIBPERL_LINK = -Wl,-rpath,$(archlib)/CORE $(LIBPERL)
 
-\$(LIBPERL):
-	\$(CC) \$(LDDLFLAGS) -Wl,-soname -Wl,libperl.so.${PERL_REVISION}.${PERL_VERSION} -o \$@ \$(filter %\$o,\$^) \$(LIBS)
+$(LIBPERL):
+	$(CC) $(LDDLFLAGS) -Wl,-soname -Wl,$(LIBPERL) -o $@ $(filter %$o,$^) $(LIBS)
 END
 else
 cat >> Makefile.config <<"END"

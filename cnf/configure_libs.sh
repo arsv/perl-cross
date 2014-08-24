@@ -61,3 +61,14 @@ if not hinted 'perllibs'; then
 	setvar perllibs "$_libs"
 	result "$_libs"
 fi
+
+mstart "Deciding how to name libperl"
+if hinted libperl; then
+	true
+elif [ "$useshrplib" == 'define' ]; then
+	setvar libperl "libperl.so.${PERL_REVISION}.${PERL_VERSION}"
+	result "$libperl"
+else
+	setvar libperl "libperl.a"
+	result "$libperl"
+fi
