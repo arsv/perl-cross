@@ -63,8 +63,8 @@ function extadddisabled {
 }
 
 function extonlyif {
-	n="$1"; shift
-	s=`modsymname "$n"`
+	m="$1"; shift
+	s=`modsymname "$m"`
 	if [ "$@" ]; then
 		return
 	else
