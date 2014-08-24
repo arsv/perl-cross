@@ -139,7 +139,7 @@ cat >> Makefile.config <<END
 LIBPERL_LINK = -Wl,-rpath,\$(archlib)/CORE \$(LIBPERL)
 
 \$(LIBPERL):
-	\$(CC) \$(LDDLFLAGS) -o \$@ \$(filter %\$o,\$^) \$(LIBS)
+	\$(CC) \$(LDDLFLAGS) -Wl,-soname -Wl,libperl.so.${PERL_REVISION}.${PERL_VERSION} -o \$@ \$(filter %\$o,\$^) \$(LIBS)
 END
 else
 cat >> Makefile.config <<"END"
