@@ -125,16 +125,11 @@ perlmini.c: perl.c
 perlmini$O: perlmini.c
 	$(HOSTCC) $(HOSTCFLAGS) -DPERL_IS_MINIPERL -c -o $@ $<
 	
-# We don't want to regenerate perly.c and perly.h, but they might
-# appear out-of-date after a patch is applied or a new distribution is
-# made.
-perly.c: perly.y
-	-@sh -c true
+# Do not re-generate perly.c and perly.h even if they appear out-of-date.
+# Use "make regen_perly" to force update.
+# The following rule cancels implicit .y -> .c make would use otherwise
+%.c: %.y
 
-perly.h: perly.y
-	-@sh -c true
-
-# this outputs perly.h, perly.act and perly.tab
 regen_perly:
 	perl regen_perly.pl
 
