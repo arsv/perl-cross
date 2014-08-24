@@ -103,6 +103,7 @@ extonlyif XS/APItest "$usedl" == 'define'
 extonlyif XS/Typemap "$usedl" == 'define'
 extonlyif VMS-DCLsym "$osname" == "vms"		# XXX: is it correct?
 extonlyif VMS-Stdio "$osname" == "vms"
+extonlyif VMS-Filespec "$osname" == "vms"
 
 for d in ext cpan dist; do
 	msg "Looking for extensions recursively under $d/"
