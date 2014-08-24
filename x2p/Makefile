@@ -1,6 +1,6 @@
 TOP = ..
 include $(TOP)/Makefile.config
-PERL = $(TOP)/miniperl -I$(TOP)/lib
+PERL = $(TOP)/miniperl_top -I$(TOP)/lib
 
 all: a2p$x find2perl s2p
 
