@@ -24,7 +24,7 @@ function extadd {
 		msg "\tskipping $2"
 		return
 	fi
-	test "$1" == 'xs' && appendvarsilent 'known_extensions' "$2"
+	appendvarsilent 'known_extensions' "$2"
 	o=`valueof "only_$s"`
 	if [ -n "$onlyext" -a -z "$o" ]; then
 		msg "\tskipping $2"
