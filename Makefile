@@ -152,6 +152,8 @@ static.list: Makefile.config | $(static_tgt) miniperl$X
 
 # ---[ site/library ]-----------------------------------------------------------
 
+libperl: $(LIBPERL)
+
 $(LIBPERL): op$o perl$o $(obj) $(dynaloader_o)
 
 # It would be better to test for static-library suffix here, but the suffix
