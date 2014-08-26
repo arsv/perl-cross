@@ -75,3 +75,8 @@ if not hinted libperl; then
 	fi
 	result "$libperl"
 fi
+
+if [ "$soname" == "define" ]; then
+	# -Dsoname was used, without the argument
+	setvar 'soname' "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION"
+fi
