@@ -92,8 +92,6 @@ l = .so
 O = .host$host_o
 X = $host_exe
 so = $dlext
-
-extensions: xconfig-pm
 END
 else
 cat >> Makefile.config <<END

@@ -122,8 +122,6 @@ you need to tweak xconfig.sh:
 					configure on the host system (xconfig.sh)
 			e.g. --host-define-foo, --host-set-foo=bar
 
-	--target-<option>[=value]	(same for tconfig.sh; do not use)
-
 Generally configure tries to build all modules it can find in the source tree.
 Use the following options to alter modules list:
 

@@ -5,7 +5,6 @@ include Makefile.config
 CONFIGPM_FROM_CONFIG_SH = lib/Config.pm lib/Config_heavy.pl
 CONFIGPM = $(CONFIGPM_FROM_CONFIG_SH) lib/Config_git.pl
 CONFIGPOD = lib/Config.pod
-XCONFIGPM = xlib/Config.pm xlib/Config_heavy.pl
 STATIC = static
 # Note: MakeMaker will look for xsubpp only in specific locations
 # This is one of them; but dist/ExtUtils-ParseXS isn't.
@@ -76,14 +75,6 @@ xconfig.h: xconfig.sh config_h.SH
 	CONFIG_H=$@ CONFIG_SH=$< ./config_h.SH
 
 config-pm: $(CONFIGPM)
-
-xconfig-pm: $(XCONFIGPM)
-
-$(XCONFIGPM): tconfig.sh configpm | xlib miniperl$X
-	./miniperl_top configpm --config-sh=tconfig.sh --config-pm=xlib/Config.pm --config-pod=xlib/Config.pod
-
-xlib:
-	mkdir -p $@
 
 # prevent the following rule from overwriting Makefile
 # by running Makefile.SH (part of original distribution)
@@ -366,15 +357,6 @@ install.perl: installperl | miniperl$X
 
 install.man: installman pod/perltoc.pod | miniperl$X
 	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
-
-ifdef target_name
-install.miniperl: miniperl$X xlib/Config.pm xlib/Config_heavy.pl
-	install -D -m 0755 miniperl $(hostbin)/$(target_name)-miniperl$X
-	test -n "$(target_arch)" -a "$(target_arch)" != "$(target_name)" &&\
-		ln -s $(target_name)-miniperl$X $(hostbin)/$(target_arch)-miniperl$X || true
-	install -D -m 0644 xlib/Config.pm $(hostprefix)/$(target_arch)/lib/perl/Config.pm
-	install -D -m 0644 xlib/Config_heavy.pl $(hostprefix)/$(target_arch)/lib/perl/Config_heavy.pl
-endif
 
 # ---[ testpack ]---------------------------------------------------------------
 .PHONY: testpack

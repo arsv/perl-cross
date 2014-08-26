@@ -99,7 +99,6 @@ if [ "$mode" == "cross" ]; then
 	msg "Respawning configure for build and target platforms"
 	msg
 	run $0 $hco --keeplog --mode=buildmini --build="$build" --buildarch="$buildarch"\
-		--target-name="$target" --target-arch="$targetarch"\
 		|| die "configure --mode=buildmini failed"
 	msg
        	run $0 "$@" --keeplog --mode=target --target="$target" --targetarch="$targetarch"\
@@ -112,9 +111,6 @@ elif [ "$mode" == "buildmini" ]; then
 	if [ "x$build" != "x" ]; then pf1="$build-"; else pf1=""; fi
 	pf2="$build-"
 	config='xconfig.sh'
-	if [ -z "$target_name" ]; then
-		msg "Warning: buildmini without --target-name; miniperl installation will not be possible"
-	fi
 elif [ "$mode" == "target" ]; then
 	targetlabel=`archlabel "$target" "$targetarch"`
 	msg "Configuring primary perl executable for $targetlabel"
@@ -161,12 +157,6 @@ if [ "$mode" == 'native' -o "$mode" == 'buildmini' -o "$mode" == "target" ]; the
 	fi
 	. $base/configure_genc.sh
 	failpoint
-	if [ "$mode" == 'target' ]; then
-		config="tconfig.sh"
-		. $base/configure_targ.sh
-		. $base/configure_genc.sh
-		failpoint
-	fi
 fi
 
 
