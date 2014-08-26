@@ -161,9 +161,13 @@ $(LIBPERL): op$o perl$o $(obj) $(dynaloader_o)
 # So let's make it so that useshrplib controls the kind of the library
 # regardless of the library name.
 # This is in-line with gcc and ld behavior btw.
+ifneq ($(soname),)
+$(LIBPERL): LDDLFLAGS += -Wl,-soname -Wl,$(soname)
+endif
+
 ifeq ($(useshrplib),define)
 $(LIBPERL):
-	$(CC) $(LDDLFLAGS) -Wl,-soname -Wl,$@ -o $@ $(filter %$o,$^) $(LIBS)
+	$(CC) $(LDDLFLAGS) -o $@ $(filter %$o,$^) $(LIBS)
 else
 $(LIBPERL):
 	$(AR) cru $@ $(filter %$o,$^)

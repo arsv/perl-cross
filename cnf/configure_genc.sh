@@ -1104,6 +1104,7 @@ default sizetype
 default sleep
 default smail
 default so so
+default soname
 default sockethdr
 default socketlib
 default socksizetype socklen_t

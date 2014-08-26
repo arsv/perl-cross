@@ -63,12 +63,15 @@ if not hinted 'perllibs'; then
 fi
 
 mstart "Deciding how to name libperl"
-if hinted libperl; then
-	true
-elif [ "$useshrplib" == 'define' ]; then
-	setvar libperl "libperl.so.${PERL_REVISION}.${PERL_VERSION}"
-	result "$libperl"
-else
-	setvar libperl "libperl.a"
+if not hinted libperl; then
+	if [ "$usesoname" == 'define' ]; then
+		setvar libperl "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION.$PERL_API_SUBVERSION"
+		setvar soname "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION"
+		setvar "useshrplib" 'define'
+	elif [ "$useshrplib" == 'define' ]; then
+		setvar libperl "libperl.so"
+	else
+		setvar libperl "libperl.a"
+	fi
 	result "$libperl"
 fi
