@@ -126,10 +126,15 @@ regen_perly:
 
 # ---[ site/perl ]--------------------------------------------------------------
 
+ifeq ($(useshrplib),define)
+perl$x: LDFLAGS += -Wl,-rpath,$(archlib)/CORE
+endif # or should it be "else"?
+perl$x: LDFLAGS += -Wl,-E
+
 perl$x: perlmain$o $(LIBPERL) $(static_tgt) static.list ext.libs
 	$(eval extlibs=$(shell cat ext.libs))
 	$(eval statars=$(shell cat static.list))
-	$(CC) $(LDFLAGS) -o $@ -Wl,-E $(filter %$o,$^) $(LIBPERL_LINK) $(statars) $(LIBS) $(extlibs)
+	$(CC) $(LDFLAGS) -o $@ $(filter %$o,$^) $(LIBPERL) $(statars) $(LIBS) $(extlibs)
 
 %$o: %.c config.h
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -148,6 +153,20 @@ static.list: Makefile.config | $(static_tgt) miniperl$X
 # ---[ site/library ]-----------------------------------------------------------
 
 $(LIBPERL): op$o perl$o $(obj) $(dynaloader_o)
+
+# It would be better to test for static-library suffix here, but the suffix
+# is not used explicitly anywhere else, including in -Dlibperl=
+# So let's make it so that useshrplib controls the kind of the library
+# regardless of the library name.
+# This is in-line with gcc and ld behavior btw.
+ifeq ($(useshrplib),define)
+$(LIBPERL):
+	$(CC) $(LDDLFLAGS) -Wl,-soname -Wl,$@ -o $@ $(filter %$o,$^) $(LIBS)
+else
+$(LIBPERL):
+	$(AR) cru $@ $(filter %$o,$^)
+	$(RANLIB) $@
+endif
 
 perl.o: git_version.h
 
