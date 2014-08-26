@@ -1,3 +1,15 @@
+When deciding which libraries are available, the original Configure uses
+shaky heuristics to physically locate library files.
+This is a very very bad thing to do, *especially* when cross-compiling,
+as said heiristics are likely to locate the host libraries, not the target ones.
+
+The only real need for this test is to make sure it's safe to pass -llibrary
+to the compiler. So that's exactly what perl-cross does, pass -llibrary
+and see if it breaks things.
+
+Note this is a part of MakeMaker, and only applies to module Makefiles.
+
+
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm
 @@ -19,9 +19,10 @@

@@ -1,0 +1,25 @@
+These scripts are run by miniperl in perl-cross,
+and have the right @INC set up for them externally.
+
+--- a/installperl
++++ b/installperl
+@@ -2,8 +2,6 @@
+ 
+ BEGIN {
+     chdir '..' if !-d 'lib' and -d '../lib';
+-    @INC = 'lib';
+-    $ENV{PERL5LIB} = 'lib';
+ 
+     # This needs to be at BEGIN time, before any use of Config
+     # install_lib itself loads and imports Config into main::
+--- a/installman
++++ b/installman
+@@ -1,8 +1,6 @@
+ #!./perl -w
+ 
+ BEGIN {
+-    @INC = qw(lib);
+-
+     # This needs to be at BEGIN time, before any use of Config
+     # install_lib itself loads and imports Config into main::
+     require './install_lib.pl';
