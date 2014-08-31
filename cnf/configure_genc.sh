@@ -91,6 +91,7 @@ default man1ext "1"
 default man3dir "$sharedir/man/man3"
 default man3ext "3"
 default bin "$prefix/bin"
+default lib "$prefix/lib"
 default scriptdir "$prefix/bin"
 default otherlibdirs ' '
 default libsdirs ' '
@@ -141,6 +142,7 @@ default_inst man1dir
 default_inst man3dir
 default_inst archlib
 default_inst bin
+default_inst lib
 default_inst html1dir
 default_inst html3dir
 default_inst privlib

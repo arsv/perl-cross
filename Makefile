@@ -127,7 +127,9 @@ regen_perly:
 # ---[ site/perl ]--------------------------------------------------------------
 
 ifeq ($(useshrplib),define)
+ifeq ($(soname),)
 perl$x: LDFLAGS += -Wl,-rpath,$(archlib)/CORE
+endif
 endif # or should it be "else"?
 perl$x: LDFLAGS += -Wl,-E
 
@@ -163,6 +165,13 @@ $(LIBPERL): op$o perl$o $(obj) $(dynaloader_o)
 # This is in-line with gcc and ld behavior btw.
 ifneq ($(soname),)
 $(LIBPERL): LDDLFLAGS += -Wl,-soname -Wl,$(soname)
+
+  ifneq ($(soname),$(LIBPERL))
+$(LIBPERL): $(soname)
+$(soname):
+	ln -sf $(LIBPERL) $@
+
+  endif
 endif
 
 ifeq ($(useshrplib),define)

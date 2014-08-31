@@ -62,21 +62,21 @@ if not hinted 'perllibs'; then
 	result "$_libs"
 fi
 
-mstart "Deciding how to name libperl"
-if not hinted libperl; then
-	if [ "$usesoname" == 'define' ]; then
-		setvar libperl "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION.$PERL_API_SUBVERSION"
-		setvar soname "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION"
-		setvar "useshrplib" 'define'
-	elif [ "$useshrplib" == 'define' ]; then
-		setvar libperl "libperl.so"
-	else
-		setvar libperl "libperl.a"
-	fi
-	result "$libperl"
+if [ "$soname" == "define" -o "$usesoname" == "define" ]; then
+	setvar 'soname' "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION"
 fi
 
-if [ "$soname" == "define" ]; then
-	# -Dsoname was used, without the argument
-	setvar 'soname' "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION"
+mstart "Deciding how to name libperl"
+if not hinted libperl; then
+	if [ -n "$soname" ]; then
+		setvar libperl "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION.$PERL_API_SUBVERSION"
+		setvar "useshrplib" 'define'
+		result "$libperl (SONAME $soname, dynamic)"
+	elif [ "$useshrplib" == 'define' ]; then
+		setvar libperl "libperl.so"
+		result "$libperl (dynamic)"
+	else
+		setvar libperl "libperl.a"
+		result "$libperl (static)"
+	fi
 fi
