@@ -18,7 +18,6 @@ branch</a>.</p>
 <ul>
 	<li>0.9.1 (2014-08-26)<ul>
 		<li>module cleanup for 5.20.0</li>
-		<li>soname for libperl.so is now supplied by Makefile</li>
 		<li>host-installed miniperl stuff removed</li>
 	</ul></li>
 
