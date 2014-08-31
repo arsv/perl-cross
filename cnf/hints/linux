@@ -1,3 +1,16 @@
+# These hints *may* assume linux/glibc. Other libc implementations,
+# would they require different settings, should be added explicitly,
+# as linux-(something), or perhaps even arch-linux-(something).
+#
+# The reason for this is in cases like arm-*-linux-gnueabi, -gnueabihf
+# and so on which make it hard to guess libc type from the 4th component.
+# In the same vein, stuff like i586-alix-linux-uclibc requies some effort
+# to get when building toolchain, and if left to gcc configure, it is
+# very likely to end up as i586-pc-linux-gnu or something along those lines,
+# even if uClibc is used.
+
+# Linux syscalls
+d_voidsig=define
 d_nanosleep=define
 d_clock_gettime=define
 d_clock_getres=define
@@ -5,5 +18,11 @@ d_clock_nanosleep=define
 d_clock=define
 
 # From the original linux.sh
-d_lstat=define
 usemallocwrap=define
+
+# *NOT* checked! that's how original Configure set them.
+# 
+d_semctl_semid_ds=define
+d_semctl_semun=define
+
+ccflags+='-D_POSIX_C_SOURCE -D_XOPEN_SOURCE -D_GNU_SOURCE'
