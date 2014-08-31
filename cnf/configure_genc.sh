@@ -1135,6 +1135,7 @@ default sysman
 default tail
 default tar
 default targetarch
+default targetsh "$sh"
 default tbl
 default tee
 default test test
