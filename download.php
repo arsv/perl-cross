@@ -1,10 +1,10 @@
 <? include "_head.php" ?>
 
-<p>Current version of perl-cross is 0.9.1. It's intended to be used with perl-5.20.0.
+<p>Current version of perl-cross is 0.9.2. It's intended to be used with perl-5.20.0.
 Download it here:</p>
 <div class="dllink">
-	<a href="https://raw.github.com/arsv/perl-cross/releases/perl-5.20.0-cross-0.9.1.tar.gz"
-	 >https://raw.github.com/arsv/perl-cross/releases/perl-5.20.0-cross-0.9.1.tar.gz</a>
+	<a href="https://raw.github.com/arsv/perl-cross/releases/perl-5.20.0-cross-0.9.2.tar.gz"
+	 >https://raw.github.com/arsv/perl-cross/releases/perl-5.20.0-cross-0.9.2.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
