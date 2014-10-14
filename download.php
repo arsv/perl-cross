@@ -1,10 +1,10 @@
 <? include "_head.php" ?>
 
-<p>Current version of perl-cross is 0.9.2. It's intended to be used with perl-5.20.0.
+<p>Current version of perl-cross is 0.9.3. It's intended to be used with perl-5.20.1.
 Download it here:</p>
 <div class="dllink">
-	<a href="https://raw.github.com/arsv/perl-cross/releases/perl-5.20.0-cross-0.9.2.tar.gz"
-	 >https://raw.github.com/arsv/perl-cross/releases/perl-5.20.0-cross-0.9.2.tar.gz</a>
+	<a href="https://raw.github.com/arsv/perl-cross/releases/perl-5.20.1-cross-0.9.3.tar.gz"
+	 >https://raw.github.com/arsv/perl-cross/releases/perl-5.20.1-cross-0.9.3.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
@@ -16,6 +16,16 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
+	<li>0.9.3 (2014-10-14)<ul>
+		<li>perl 5.20.1</li>
+		<li>bigendian target byteorder detection fix</li>
+	</ul></li>
+
+	<li>0.9.2 (2014-09-20)<ul>
+		<li>minor updates to handle perl 5.20.1-RC1</li>
+		<li>soname'd libperl installation</li>
+	</ul></li>
+
 	<li>0.9.1 (2014-08-26)<ul>
 		<li>module cleanup for 5.20.0</li>
 		<li>host-installed miniperl stuff removed</li>
