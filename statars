@@ -3,8 +3,7 @@
 $lib = 'lib/auto/';
 foreach(@ARGV) {
 	$m = $_;
-	s!^(dist|ext|cpan)/!!;
-	s!-!/!g;
+	s!::!/!g;
 	@f = split m!/!;
 	$f = pop @f;
 	undef $A;

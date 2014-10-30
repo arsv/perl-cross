@@ -29,7 +29,7 @@ nonxs_tgt = $(patsubst %,%/pm_to_blib,$(nonxs_ext))
 disabled_dynamic_tgt = $(patsubst %,%/pm_to_blib,$(disabled_dynamic_ext))
 disabled_nonxs_tgt = $(patsubst %,%/pm_to_blib,$(disabled_nonxs_ext))
 # perl module names for static mods
-static_pmn = $(shell echo $(static_ext) | sed -e 's!\(cpan\|ext\|dist\)/!!g' -e 's/-/::/g')
+static_pmn = $(shell for e in $(static_ext) ; do grep '^NAME =' $$e/Makefile | cut -d' ' -f3 ; done)
 
 dynaloader_o = $(patsubst %,%$o,$(dynaloader))
 
@@ -143,14 +143,14 @@ perl$x: perlmain$o $(LIBPERL) $(static_tgt) static.list ext.libs
 
 globals.o: uudmap.h
 
-perlmain.c: ext/ExtUtils-Miniperl/pm_to_blib | miniperl$X
+perlmain.c: ext/ExtUtils-Miniperl/pm_to_blib $(patsubst %,%/Makefile,$(static_ext)) | miniperl$X
 	./miniperl_top -MExtUtils::Miniperl -e 'writemain(\"$@", @ARGV)' $(dynaloader) $(static_pmn)
 
-ext.libs: Makefile.config | $(static_tgt) miniperl$X
-	./miniperl_top extlibs $(static_ext) > $@
+ext.libs: Makefile.config $(patsubst %,%/Makefile,$(static_ext)) | $(static_tgt) miniperl$X
+	./miniperl_top extlibs $(static_pmn) > $@
 
-static.list: Makefile.config | $(static_tgt) miniperl$X
-	./miniperl_top statars $(static_ext) > $@
+static.list: Makefile.config $(patsubst %,%/Makefile,$(static_ext)) | $(static_tgt) miniperl$X
+	./miniperl_top statars $(static_pmn) > $@
 
 # ---[ site/library ]-----------------------------------------------------------
 

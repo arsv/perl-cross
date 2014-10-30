@@ -1,9 +1,8 @@
 #!./miniperl
 
 foreach(@ARGV) {
-	s!^(dist|ext|cpan)/!lib/auto/!;
-	s!-!/!g;
-	$_ .= "/extralibs.ld";
+	s!::!/!g;
+	$_ = "lib/auto/" . $_ . "/extralibs.ld";
 	next unless -f $_;
 	open(EL, '<', $_) || next;
 	push(@libs, <EL>);	
