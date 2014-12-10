@@ -77,7 +77,7 @@ xconfig.h: xconfig.sh config_h.SH
 config-pm: $(CONFIGPM)
 
 # prevent the following rule from overwriting Makefile
-# by running Makefile.SH (part of original distribution)
+# by running Makefile.SH (part of the original distribution)
 Makefile:
 	touch $@
 

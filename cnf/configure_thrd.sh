@@ -4,12 +4,12 @@
 # Called only if $usethreads is set (which is not by default)
 
 # Both presence *and* prototype for the function are checked here,
-# with prototype encoded the same way relevant constants from config.h use:
+# with the prototype encoded the same way as the constants from config.h:
 # 	[A-Za-z]_[A-Za-z]+
 # Each letter mean one type; first, return type, then arguments
 #	I_BBW	int foo(char*, char*, size_t)
 #	V_HI	void bar(FILE*, int)
-# Here's what each letter mean:
+# Here's what each letter means:
 
 type_I='int'
 type_B='char*'
