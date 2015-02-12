@@ -1134,6 +1134,7 @@ default strings
 default submit
 default subversion
 default sysman
+default sysroot
 default tail
 default tar
 default targetarch
