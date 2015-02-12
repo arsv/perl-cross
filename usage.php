@@ -151,8 +151,8 @@ decribes <i>how</i> to modify them, not <i>which values</i> to use.</p>
 		<dd>Same, for the build system. Only useful when cross-compiling.</dd>
 
 	<dt>--sysroot=<i>/path</i></dt>
-		<dd>path to (copy of) target system root in the build system
-		(currently unused (?)) <!-- TODO --></dd>
+		<dd>target includes and libraries location in the build system, see gcc(1) or clang(1).
+		This option is passed directly to the compiler and linker.</dd>
 </dl>
 
 <p>Options from the original Configure which are not supported or make
