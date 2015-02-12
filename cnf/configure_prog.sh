@@ -188,11 +188,15 @@ END
 	fi
 fi
 
+setifndef 'lddlflags' "-shared"
 if [ "$mode" == 'target' -o "$mode" == 'native' ]; then
 	if [ -n "$sysroot" ]; then
 		msg "Adding --sysroot to {cc,ld}flags"
-		setvar 'ccflags' "--sysroot='$sysroot' $ccflags"
-		setvar 'ldflags' "--sysroot='$sysroot' $ldflags"
+		prependvar 'ccflags' "--sysroot=$sysroot"
+		prependvar 'ldflags' "--sysroot=$sysroot"
+		# While cccdlflags are used together with ccflags,
+		# ld is always called with lddlflags *instead*of* ldflags
+		prependvar 'lddlflags' "--sysroot=$sysroot"
 	fi
 fi
 

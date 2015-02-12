@@ -349,6 +349,16 @@ function appendvar {
 	fi
 }
 
+# prepend vardst value-to-append
+function prependvar {
+	v=`valueof "$1"`
+	if [ -n "$v" -a -n "$2" ]; then
+		setvar "$1" "$2 $v"
+	elif [ -z "$v" -a -n "$2" ]; then
+		setvar "$1" "$2"
+	fi
+}
+
 function appendvarsilent {
 	v=`valueof "$1"`
 	test -n "$v" && eval $1="'$v $2'" || eval $1="'$2'"
