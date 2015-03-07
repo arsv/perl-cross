@@ -7,9 +7,13 @@
 # Check write_buildcustomize.pl for the list of modules to include here
 
 top=`dirname "$0"`
+if [ ! -f $top/miniperl ]; then
+	echo "$0: no $top/miniperl found; build it before using miniperl_top"
+	exit 1
+fi
 if [ -f $top/lib/buildcustomize.pl ]; then
 	# buildcustomize.pl silently overrides all -I options below
-	echo "Remove $top/lib/buildcustomize.pl before running miniperl_top" >&2
+	echo "$0: remove $top/lib/buildcustomize.pl before running miniperl_top" >&2
 	exit 1
 fi
 exec $top/miniperl\
