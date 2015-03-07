@@ -1,10 +1,10 @@
 <? include "_head.php" ?>
 
-<p>Current version of perl-cross is 0.9.5. It's intended to be used with perl-5.20.2.
+<p>Current version of perl-cross is 0.9.6. It's intended to be used with perl-5.20.2.
 Download it here:</p>
 <div class="dllink">
-	<a href="https://raw.github.com/arsv/perl-cross/releases/perl-5.20.2-cross-0.9.5.tar.gz"
-	 >https://raw.github.com/arsv/perl-cross/releases/perl-5.20.2-cross-0.9.5.tar.gz</a>
+	<a href="https://raw.github.com/arsv/perl-cross/releases/perl-5.20.2-cross-0.9.6.tar.gz"
+	 >https://raw.github.com/arsv/perl-cross/releases/perl-5.20.2-cross-0.9.6.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
@@ -16,6 +16,10 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
+	<li>0.9.6 (2015-03-07)<ul>
+		<li>a2p yacc invocation suppressed for 5.20.2 sources</li>
+	</ul></li>
+
 	<li>0.9.5 (2015-02-24)<ul>
 		<li>perl 5.20.2</li>
 		<li>--sysroot handling fixed</li>
