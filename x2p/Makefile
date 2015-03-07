@@ -10,6 +10,12 @@ all: a2p$x find2perl s2p
 a2p$x: a2p$o hash$o str$o util$o walk$o
 	$(CC) -o $@ $(filter %$o,$^) $(LDFLAGS)
 
+# Do not rebuild a2p.c just because a2p.y is newer.
+# It is very unlikely for perl-cross to be used for perl development,
+# but it may happen that perl source has a2p.c not-older than a2p.y.
+a2p.c: a2p.y
+	test -f $@ && touch $@ || yacc $<
+
 %: %.PL
 	$(PERL) $<
 
