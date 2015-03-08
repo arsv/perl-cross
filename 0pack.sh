@@ -17,7 +17,7 @@
 
 PV=5.20.2
 
-tar -cf perl-cross.tar\
+tar -zcf perl-cross.tar.gz\
 	--exclude README.md\
 	--exclude LICENSE\
 	--exclude Artistic\
