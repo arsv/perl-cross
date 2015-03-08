@@ -5,7 +5,7 @@
 #
 # To make it look nice on Github, it must carry README, Copying
 # and have a plain directory layout. When deploying it onto a perl
-# source tree, it's better not to have said files.
+# source tree, it's better not to have those files.
 #
 # Berlios versions were packed to match relevant perl directory
 # name, and it worked well. So the idea here is to keep
