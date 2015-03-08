@@ -5,10 +5,12 @@ with the primary emphasis on cross-compiling the source.
 
 ## Download
 
-Check [releases](http://github.com/arsv/perl-cross/releases) branch
-for ready-to-use tarballs.
+Since version 0.9, downloads are available on the github
+[releases](https://github.com/arsv/perl-cross/releases) page.
 
-Alternatively, clone git tree and run 0pack.sh to a usable tarball.
+For older releases check the [releases](https://github.com/arsv/perl-cross/tree/releases) branch.
+
+Alternatively, clone the git tree and run 0pack.sh to get a usable tarball.
 
 ## Usage
 
