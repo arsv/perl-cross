@@ -1205,10 +1205,10 @@ default yaccflags
 default zcat
 default zip zip
 
-# "use MakeMaker direct CC Library Test"
+# "use MakeMaker direct LD Library Test"
 # see cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/Liblist/Kid.pm
 # and resp. patch for reasons
-default usemmcclt 'define'
+default usemmldlt 'define'
 
 if [ "$mode" == "buildmini" ]; then
 	default target_name
