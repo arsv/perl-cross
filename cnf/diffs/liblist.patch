@@ -19,7 +19,7 @@ Note this is a part of MakeMaker, and only applies to module Makefiles.
 -    if    ( $^O eq 'VMS' )     { return &_vms_ext; }
 -    elsif ( $^O eq 'MSWin32' ) { return &_win32_ext; }
 -    else                       { return &_unix_os2_ext; }
-+  if   ($Config{usemmcclt}){ return &_cc_ext;       }
++  if   ($Config{usemmldlt}){ return &_ld_ext;       }
 +  elsif($^O eq 'VMS')      { return &_vms_ext;      }
 +  elsif($^O eq 'MSWin32')  { return &_win32_ext;    }
 +  else                     { return &_unix_os2_ext; }
@@ -33,7 +33,7 @@ Note this is a part of MakeMaker, and only applies to module Makefiles.
 +# A direct test for -l validity.
 +# Because guessing real file names for -llib options when dealing
 +# with a cross compiler is generally a BAD IDEA^tm.
-+sub _cc_ext {
++sub _ld_ext {
 +    my($self,$potential_libs, $verbose, $give_libs) = @_;
 +    $verbose ||= 0;
 +
@@ -47,8 +47,8 @@ Note this is a part of MakeMaker, and only applies to module Makefiles.
 +    return ("", "", "", "", ($give_libs ? [] : ())) unless $potential_libs;
 +    warn "Potential libraries are '$potential_libs':\n" if $verbose;
 +
-+    my($cc)   = $Config{cc};
-+    my($ccflags)   = $Config{ccflags};
++    my($ld)   = $Config{ld};
++    my($lddlflags)   = $Config{lddlflags};
 +    my($libs) = defined $Config{perllibs} ? $Config{perllibs} : $Config{libs};
 +
 +    my $try = 'try_mm.c';
@@ -65,7 +65,7 @@ Note this is a part of MakeMaker, and only applies to module Makefiles.
 +		push(@testlibs, $thislib);
 +		next
 +	};
-+	my $cmd = "$cc $ccflags -o $tryx $try $testlibs $thislib >/dev/null 2>&1";
++	my $cmd = "$ld $lddlflags -o $tryx $try $testlibs $thislib >/dev/null 2>&1";
 +	my $ret = system($cmd);
 +	warn "Warning (mostly harmless): " . "No library found for $thislib\n" if $ret;
 +	next if $ret;
