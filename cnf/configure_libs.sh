@@ -1,14 +1,18 @@
 #!/bin/bash
 
 mstart "Deciding whether to use DynaLoader"
+if [ -z "$usedl" ]; then
+	if [ "$i_dlfcn" == 'define' -o "$i_nlist" == 'define' ]; then
+		setvar 'usedl' 'define'
+	else
+		setvar 'usedl' 'undef'
+	fi
+fi
+test "$usedl" == 'define' && result 'yes' || result "no"
+
 if [ "$usedl" == 'undef' -a -z "$allstatic" ]; then
-	setvar 'usedl' 'undef'
-	result "no"
 	msg "DynaLoader is disabled, making all modules static"
 	setvar 'allstatic' 1
-else
-	setvar 'usedl' 'define'
-	result 'yes'
 fi
 
 mstart "Checking which libraries are available"
