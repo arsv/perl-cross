@@ -97,13 +97,16 @@ extonlyif Opcode "$useopcode" == 'define'
 extonlyif POSIX "$useposix" == 'true'
 extonlyif Socket "$d_socket" == 'define'
 extonlyif Sys/Syslog "$d_socket" == 'define'
-extonlyif Thread "$usethreads" == 'define'
 extonlyif cpan/List-Util "$usedl" != 'undef'
 extonlyif XS/APItest "$usedl" == 'define'
 extonlyif XS/Typemap "$usedl" == 'define'
 extonlyif VMS-DCLsym "$osname" == "vms"		# XXX: is it correct?
 extonlyif VMS-Stdio "$osname" == "vms"
 extonlyif VMS-Filespec "$osname" == "vms"
+
+extonlyif Thread "$usethreads" == 'define'
+extonlyif threads "$usethreads" == 'define'
+extonlyif threads-shared "$usethreads" == 'define'
 
 for d in ext cpan dist; do
 	msg "Looking for extensions recursively under $d/"
