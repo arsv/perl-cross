@@ -266,7 +266,6 @@ default baserev 5.0
 default bash
 default bin_ELF define
 default bison bison
-default bootstrap_charset undef
 default byacc byacc
 default byteorder
 default c
@@ -325,13 +324,20 @@ default d_PRIu64 undef
 default d_PRIx64 undef
 default d_SCNfldbl undef
 default d__fwalk undef
+default d_re_comp undef
+default d_ptrdiff_t undef
+default d_regcmp undef
+default d_regcomp undef
 default d_access undef
 default d_accessx undef
+default d_acosh undef
 default d_aintl undef
 default d_alarm undef
 default d_archlib define
 default d_asctime64 undef
 default d_asctime_r undef
+default d_asinh undef
+default d_atanh undef
 default d_atolf undef
 default d_atoll undef
 default d_attribute_deprecated undef
@@ -342,6 +348,7 @@ default d_attribute_noreturn undef
 default d_attribute_pure undef
 default d_attribute_unused undef
 default d_attribute_warn_unused_result undef
+default d_backtrace undef
 default d_bcmp undef
 default d_bcopy undef
 default d_bsd undef
@@ -353,6 +360,7 @@ default d_bzero undef
 default d_c99_variadic_macros define
 default d_casti32 undef
 default d_castneg define
+default d_cbrt undef
 default d_charvspr undef
 default d_chown undef
 default d_chroot undef
@@ -362,6 +370,7 @@ default d_clearenv undef
 default d_closedir undef
 default d_cmsghdr_s undef
 default d_const define
+default d_copysign undef
 default d_copysignl undef
 default d_cplusplus undef
 default d_crypt undef
@@ -379,6 +388,7 @@ default d_difftime64 undef
 default d_dir_dd_fd undef
 default d_dirfd undef
 default d_dirnamlen undef
+default d_dladdr undef
 default d_dlerror undef
 default d_dlopen undef
 default d_dlsymun undef
@@ -400,7 +410,11 @@ default d_endpwent_r undef
 default d_endsent undef
 default d_endservent_r undef
 default d_eofnblk define
+default d_erf undef
+default d_erfc undef
 default d_eunice undef
+default d_exp2 undef
+default d_expm1 undef
 default d_faststdio undef
 default d_fchdir undef
 default d_fchmod undef
@@ -409,19 +423,27 @@ default d_fcntl undef
 default d_fcntl_can_lock undef
 default d_fd_macros undef
 default d_fd_set undef
+default d_fdim undef
 default d_fds_bits undef
+default d_fegetround undef
 default d_fgetpos undef
 default d_finite undef
 default d_finitel undef
 default d_flexfnam define
 default d_flock undef
 default d_flockproto define
+default d_fma undef
+default d_fmax undef
+default d_fmin undef
 default d_fork undef
 default d_fp_class undef
+default d_fp_classify undef
+default d_fp_classl undef
 default d_fpathconf undef
 default d_fpclass undef
 default d_fpclassify undef
 default d_fpclassl undef
+default d_fpgetround undef
 default d_fpos64_t undef
 default d_frexpl undef
 default d_fs_data_s undef
@@ -501,6 +523,8 @@ default d_gnulibc define
 default d_grpasswd undef
 default d_hasmntopt undef
 default d_htonl undef
+default d_hypot undef
+default d_ilogb undef
 default d_ilogbl undef
 default d_inc_version_list undef
 default d_index undef
@@ -515,21 +539,42 @@ default d_ipv6_mreq_source undef
 default d_isascii undef
 default d_isblank undef
 default d_isfinite undef
+default d_isfinitel undef
 default d_isinf undef
+default d_isinfl undef
+default d_isless undef
 default d_isnan undef
 default d_isnanl undef
+default d_isnormal undef
+default d_j0 undef
+default d_j0l undef
 default d_killpg undef
+default d_lc_monetary_2008 undef
 default d_lchown undef
 default d_ldbl_dig undef
+default d_ldexpl undef
+default d_lgamma undef
+default d_lgamma_r undef
 default d_libm_lib_version undef
 default d_link undef
+default d_llrint undef
+default d_llrintl undef
+default d_llround undef
+default d_llroundl undef
 default d_localtime64 undef
 default d_localtime_r undef
 default d_localtime_r_needs_tzset undef
 default d_locconv undef
 default d_lockf undef
+default d_log1p undef
+default d_log2 undef
+default d_logb undef
 default d_longdbl undef
 default d_longlong undef
+default d_lrint undef
+default d_lrintl undef
+default d_lround undef
+default d_lroundl undef
 default d_lseekproto define
 default d_lstat undef
 default d_madvise undef
@@ -569,8 +614,12 @@ default d_msgsnd undef
 default d_msync undef
 default d_munmap undef
 default d_mymalloc undef
+default d_nan undef
 default d_ndbm undef
 default d_ndbm_h_uses_prototypes define
+default d_nearbyint undef
+default d_nextafter undef
+default d_nexttoward undef
 default d_nice undef
 default d_nl_langinfo undef
 default d_nv_preserves_uv undef
@@ -612,19 +661,21 @@ default d_readdir_r undef
 default d_readlink undef
 default d_readv undef
 default d_recvmsg undef
+default d_remainder undef
+default d_remquo undef
 default d_rename undef
 default d_rewinddir undef
+default d_rint undef
 default d_rmdir undef
+default d_round undef
 default d_safebcpy undef
 default d_safemcpy undef
 default d_sanemcmp define
 default d_sbrkproto define
+default d_scalbn undef
 default d_scalbnl undef
 default d_sched_yield undef
 default d_scm_rights undef
-default d_sin6_scope_id undef
-default d_sockaddr_sa_len undef
-default d_sockaddr_in6 undef
 default d_seekdir undef
 default d_select undef
 default d_sem undef
@@ -677,8 +728,11 @@ default d_sigaction undef
 default d_signbit undef
 default d_sigprocmask undef
 default d_sigsetjmp undef
+default d_sin6_scope_id undef
 default d_sitearch define
 default d_snprintf undef
+default d_sockaddr_in6 undef
+default d_sockaddr_sa_len undef
 default d_sockatmark undef
 default d_sockatmarkproto define
 default d_socket undef
@@ -691,11 +745,11 @@ default d_srand48_r undef
 default d_srandom_r undef
 default d_sresgproto define
 default d_sresuproto define
+default d_stat undef
 default d_statblks undef
 default d_statfs_f_flags undef
 default d_statfs_s undef
 default d_static_inline undef
-default perl_static_inline static
 default d_statvfs undef
 default d_stdio_cnt_lval undef
 default d_stdio_ptr_lval undef
@@ -734,13 +788,16 @@ default d_tcgetpgrp undef
 default d_tcsetpgrp undef
 default d_telldir undef
 default d_telldirproto define
+default d_tgamma undef
 default d_time undef
 default d_timegm undef
 default d_times undef
 default d_tm_tm_gmtoff undef
 default d_tm_tm_zone undef
 default d_tmpnam_r undef
+default d_trunc undef
 default d_truncate undef
+default d_truncl undef
 default d_ttyname_r undef
 default d_tz_name 
 default d_tzname undef
@@ -754,10 +811,6 @@ default d_unsetenv undef
 default d_usleep undef
 default d_usleepproto define
 default d_ustat undef
-default_if_defined usevendorprefix d_vendorarch define undef
-default_if_defined usevendorprefix d_vendorbin define undef
-default_if_defined usevendorprefix d_vendorlib define undef
-default_if_defined usevendorprefix d_vendorscript define undef
 default d_vfork undef
 default d_void_closedir undef
 default d_voidsig undef
@@ -771,6 +824,14 @@ default d_wcstombs undef
 default d_wctomb undef
 default d_writev undef
 default d_xenix undef
+default d_wcscmp undef
+default d_wcsxfrm undef
+default doublekind -1
+default perl_static_inline static
+default_if_defined usevendorprefix d_vendorarch define undef
+default_if_defined usevendorprefix d_vendorbin define undef
+default_if_defined usevendorprefix d_vendorlib define undef
+default_if_defined usevendorprefix d_vendorscript define undef
 default date date
 default db_hashtype 'unsigned int'
 default db_prefixtype 'size_t'
@@ -851,6 +912,7 @@ default hint 'default'
 default hostcat 'cat /etc/hosts'
 default i_arpainet undef
 default i_assert undef
+default i_bfd undef
 default i_bsdioctl
 default i_crypt undef
 default i_db undef
@@ -858,7 +920,9 @@ default i_dbm undef
 default i_dirent undef
 default i_dld undef
 default i_dlfcn undef
+default i_execinfo undef
 default i_fcntl undef
+default i_fenv undef
 default i_float define
 default i_fp undef
 default i_fp_class undef
@@ -887,6 +951,7 @@ default i_poll undef
 default i_prot undef
 default i_pthread undef
 default i_pwd undef
+default i_quadmath undef
 default i_rpcsvcdbm undef
 default i_sfio undef
 default i_sgtty undef
@@ -896,6 +961,7 @@ default i_stdarg undef
 default i_stdbool undef
 default i_stddef undef
 default i_stdlib undef
+default i_stdint undef
 default i_string undef
 default i_sunmath undef
 default i_sysaccess undef
@@ -971,6 +1037,7 @@ default lns "$ln -s"
 default localtime_r_proto 0
 default locincpth
 default loclibpth
+default longdblkind -1
 default lp
 default lpr
 default ls ls
@@ -1188,6 +1255,8 @@ default usesocks undef
 default usethreads undef
 default useversionedarchname undef
 default usevfork false
+default usecbacktrace undef
+default usequadmath undef
 default usrinc
 default uuname
 default uvXUformat '"lX"'

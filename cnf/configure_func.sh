@@ -211,10 +211,13 @@ check hasfunc pthread_yield
 check hasfunc prctl
 check hasfunc rand
 check hasfunc random
+check hasfunc re_comp
 check hasfunc readdir 'NULL'
 check hasfunc readlink
 check hasfunc readv
 check hasfunc recvmsg
+check hasfunc regcmp
+check hasfunc regcomp
 check hasfunc rename 'NULL,NULL'
 check hasfunc rewinddir
 check hasfunc rmdir 'NULL'
@@ -266,6 +269,7 @@ check hasfunc socket "0,0,0" 'sys/types.h sys/socket.h'
 check hasfunc socketpair
 check hasfunc socks5_init
 check hasfunc sqrtl "0.0" 'math.h'
+check hasfunc stat
 check hasfunc statvfs
 check hasfunc strchr "NULL,0" 'stdlib.h string.h strings.h'
 check hasfunc strcoll "NULL,NULL" 'stdlib.h string.h'
@@ -305,9 +309,66 @@ check hasfunc vprintf 'NULL,0'
 check hasfunc vsnprintf
 check hasfunc wait4
 check hasfunc waitpid '0,NULL,0'
+check hasfunc wcscmp
 check hasfunc wcstombs 'NULL,NULL,0'
+check hasfunc wcsxfrm
 check hasfunc wctomb
 check hasfunc writev
+
+check hasfunc acosh '0.0' 'math.h'
+check hasfunc asinh '0.0' 'math.h'
+check hasfunc atanh '0.0' 'math.h'
+check hasfunc cbrt '0.0' 'math.h'
+check hasfunc copysign '0.0, 0.0' 'math.h'
+check hasfunc erf '0.0' 'math.h'
+check hasfunc erfc '0.0' 'math.h'
+check hasfunc exp2 '0.0' 'math.h'
+check hasfunc expm1 '0.0' 'math.h'
+check hasfunc fdim '0.0, 0.0' 'math.h'
+check hasfunc fegetround '' 'fenv.h'
+check hasfunc fma '0.0, 0.0, 0.0' 'math.h'
+check hasfunc fmax '0.0, 0.0' 'math.h'
+check hasfunc fmin '0.0, 0.0' 'math.h'
+check hasfunc fp_classify '0.0' 'math.h'
+check hasfunc fp_classl '0.0' 'math.h'
+check hasfunc fpgetround '' 'fenv.h'
+check hasfunc hypot '0.0, 0.0' 'math.h'
+check hasfunc ilogb '0.0' 'math.h'
+check hasfunc isfinitel '0.0' 'math.h'
+check hasfunc isinfl '0.0' 'math.h'
+check hasfunc isless '0.0, 0.0' 'math.h'
+check hasfunc isnormal '0.0' 'math.h'
+check hasfunc j0 '0.0' 'math.h'
+check hasfunc j0l '0.0' 'math.h'
+check hasfunc ldexpl '0.0, 0' 'math.h'
+check hasfunc lgamma '0.0' 'math.h'
+check hasfunc lgamma_r '0.0, NULL' 'math.h'
+check hasfunc llrint '0.0' 'math.h'
+check hasfunc llrintl '0.0' 'math.h'
+check hasfunc llround '0.0' 'math.h'
+check hasfunc llroundl '0.0' 'math.h'
+check hasfunc log1p '0.0' 'math.h'
+check hasfunc log2 '0.0' 'math.h'
+check hasfunc logb '0.0' 'math.h'
+check hasfunc lrint '0.0' 'math.h'
+check hasfunc lrintl '0.0' 'math.h'
+check hasfunc lround '0.0' 'math.h'
+check hasfunc lroundl '0.0' 'math.h'
+check hasfunc nan 'NULL' 'math.h'
+check hasfunc nearbyint '0.0' 'math.h'
+check hasfunc nextafter '0.0, 0.0' 'math.h'
+check hasfunc nexttoward '0.0, 0.0' 'math.h'
+check hasfunc remainder '0.0, 0.0' 'math.h'
+check hasfunc remquo '0.0, 0.0, NULL' 'math.h'
+check hasfunc rint '0.0' 'math.h'
+check hasfunc round '0.0' 'math.h'
+check hasfunc scalbn '0.0, 0' 'math.h'
+check hasfunc tgamma '0.0' 'math.h'
+check hasfunc trunc '0.0' 'math.h'
+check hasfunc truncl '0.0' 'math.h'
+
+check hasfunc backtrace 'NULL, 0' 'execinfo.h'
+check hasfunc dladdr 'NULL, NULL' 'dlfcn.h'
 
 check isvoid closedir "NULL" 'sys/types.h dirent.h'
 check hasvar sys_errlist 'stdio.h'
