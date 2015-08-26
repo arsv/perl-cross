@@ -1,5 +1,8 @@
 package Encode;
 
+use Exporter;
+our @EXPORT = qw(encode);
+
 sub encode
 {
 	return $_[1];
