@@ -1,6 +1,7 @@
 package Encode;
 
 use Exporter;
+our @ISA = qw(Exporter);
 our @EXPORT = qw(encode);
 
 sub encode
