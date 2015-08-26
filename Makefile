@@ -18,7 +18,7 @@ export PERL_CORE=1
 POD1 = $(wildcard pod/*.pod)
 MAN1 = $(patsubst pod/%.pod,man/man1/%$(man1ext),$(POD1))
 
-obj += $(madlyobj) $(mallocobj) gv$o toke$o perly$o pad$o regcomp$o dump$o util$o mg$o reentr$o mro$o
+obj += $(madlyobj) $(mallocobj) gv$o toke$o perly$o pad$o regcomp$o dump$o util$o mg$o reentr$o mro_core$o
 obj += hv$o av$o run$o pp_hot$o sv$o pp$o scope$o pp_ctl$o pp_sys$o
 obj += doop$o doio$o regexec$o utf8$o taint$o deb$o universal$o globals$o perlio$o perlapi$o numeric$o
 obj += mathoms$o locale$o pp_pack$o pp_sort$o keywords$o caretx$o
