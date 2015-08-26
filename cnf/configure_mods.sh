@@ -105,8 +105,6 @@ extonlyif VMS-Stdio "$osname" == "vms"
 extonlyif VMS-Filespec "$osname" == "vms"
 
 extonlyif Thread "$usethreads" == 'define'
-extonlyif threads "$usethreads" == 'define'
-extonlyif threads-shared "$usethreads" == 'define'
 
 for d in ext cpan dist; do
 	msg "Looking for extensions recursively under $d/"
