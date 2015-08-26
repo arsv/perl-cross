@@ -6,7 +6,7 @@ checkcase.t to fail. Skip them.
 @@ -21,6 +21,8 @@
  
  	   # Special exemption for Makefile, makefile
- 	   return if $name =~ m!\A(?:x2p/)?[Mm]akefile\z!;
+ 	   return if $name =~ m!\A[Mm]akefile\z!;
 +	   # same for Configure, configure in perl-cross
 +	   return if $name =~ m!\A[Cc]onfigure\z!;
  
