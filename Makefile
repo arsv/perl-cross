@@ -49,8 +49,8 @@ CROSSPATCHED = $(patsubst %.patch,%.applied,$(CROSSPATCHES))
 
 crosspatch: $(CROSSPATCHED)
 
-# a minor fix for buildroot, force crosspatching when running "make perl modules"
-# instead of "make all"
+# A minor fix for buildroot, force crosspatching when running "make perl modules"
+# instead of "make all".
 miniperlmain$O: crosspatch
 
 # Original versions are not saved anymore; patch generally takes care of this,
@@ -65,7 +65,7 @@ $(CROSSPATCHED): %.applied: %.patch
 .SECONDARY:
 
 # Force early building of miniperl -- not really necessary, but makes
-# build process more logical (no reason to even try CC if HOSTCC fails)
+# the build process more logical. No reason to try CC if HOSTCC fails.
 all: crosspatch miniperl$X dynaloader perl$x nonxs_ext utilities extensions pods
 
 config.h: config.sh config_h.SH
@@ -76,8 +76,7 @@ xconfig.h: xconfig.sh config_h.SH
 
 config-pm: $(CONFIGPM)
 
-# prevent the following rule from overwriting Makefile
-# by running Makefile.SH (part of the original distribution)
+# Prevent the following rule from overwriting Makefile by running Makefile.SH
 Makefile:
 	touch $@
 
