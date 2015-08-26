@@ -24,10 +24,10 @@ exec $top/miniperl\
 	-I$top/dist/Exporter/lib\
 	-I$top/dist/Cwd\
 	-I$top/dist/Cwd/lib\
-	-I$top/dist/ExtUtils-Command/lib\
-	-I$top/dist/ExtUtils-Install/lib\
+	-I$top/cpan/ExtUtils-Command/lib\
+	-I$top/cpan/ExtUtils-Install/lib\
 	-I$top/cpan/ExtUtils-MakeMaker/lib\
-	-I$top/dist/ExtUtils-Manifest/lib\
+	-I$top/cpan/ExtUtils-Manifest/lib\
 	-I$top/cpan/File-Path/lib\
 	-I$top/ext/File-Find/lib\
 	-I$top/ext/re\
