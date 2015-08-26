@@ -66,7 +66,7 @@ $(CROSSPATCHED): %.applied: %.patch
 
 # Force early building of miniperl -- not really necessary, but makes
 # build process more logical (no reason to even try CC if HOSTCC fails)
-all: crosspatch miniperl$X dynaloader perl$x nonxs_ext utilities extensions translators pods
+all: crosspatch miniperl$X dynaloader perl$x nonxs_ext utilities extensions pods
 
 config.h: config.sh config_h.SH
 	CONFIG_H=$@ CONFIG_SH=$< ./config_h.SH
@@ -328,9 +328,6 @@ modules-clean: clean-modules
 
 utilities: miniperl$X $(CONFIGPM)
 	$(MAKE) -C utils all
-
-translators: miniperl$X $(CONFIGPM)
-	$(MAKE) -C x2p all
 
 # ---[ modules lists ]----------------------------------------------------------
 modules.done: modules.list | uni.data
