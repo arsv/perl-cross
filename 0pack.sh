@@ -15,7 +15,7 @@
 #
 # Tar with --xform option support is expected.
 
-PV=5.20.2
+PV=5.22.0
 
 tar -zcf perl-cross.tar.gz\
 	--exclude README.md\
