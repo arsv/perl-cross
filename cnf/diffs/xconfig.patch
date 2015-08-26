@@ -16,4 +16,4 @@ uses, let's stick with the old xconfig.h way for now.
 +#   endif
  #endif
  
- /* See L<perlguts/"The Perl API"> for detailed notes on
+ /* NOTE 1: that with gcc -std=c89 the __STDC_VERSION__ is *not* defined

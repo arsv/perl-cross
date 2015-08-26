@@ -3,7 +3,7 @@ checkcase.t to fail. Skip them.
 
 --- a/t/porting/checkcase.t
 +++ b/t/porting/checkcase.t
-@@ -21,6 +21,8 @@
+@@ -25,6 +25,8 @@
  
  	   # Special exemption for Makefile, makefile
  	   return if $name =~ m!\A[Mm]akefile\z!;
