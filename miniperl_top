@@ -39,4 +39,5 @@ exec $top/miniperl\
 	-I$top/dist/Carp/lib\
 	-I$top/cpan/podlators/lib\
 	-I$top/cpan/parent/lib\
+	-I$top/cpan/version/lib\
 	"$@"
