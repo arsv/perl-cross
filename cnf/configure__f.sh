@@ -222,7 +222,7 @@ function try_link_libs {
 }
 
 function try_link {
-	try_link_libs $libs
+	try_link_libs $libs $*
 }
 
 function try_readelf {

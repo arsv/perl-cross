@@ -22,7 +22,7 @@ function hasfunc {
 		esac ;;
 	esac
 	try_add "int main(void) { $1($2); return 0; }"
-	try_link
+	try_link -O0 -fno-builtin
 	resdef 'found' 'not found' "$_s"
 }
 
