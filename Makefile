@@ -407,7 +407,7 @@ clean-obj:
 	-test -n "$O" && rm -f *$O
 
 clean-subdirs:
-	@for i in utils x2p; do $(MAKE) -C $$i clean; done
+	$(MAKE) -C utils clean
 
 # assuming modules w/o Makefiles were never built and need no cleaning
 clean-modules: config.h
