@@ -51,7 +51,8 @@ function mstart {
 # setenv name value
 # emulates (incorrect in sh) statement $$1="$2"
 function setenv {
-	eval $1="'$2'"
+	_z=`echo "$2" | sed -e "s@'@'\"'\"'@g"`
+	eval $1="'$_z'"
 }
 
 # setvar name value
@@ -59,7 +60,7 @@ function setenv {
 function setvar {
 	_x=`valueof "$1"`
 	if [ "$_x" != "$2" ]; then
-		eval $1="'$2'"
+		setenv "$1" "$2"
 		log "Set $1='$2'"
 	fi
 }
@@ -93,7 +94,8 @@ function setvaru {
 function putvar {
 	_x=`valueof "x_$1"`
 	test -n "$_x" && setenv "x_$1" 'written'
-	echo "$1='$2'" >> $config
+	_z=`echo "$2" | sed -e "s@'@'\"'\"'@g"`
+	echo "$1='$_z'" >> $config
 	setvar "$1" "$2"
 }
 
