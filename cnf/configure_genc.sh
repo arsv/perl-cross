@@ -283,7 +283,7 @@ default charbits 8
 default charsize 1
 default cf_by unknown
 default cf_email nobody@nowhere.land
-default cf_time "`date`"
+default cf_time "`LC_ALL=C date`"
 default chgrp
 default chmod chmod
 default chown
