@@ -1,10 +1,10 @@
 <? include "_head.php" ?>
 
-<p>Current version of perl-cross is 1.0.0. It is intended to be used with perl-5.22.0.
+<p>Current version of perl-cross is 1.0.1. It is intended to be used with perl-5.22.0.
 Download it here:</p>
 <div class="dllink">
-	<a href="https://raw.github.com/arsv/perl-cross/releases/perl-5.22.0-cross-1.0.0.tar.gz"
-	 >https://raw.github.com/arsv/perl-cross/releases/perl-5.22.0-cross-1.0.0.tar.gz</a>
+	<a href="https://raw.github.com/arsv/perl-cross/releases/perl-5.22.0-cross-1.0.1.tar.gz"
+	 >https://raw.github.com/arsv/perl-cross/releases/perl-5.22.0-cross-1.0.1.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
@@ -16,6 +16,12 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
+	<li>1.0.1 (2015-11-03)<ul>
+		<li>poisoned paths patch from Buildroot</li>
+		<li>disable gcc built-ins to avoid false positives in hasfunc</li>
+		<li>proper escaping for values written to config.sh</li>
+	</ul></li>
+
 	<li>1.0.0 (2015-08-26)<ul>
 		<li>perl 5.22.0</li>
 		<li>floating-point functions detection and minor updates</li>
