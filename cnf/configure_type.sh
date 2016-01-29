@@ -52,7 +52,7 @@ function typesize {
 		return 1
 	fi
 
-	result=`grep foo try.out | sed -e 's/.*: [0-9]\+ \+//' -e 's/ .*//'`
+	result=`grep foo try.out | sed -e 's/.*: [0-9]* *//' -e 's/ .*//'`
 	if [ -z "$result" -o "$result" -le 0 ]; then
 		result "unknown"
 		fail "Can't determine sizeof($_typename)"
