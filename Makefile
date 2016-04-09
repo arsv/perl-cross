@@ -227,7 +227,7 @@ $(dynamic_tgt) $(disabled_dynamic_tgt): %/pm_to_blib: | %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=dynamic
 
 %/Makefile: %/Makefile.PL preplibrary cflags config.h | $(XSUBPP) miniperl$X
-	$(eval top=$(shell echo $(dir $@) | sed -e 's![^/]\+!..!g'))
+	$(eval top=$(shell echo $(dir $@) | sed -re 's![^/]+!..!g'))
 	cd $(dir $@) && $(top)miniperl_top -I$(top)lib Makefile.PL \
 	 INSTALLDIRS=perl INSTALLMAN1DIR=none INSTALLMAN3DIR=none \
 	 PERL_CORE=1 LIBPERL_A=$(LIBPERL) PERL_CORE=1 PERL="$(top)miniperl_top"
@@ -292,7 +292,7 @@ lib/ExtUtils/xsubpp: dist/ExtUtils-ParseXS/lib/ExtUtils/xsubpp
 # No ExtUtils dependencies here because that's where they come from
 cpan/ExtUtils-ParseXS/Makefile cpan/ExtUtils-Constant/Makefile: \
 		%/Makefile: %/Makefile.PL preplibrary cflags | miniperl$X miniperl_top
-	$(eval top=$(shell echo $(dir $@) | sed -e 's![^/]\+!..!g'))
+	$(eval top=$(shell echo $(dir $@) | sed -re 's![^/]+!..!g'))
 	cd $(dir $@) && $(top)miniperl_top Makefile.PL PERL_CORE=1 PERL=$(top)miniperl_top
 
 cpan/List-Util/pm_to_blib: | dynaloader

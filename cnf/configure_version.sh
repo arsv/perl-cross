@@ -2,7 +2,7 @@
 
 # setverpart name NAME
 function setverpart {
-	_v=`grep '#define' patchlevel.h | grep "$2" | head -1 | sed -e "s/#define $2\s\+//" -e "s/\s.*//"`
+	_v=`grep '#define' patchlevel.h | grep "$2" | head -1 | sed -re "s/#define $2\s+//" -e "s/\s.*//"`
 	msg "	$1=$_v"
 	setvar $1 "$_v"
 }

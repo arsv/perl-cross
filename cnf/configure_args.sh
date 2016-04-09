@@ -177,7 +177,7 @@ while [ $i -le $# -o -n "$n" ]; do
 			;;
 		libs)
 			if [ -n "$v" ]; then
-				v=`echo ",$v" | sed -e 's/,\([^,]\+\)/-l\1 /g'`
+				v=`echo ",$v" | sed -re 's/,([^,]+)/-l\1 /g'`
 				setvar 'libs' "$v"
 			fi
 			;;
@@ -186,7 +186,7 @@ while [ $i -le $# -o -n "$n" ]; do
 			hco="$hco --$what=$v"
 			;;
 		with-*)
-			what=`echo "$a" | sed -e 's/^[^-]\+-//' -e 's/-/_/g'`
+			what=`echo "$a" | sed -re 's/^[^-]+-//' -e 's/-/_/g'`
 			setvaru "$what" "$v"
 			;;
 		disable-mod|disable-ext|disable-module|disable-modules)

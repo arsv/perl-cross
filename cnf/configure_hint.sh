@@ -12,8 +12,8 @@ function tryhints {
 	hintfile="$base/hints/$1"
 	if [ -f "$hintfile" ]; then
 		msg "	using $hintfile"
-		sed -e "/^\([A-Za-z0-9_]\+\)+=/s//happend \1 /" \
-		    -e "/^\([A-Za-z0-9_]\+\)=/s//hint \1 /"\
+		sed -re "/^([A-Za-z0-9_]+)+=/s//happend \1 /" \
+		    -re "/^([A-Za-z0-9_]+)=/s//hint \1 /"\
 			"$hintfile" > config.hint.tmp
 		. ./config.hint.tmp
 		rm -f config.hint.tmp
