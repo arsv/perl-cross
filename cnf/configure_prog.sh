@@ -224,3 +224,19 @@ if [ "$uselargefiles" == 'define' ]; then
 	appendvar 'ccflags' " -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
 	log
 fi
+
+if not hinted 'osname'; then
+	log "Android target test"
+	run $cc -v > try.out 2>&1
+	try_dump_out
+	case "`sed -ne '/^Target: /s///p' try.out`" in
+		*-android|*-androideabi)
+			msg "Android toolchain detected"
+			setvar osname "android"
+			;;
+		*)
+			log "Non-Android toolchain probably"
+			;;
+	esac
+	log
+fi
