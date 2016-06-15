@@ -40,3 +40,11 @@ check hasfield d_dirnamlen 'struct dirent' d_namelen 'sys/types.h'
 check hasfield d_grpasswd 'struct group' gr_passwd grp.h
 check hasfield d_sockaddr_sa_len 'struct sockaddr' sa_len 'sys/types.h sys/socket.h'
 check hasfield d_sin6_scope_id 'struct sockaddr_in6' sin6_scope_id 'sys/types.h sys/socket.h netinet/in.h'
+
+check hasfield d_siginfo_si_errno 'struct siginfo' si_errno 'signal.h'
+check hasfield d_siginfo_si_pid 'struct siginfo' si_pid 'signal.h'
+check hasfield d_siginfo_si_uid 'struct siginfo' si_uid 'signal.h'
+check hasfield d_siginfo_si_addr 'struct siginfo' si_addr 'signal.h'
+check hasfield d_siginfo_si_band 'struct siginfo' si_band 'signal.h'
+check hasfield d_siginfo_si_value 'struct siginfo' si_value 'signal.h'
+check hasfield d_siginfo_si_fd 'struct siginfo' si_fd 'signal.h'

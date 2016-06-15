@@ -423,6 +423,7 @@ default d_fcntl undef
 default d_fcntl_can_lock undef
 default d_fd_macros undef
 default d_fd_set undef
+default d_fdclose undef
 default d_fdim undef
 default d_fds_bits undef
 default d_fegetround undef
@@ -586,6 +587,7 @@ default d_mbtowc undef
 default d_memchr undef
 default d_memcmp undef
 default d_memcpy undef
+default d_memmem undef
 default d_memmove undef
 default d_memset undef
 default d_mkdir undef
@@ -597,7 +599,6 @@ default d_mktime undef
 default d_mktime64 undef
 default d_mmap undef
 default d_modfl undef
-default d_modfl_pow32_bug undef
 default d_modflproto define
 default d_mprotect undef
 default d_msg undef
@@ -1003,6 +1004,7 @@ default i_values undef
 default i_varargs undef
 default i_varhdr undef
 default i_vfork undef
+default i_xocale undef
 default ignore_versioned_solibs
 default inc_version_list
 default inc_version_list_init
@@ -1273,6 +1275,29 @@ default yacc yacc
 default yaccflags
 default zcat
 default zip zip
+
+default d_siginfo_si_errno undef
+default d_siginfo_si_pid undef
+default d_siginfo_si_uid undef
+default d_siginfo_si_addr undef
+default d_siginfo_si_status undef
+default d_siginfo_si_band undef
+default d_siginfo_si_value undef
+default d_siginfo_si_fd undef
+default d_newlocale undef
+default d_freelocale undef
+default d_uselocale undef
+default d_duplocale undef
+
+default dtraceobject undef
+default doubleinfbytes 0
+default doublemantbits 0
+default doublenanbytes 0
+
+default longdblinfbytes 0
+default longdblmantbits 0
+default longdblnanbytes 0
+default nvmantbits 0
 
 # "use MakeMaker direct LD Library Test"
 # see cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/Liblist/Kid.pm
