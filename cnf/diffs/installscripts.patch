@@ -25,7 +25,7 @@ The second chunk in installperl add -Dsoname support.
  
      # This needs to be at BEGIN time, before any use of Config
      # install_lib itself loads and imports Config into main::
-@@ -186,6 +184,7 @@
+@@ -194,6 +192,7 @@
  
  # Fetch some frequently-used items from %Config
  my $installbin = "$opts{destdir}$Config{installbin}";
@@ -33,8 +33,8 @@ The second chunk in installperl add -Dsoname support.
  my $installscript = "$opts{destdir}$Config{installscript}";
  my $installprivlib = "$opts{destdir}$Config{installprivlib}";
  my $installarchlib = "$opts{destdir}$Config{installarchlib}";
-@@ -367,7 +366,8 @@
-     )
+@@ -377,7 +376,8 @@
+     @corefiles = <*.h>;
  } else {
      # [als] hard-coded 'libperl' name... not good!
 -    @corefiles = <*.h libperl*.* perl*$Config{lib_ext}>;
@@ -43,8 +43,8 @@ The second chunk in installperl add -Dsoname support.
  
      # AIX needs perl.exp installed as well.
      push(@corefiles,'perl.exp') if $^O eq 'aix';
-@@ -385,6 +385,29 @@
-     }
+@@ -402,6 +402,29 @@
+ 	chmod($NON_SO_MODE, $dest) foreach @corefiles;
  }
  
 +if($Config{useshrplib} && $Config{soname}) {

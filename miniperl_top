@@ -16,6 +16,11 @@ if [ -f $top/lib/buildcustomize.pl ]; then
 	echo "$0: remove $top/lib/buildcustomize.pl before running miniperl_top" >&2
 	exit 1
 fi
+
+# Some of the modules (cpan/podlators) fail to build when $top is relative.
+# This is unbelievably ugly and should be removed somehow.
+top=$(cd $top; pwd)
+
 exec $top/miniperl\
 	-I$top/cnf/stub\
 	-I$top/cnf/cpan\

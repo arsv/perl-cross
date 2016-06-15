@@ -106,6 +106,7 @@ check hashdr 'utime.h'
 check hashdr 'values.h'
 check hashdr 'varargs.h'
 check hashdr 'vfork.h'
+check hashdr 'xlocale.h'
 
 if [ "$usethreads" == 'define' ]; then
 	check hashdr 'pthread.h'

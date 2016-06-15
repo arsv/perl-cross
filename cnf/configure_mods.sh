@@ -103,6 +103,8 @@ extonlyif XS/Typemap "$usedl" == 'define'
 extonlyif VMS-DCLsym "$osname" == "vms"		# XXX: is it correct?
 extonlyif VMS-Stdio "$osname" == "vms"
 extonlyif VMS-Filespec "$osname" == "vms"
+extonlyif Amiga-ARexx "$osname" == "amiga"
+extonlyif Amiga-Exec "$osname" == "amiga"
 
 extonlyif Thread "$usethreads" == 'define'
 

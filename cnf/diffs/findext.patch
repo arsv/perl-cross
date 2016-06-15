@@ -7,7 +7,7 @@ No no no.
 
 --- a/win32/FindExt.pm
 +++ b/win32/FindExt.pm
-@@ -115,10 +115,6 @@
+@@ -116,10 +116,6 @@
          $this_ext =~ s!-!/!g;
          $leaf =~ s/.*-//;
  
