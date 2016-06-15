@@ -78,7 +78,7 @@ function extonlyif {
 function settrimspaces {
 	_k="$1"
 	_v="$2"
-	_v=`echo "$_v" | sed -re 's/\s+/ /g' -e 's/^\s+//' -e 's/\s+$//'`
+	_v=`echo "$_v" | sed -r -e 's/\s+/ /g' -e 's/^\s+//' -e 's/\s+$//'`
 	setvar $1 "$_v"
 }
 
