@@ -134,15 +134,7 @@ LIBPERL = $libperl
 
 LNS = $lns
 
-root = \$(DESTDIR)\$(sysroot)
-bindir = \$(root)$installbin
-scriptdir = \$(root)$installscript
-privlib = \$(root)$installprivlib
-archlib = \$(root)$installarchlib
-man1dir = \$(root)$installman1dir
-man3dir = \$(root)$installman3dir
-man1ext = $installman1ext
-man3ext = $installman3ext
+archlib = $archlib
 
 dynamic_ext = $dynamic_ext
 static_ext = $static_ext
