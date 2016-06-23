@@ -38,10 +38,10 @@ options to the compiler, so you'll have to use <tt>-Doptimize</tt>.</p>
 <p><b>Android</b> (assuming NDK is installed in <tt>/opt/android-ndk</tt>):</p>
 <pre>
 	ANDROID=/opt/android-ndk
-	TOOLCHAIN=arm-linux-androideabi-4.4.3/prebuilt/linux-x86
-	PLATFORM=$ANDROID/platforms/android-9/arch-arm
+	TOOLCHAIN=arm-linux-androideabi-4.9/prebuilt/linux-x86_64
+	PLATFORM=$ANDROID/platforms/android-16/arch-arm
 	export PATH=$PATH:$ANDROID/toolchains/$TOOLCHAIN/bin
-	./configure --target=arm-linux-androideabi --sysroot=$PLATFORM --disable-mod=ext/Errno
+	./configure --target=arm-linux-androideabi --sysroot=$PLATFORM
 </pre>
 
 <p><b>MinGW32</b>: can't be built yet. configure will produce (likely usable) config.sh,
