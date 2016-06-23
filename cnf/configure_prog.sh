@@ -197,6 +197,8 @@ if [ "$mode" == 'target' -o "$mode" == 'native' ]; then
 		# While cccdlflags are used together with ccflags,
 		# ld is always called with lddlflags *instead*of* ldflags
 		prependvar 'lddlflags' "--sysroot=$sysroot"
+		# Same for cpp
+		prependvar 'cppflags' "--sysroot=$sysroot"
 	fi
 fi
 
