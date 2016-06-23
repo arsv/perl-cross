@@ -126,7 +126,7 @@ regen_perly:
 
 # ---[ site/perl ]--------------------------------------------------------------
 
-ifeq ($(useshrplib),define)
+ifeq ($(useshrplib),true)
 ifeq ($(soname),)
 perl$x: LDFLAGS += -Wl,-rpath,$(archlib)/CORE
 endif
@@ -174,7 +174,7 @@ $(soname):
   endif
 endif
 
-ifeq ($(useshrplib),define)
+ifeq ($(useshrplib),true)
 $(LIBPERL):
 	$(CC) $(LDDLFLAGS) -o $@ $(filter %$o,$^) $(LIBS)
 else

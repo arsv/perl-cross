@@ -15,13 +15,21 @@ function defineyesno {
 function defyes { defineyesno "$1" "$2" 'define' 'undef'; }
 function defno  { defineyesno "$1" "$2" 'undef' 'define'; }
 
-# setordefine key hasarg arg default
+# setordefine key hasarg arg default-a default-b
 function setordefine {
 	if [ -n "$2" ]; then
 		setvaru "$1" "$3"
-	else
-		setvaru "$1" "$4"
-	fi
+	else case "$1" in
+		# There are several variables that take true/false
+		# instead of define/undef. And some code that does not accept
+		# "define" instead of "true". Ugh.
+		useopcode|useposix|useshrplib|usevfork)
+			setvaru "$1" "$5"
+			;;
+		*)
+			setvaru "$1" "$4"
+			;;
+	esac fi
 }
 
 # pushvar stem value
@@ -220,11 +228,11 @@ while [ $i -le $# -o -n "$n" ]; do
 		mode|host|target|build) ;;
 		# original Configure options
 		D)
-			setordefine "$k" "$x" "$v" 'define'
+			setordefine "$k" "$x" "$v" 'define' 'true'
 			;;
 		U)
 			test -n "$v" && msg "WARNING: -Ukey=val, val ignored; use -Dkev=val instead"
-			setordefine "$k" "$x" "" 'undef' # "" is *not* a typo here!
+			setordefine "$k" "$x" "" 'undef' 'false' # "" is *not* a typo here!
 			;;
 		O) overwrite=1 ;;
 		f) pushnvar loadfile "$v" ;;

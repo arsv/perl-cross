@@ -74,9 +74,9 @@ mstart "Deciding how to name libperl"
 if not hinted libperl; then
 	if [ -n "$soname" ]; then
 		setvar libperl "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION.$PERL_API_SUBVERSION"
-		setvar "useshrplib" 'define'
+		setvar "useshrplib" 'true'
 		result "$libperl (SONAME $soname, dynamic)"
-	elif [ "$useshrplib" == 'define' ]; then
+	elif [ "$useshrplib" == 'true' ]; then
 		setvar libperl "libperl.so"
 		result "$libperl (dynamic)"
 	else

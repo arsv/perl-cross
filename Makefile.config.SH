@@ -56,7 +56,7 @@ else
 fi
 
 cflags="-DPERL_CORE $ccflags $optimize"
-test "$useshrplib" == 'define' && cflags="$cflags $cccdlflags"
+test "$useshrplib" == 'true' && cflags="$cflags $cccdlflags"
 
 if [ "$usecrosscompile" == "define" ]; then
 test -n "$toolsprefix" && cross="$toolsprefix" || cross="$target_name-"
