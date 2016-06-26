@@ -1,9 +1,10 @@
 <? include "_head.php" ?>
 
 <p>Generally you should start by unpacking perl-X.Y.Z-cross-W.Q.tar.gz over
-perl-X.Y.Z distribution. It will overwrite some of the files; that's ok.</p>
+perl-X.Y.Z distribution. Perl-cross package will overwrite some of the original
+perl files; that's ok.</p>
 
-<p>The build process is similar to that of most autoconfed packages.
+<p>The build process is similar to that of most autoconf-based packages.
 For a native build, use something like</p>
 <pre>
 	./configure --prefix=/usr
@@ -21,6 +22,16 @@ For a native build, use something like</p>
 
 <h2>Target-specific notes</h2>
 
+<p><b>Android</b>, assuming NDK is installed in <tt>/opt/android-ndk</tt>:</p>
+<pre>
+	ANDROID=/opt/android-ndk
+	TOOLCHAIN=arm-linux-androideabi-4.9/prebuilt/linux-x86_64
+	PLATFORM=$ANDROID/platforms/android-16/arch-arm
+	export PATH=$PATH:$ANDROID/toolchains/$TOOLCHAIN/bin
+	./configure --target=arm-linux-androideabi --sysroot=$PLATFORM
+</pre>
+<p>Adjust platform and compiler version to match your particular NDK.</p>
+
 <p><b>arm-linux-uclibc</b>: successful build is highly likely.
 Check <tt>--target-tools-prefix</tt>, it may be useful here, especially
 if you're using <tt>--sysroot</tt>.</p>
@@ -35,19 +46,10 @@ uses uClibc.</p>
 (assuming it's in $PATH). Note that configure won't supply any optimization
 options to the compiler, so you'll have to use <tt>-Doptimize</tt>.</p>
 
-<p><b>Android</b> (assuming NDK is installed in <tt>/opt/android-ndk</tt>):</p>
-<pre>
-	ANDROID=/opt/android-ndk
-	TOOLCHAIN=arm-linux-androideabi-4.9/prebuilt/linux-x86_64
-	PLATFORM=$ANDROID/platforms/android-16/arch-arm
-	export PATH=$PATH:$ANDROID/toolchains/$TOOLCHAIN/bin
-	./configure --target=arm-linux-androideabi --sysroot=$PLATFORM
-</pre>
-
 <p><b>MinGW32</b>: can't be built yet. configure will produce (likely usable) config.sh,
 but current perl-cross Makefiles can't handle win32 build.</p>
 <pre>
-	./configure --target=i486-mingw32 --no-dynaloader --disable-mod=ext/Errno
+	./configure --target=i486-mingw32 --no-dynaloader
 </pre>
 <p>will get you about as far as possible for now.</p>
 
