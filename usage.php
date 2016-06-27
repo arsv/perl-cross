@@ -1,8 +1,8 @@
 <? include "_head.php" ?>
 
-<p>Generally you should start by unpacking perl-X.Y.Z-cross-W.Q.tar.gz over
-perl-X.Y.Z distribution. Perl-cross package will overwrite some of the original
-perl files; that's ok.</p>
+<p>Unpack perl-X.Y.Z-cross-W.Q.tar.gz over perl-X.Y.Z distribution.<br>
+Perl-cross package should overwrite top-level Makefile and some other files
+in the perl source tree.</p>
 
 <p>The build process is similar to that of most autoconf-based packages.
 For a native build, use something like</p>
