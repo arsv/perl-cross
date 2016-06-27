@@ -1,19 +1,22 @@
 <? include "_head.php" ?>
 
-<p><b>perl-cross</b> provides alternative <tt>configure</tt> script, top-level Makefile
-as well as some auxilliary files for the standard <b>perl</b> distribution intended to
-allow cross-compiling perl in a relatively straighforward way.</p>
+<p><b>perl-cross</b> provides alternative <tt>configure</tt> script,
+top-level Makefile as well as some auxilliary files for the standard
+<b>perl</b> distribution intended to allow cross-compiling perl in
+a relatively straighforward way.</p>
 
 <div class="warn">perl-cross is not a part of perl distribution,
 it's a third-party tool in an eternal-alpha state.
 <div>Use at your own risk!</div>
-If you can use Configure from the vanilla distribution, you probably <i>should</i> use Configure;<br>
+If you can use Configure from the vanilla distribution, you probably
+<i>should</i> use Configure;<br>
 <b>perl-cross</b> is for the cases when Configure just can't make it.</div>
 
 <p>The configure script from perl-cross is essentially a 100 kB long session
-of severe bash(1) abuse. Unlike the products of GNU autoconf, it sacrifices portability
-for readability; it will likely only run on a relatively sane GNU system with GNU binutils
-(which is kind of expected if you're doing a <i>cross-build</i>, but still is a limitation).
+of severe bash(1) abuse. Unlike the products of GNU autoconf, it sacrifices
+portability for readability; it will likely only run on a relatively sane GNU
+system with GNU binutils (which is kind of expected for a <i>cross-build</i>
+but still feels like a limitation).
 </p>
 
 <p>Typical native build:</p>
@@ -28,8 +31,8 @@ for readability; it will likely only run on a relatively sane GNU system with GN
 	make
 	make DESTDIR=... install
 </pre>
-<p>See <a href="usage.html">configure usage</a> page for a complete list of available
-<tt>configure</tt> options.</p>
+<p>See <a href="usage.html">configure usage</a> page for a complete list
+of available <tt>configure</tt> options.</p>
 
 
 <h2>History</h2>
@@ -65,7 +68,7 @@ Feel free to ask questions, most of the time I'll try to help.</p>
 
 <p>Several other people contributed patches and suggestions.</p>
 
-<p>If possible, please report successful builds and/or
-problems you encountered while using perl-cross for your particular platform.</p>
+<p>If possible, please report successful builds and/or problems
+you encountered while using perl-cross for your particular platform.</p>
 
 <? include "_foot.php" ?>
