@@ -1,14 +1,14 @@
 <? include "_head.php" ?>
 
-<p>Current version of perl-cross is 1.0.2. It is intended to be used with perl-5.22.1.
+<p>Current version of perl-cross is 1.0.3. It is intended to be used with perl-5.24.0.
 Download it here:</p>
 <div class="dllink">
-	<a href="https://github.com/arsv/perl-cross/releases/download/1.0.2/perl-5.22.1-cross-1.0.2.tar.gz"
-	 >https://github.com/arsv/perl-cross/releases/download/1.0.2/perl-5.22.1-cross-1.0.2.tar.gz</a>
+	<a href="https://github.com/arsv/perl-cross/releases/download/1.0.3/perl-5.24.0-cross-1.0.3.tar.gz"
+	 >https://github.com/arsv/perl-cross/releases/download/1.0.3/perl-5.24.0-cross-1.0.3.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
-Use the exact perl version perl-cross was intended for, i.e. perl-5.20.0 for perl-5.20.0-cross-0.9.</p>
+Use the exact perl version perl-cross was intended for, i.e. perl-5.24.0 for perl-5.24.0-cross-1.0.3.</p>
 
 <p>For older releases, check <a href="https://github.com/arsv/perl-cross/tree/releases">GitHub releases
 branch</a>.</p>
@@ -16,6 +16,14 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
+	<li>1.0.3 (2016-06-30)<ul>
+		<li>perl-5.24.0</li>
+		<li>Android detection and proper osname</li>
+		<li>Errno.pm building fixed for Android</li>
+		<li>fixed rpath handling in presence of --sysroot</li>
+		<li>busybox sed may be used now instead of GNU sed</li>
+	</ul></li>
+
 	<li>1.0.2 (2015-12-15)<ul>
 		<li>perl-5.22.1</li>
 		<li>Berkeley DB detection fix (DB::File)</li>
