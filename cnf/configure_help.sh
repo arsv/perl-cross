@@ -85,8 +85,7 @@ symbols.
 		-DEBUGGING=none          DEBUGGING options
 		-Dcc=gcc                 same as --with-cc=gcc
 		-Dprefix=/opt/perl5      same as --prefix=/opt/perl5
-	-O		let -D and -U override definitions
-			 from loaded configuration file.
+	-O		(ignored)
 	-U symbol	undefine symbol:
 		-U symbol    symbol gets the value 'undef'
 		-U symbol=   symbol gets completely empty

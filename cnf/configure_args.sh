@@ -238,7 +238,7 @@ while [ $i -le $# -o -n "$n" ]; do
 			test -n "$v" && msg "WARNING: -Ukey=val, val ignored; use -Dkev=val instead"
 			setordefine "$k" "$x" "" 'undef' 'false' # "" is *not* a typo here!
 			;;
-		O) overwrite=1 ;;
+		O) msg "WARNING: -O ignored" ;;
 		f) sourcenopath "$v" "i=$i" "n=$n" ;;
 		A)	# see configure_hint
 			pushnvarkvx appendlist "$k" "$v" "$x" ;;
@@ -249,11 +249,3 @@ while [ $i -le $# -o -n "$n" ]; do
 	esac
 done
 unset -v i a k v x n
-
-# Handle -O
-if [ -n "$overwrite" -a -n "$uservars" ]; then
-	for k in $uservars; do
-		v=`valueof "u_$k"`
-		setenv $k "$v"
-	done
-fi

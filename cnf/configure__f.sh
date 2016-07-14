@@ -78,7 +78,6 @@ setvaru() {
 		uservars="$1"
 	fi
 	setenv "$1" "$2"
-	setenv "u_$1" "$2"
 	if [ -n "$3" ]; then
 		setenv "x_$1" "$3"
 	else
