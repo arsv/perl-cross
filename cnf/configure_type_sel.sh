@@ -19,7 +19,7 @@ typeselect() {
 		eval _mark="\$d_${_isymb}"
 		eval _size="\$${_isymb}size"
 		log "	checking $_utype/$_itype ($_size)"
-		if [ "$_mark" == 'define' -a "$_size" == "$_rqsize" ]; then
+		if [ "$_mark" = 'define' -a "$_size" = "$_rqsize" ]; then
 			setvar ${_symboli}size $_size
 			setvar ${_symboli}type $_itype
 			setvar ${_symbolu}size $_size
@@ -97,7 +97,7 @@ typeorfallback() {
 		_def=`valueof "d_$_sym"`
 		_size=`valueof "${_sym}size"`
 		log "\tsym=$_sym def=$_def size=$_size"
-		if [ "$_def" == 'define' ]; then
+		if [ "$_def" = 'define' ]; then
 			setvar "${_dst}type" "$t"
 			setvar "${_dst}size" "$_size"	
 			result "$t"
@@ -120,7 +120,7 @@ typeorfallback 'uid' 'uid_t' 'int'
 setvar uidsign '1'
 
 # Configure checks for "bool" type but uses i_stdbool for the result
-if [ "$i_stdbool" == 'define' -a "$d_bool" != "define" ]; then
+if [ "$i_stdbool" = 'define' -a "$d_bool" != "define" ]; then
 	msg "Disabling <stdbool.h> because bool type wasn't usable"
 	setvar i_stdbool undef
 fi
@@ -168,7 +168,7 @@ fi
 
 mstart "Deciding whether nv preserves full uv"
 if not hinted "d_nv_preserves_uv"; then
-	test $nv_preserves_uv_bits -gt 0 -a $((8*uvsiz)) == $nv_preserves_uv_bits
+	test $nv_preserves_uv_bits -gt 0 -a $((8*uvsiz)) = $nv_preserves_uv_bits
 	resdef "apparently so" "probably no" d_nv_preserves_uv
 fi
 

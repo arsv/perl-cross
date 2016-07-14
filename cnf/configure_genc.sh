@@ -1304,13 +1304,13 @@ default nvmantbits 0
 # and resp. patch for reasons
 default usemmldlt 'define'
 
-if [ "$mode" == "buildmini" ]; then
+if [ "$mode" = "buildmini" ]; then
 	default target_name
 	default target_arch
 	default sysroot
 fi
 
-if [ "$disabledmods" == 'define' ]; then
+if [ "$disabledmods" = 'define' ]; then
 	default disabledmods 'define'
 	default disabled_dynamic_ext ''
 	default disabled_nonxs_ext ''

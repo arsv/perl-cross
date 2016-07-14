@@ -157,7 +157,7 @@ try_includes() {
 	for i in "$@"; do 
 		s=i_`symbolname "$i"`
 		v=`valueof "$s"`
-		if [ "$v" == 'define' ]; then
+		if [ "$v" = 'define' ]; then
 			echo "#include <$i>" >> try.c
 		else 
 			echo "/* <$i> missing */" >> try.c
@@ -249,7 +249,7 @@ isset() {
 	fi
 }
 
-bytes() { test "$1" == 1 && echo "byte" || echo "bytes"; }
+bytes() { test "$1" = 1 && echo "byte" || echo "bytes"; }
 
 valueof() { eval echo "\"\$$1\""; }
 
@@ -295,7 +295,7 @@ ifhintdefined() {
 	x=`valueof "x_$1"`
 	test -z "$x" && x='preset'
 	if test -n "$h"; then
-		if [ "$h" == 'define' ]; then
+		if [ "$h" = 'define' ]; then
 			log "Value for $1: $2 (yes, define) ($x)"
 			result "($x) $2"
 			__=0
@@ -316,7 +316,7 @@ nohintdefined() { ifhintdefined "$@" && return 1 || return 0; }
 
 # resdef result-yes result-no symbol symbol2
 resdef() {
-	if [ $? == 0 ]; then
+	if [ $? = 0 ]; then
 		setvar "$3" "define"
 		test -n "$4" && setvar "$4" 'define'
 		result "$1"

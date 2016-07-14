@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$mode" == "buildmini" ]; then
+if [ "$mode" = "buildmini" ]; then
 	V="HOST"
 else
 	V=''

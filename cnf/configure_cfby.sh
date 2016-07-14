@@ -33,7 +33,7 @@ mstart "Figuring out domain name"
 if nothinted mydomainname; then
 	if [ -n "$phostname" ]; then
 		mydomainname=`$phostname -y 2>/dev/null`
-		if [ -z "$mydomainname" -o "$mydomainname" == "(none)" ]; then
+		if [ -z "$mydomainname" -o "$mydomainname" = "(none)" ]; then
 			mydomainname=`$phostname -d 2>/dev/null`
 		fi
 		if [ -n "$mydomainname" ]; then

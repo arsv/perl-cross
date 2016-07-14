@@ -32,7 +32,7 @@ happend() {
 	_s=`valueof "x_$1"`
 	if [ -z "$_v" ]; then
 		setvaru "$1" "$2" 'hinted'
-	elif [ "$_s" == 'hinted' ]; then
+	elif [ "$_s" = 'hinted' ]; then
 		appendvar "$1" "$2"
 	fi
 }
@@ -101,7 +101,7 @@ fi
 # configure_version must be included somewhere before this point
 # Note: this breaks "set only if not set by this point" rule,
 # but allows using -Darchname *and* -Duseversionedarchname at the same time
-if [ "$useversionedarchname" == 'define' ]; then
+if [ "$useversionedarchname" = 'define' ]; then
 	msg "Using versioned archname ($archname-$api_versionstring)"
 	setvar 'archname' "$archame-$api_versionstring"
 fi

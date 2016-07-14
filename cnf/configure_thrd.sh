@@ -46,7 +46,7 @@ hasfuncr() {
 	__=13
 	ifhintdefined "$D" 'present' 'missing' && test $__ != 0 && return $__
 
-	if [ $__ == '13' ]; then
+	if [ $__ = '13' ]; then
 		try_start
 		try_add "int main(void) { $w(); return 0; }"
 		try_link
@@ -63,17 +63,17 @@ hasfuncr() {
 		if hasfuncr_proto "$w" "$i" "$p" "$@"; then
 			setvar "${w}_proto" "$p"
 			cz="${cz}y"
-		elif [ -z "$cz" -o "$cz" == 'y' ]; then
+		elif [ -z "$cz" -o "$cz" = 'y' ]; then
 			cz="${cz}n"
 		fi
-		if [ "$cz" == "yn" -o "$cz" == "ny" ]; then
+		if [ "$cz" = "yn" -o "$cz" = "ny" ]; then
 			return 0;
-		elif [ "$cz" == 'yy' ]; then
+		elif [ "$cz" = 'yy' ]; then
 			msg "\tdouble positive, $w has no declared prototype"
 			break;
 		fi
 	done
-	if [ "$cz" == "y" ]; then
+	if [ "$cz" = "y" ]; then
 		# There was only one prototype to test, so we take one more
 		# to see if it will return negative result. V_Z is not among
 		# prototypes these functions can have, so it should always

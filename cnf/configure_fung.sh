@@ -42,10 +42,10 @@ fi
 mstart "Looking how to get error messages"
 # Configure has quite a long piece on strerror, which basically means just this:
 logvars d_strerror d_sys_errlist
-if [ "$d_strerror" == 'define' ]; then
+if [ "$d_strerror" = 'define' ]; then
 	setvar 'd_strerrm' 'strerror(e)'
 	result 'strerror()'
-elif [ "$d_sys_errlist" == 'define' ]; then
+elif [ "$d_sys_errlist" = 'define' ]; then
 	setvar 'd_strerrm' '((e)<0||(e)>=sys_nerr?"unknown":sys_errlist[e])'
 	result 'sys_errlist[]'
 else
@@ -55,13 +55,13 @@ fi
 
 mstart "Looking for a random number function"
 logvars d_drand48 d_random d_rand
-if [ "$d_drand48" == 'define' ]; then
+if [ "$d_drand48" = 'define' ]; then
 	setvar 'randfunc' 'drand48'
 	result 'good, found drand48()'
-elif [ "$d_random" == 'define' ]; then
+elif [ "$d_random" = 'define' ]; then
 	setvar 'randfunc' 'random'
 	result 'ok, found random()'
-elif [ "$d_rand" == 'define' ]; then
+elif [ "$d_rand" = 'define' ]; then
 	setvar 'randfunc' 'rand'
 	result 'yick, looks like I have to use rand()'
 else
@@ -71,11 +71,11 @@ fi
 	
 # It's a bit more complicated in original Configure, but let's
 # assume that if there's clock_t defined then that's what times() returns.
-if [ "$d_times" == 'define' ]; then
+if [ "$d_times" = 'define' ]; then
 	mstart "Looking what times() may return"
 	logvars d_clock_t
 	if nothinted clocktype; then
-		if [ "$d_clock_t" == 'define' ]; then
+		if [ "$d_clock_t" = 'define' ]; then
 			setvar clocktype 'clock_t'
 			result 'clock_t'
 		else
@@ -85,7 +85,7 @@ if [ "$d_times" == 'define' ]; then
 	fi
 fi
 
-if [ "$d_prctl" == 'define' ]; then
+if [ "$d_prctl" = 'define' ]; then
 	mstart "Checking whether prctl supports PR_SET_NAME"
 	try_start
 	try_includes 'sys/prctl.h'
@@ -101,7 +101,7 @@ fi
 checkfpclass() {
 	f="$1"; shift
 	v=`valueof "d_$f"`	
-	if [ "$v" == 'define' ]; then
+	if [ "$v" = 'define' ]; then
 		mstart "Checking whether $f() constants are defined"
 		if alldefined `echo $* | sed -e 's/\</d_/g'`; then
 			result 'yes'

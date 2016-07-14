@@ -2,15 +2,15 @@
 
 mstart "Deciding whether to use DynaLoader"
 if [ -z "$usedl" ]; then
-	if [ "$i_dlfcn" == 'define' -o "$i_nlist" == 'define' ]; then
+	if [ "$i_dlfcn" = 'define' -o "$i_nlist" = 'define' ]; then
 		setvar 'usedl' 'define'
 	else
 		setvar 'usedl' 'undef'
 	fi
 fi
-test "$usedl" == 'define' && result 'yes' || result "no"
+test "$usedl" = 'define' && result 'yes' || result "no"
 
-if [ "$usedl" == 'undef' -a -z "$allstatic" ]; then
+if [ "$usedl" = 'undef' -a -z "$allstatic" ]; then
 	msg "DynaLoader is disabled, making all modules static"
 	setvar 'allstatic' 1
 fi
@@ -35,10 +35,10 @@ if not hinted 'libs'; then
 fi
 
 # We need to know whether we're trying to build threads support to make decision about -lpthreads
-if [ "$usethreads" == 'define' -o "$useithreads" == 'define' -o "$use5005threads" == 'define' ]; then
-	test "$usethreads" == 'define' || setvar 'usethreads' 'define'
+if [ "$usethreads" = 'define' -o "$useithreads" = 'define' -o "$use5005threads" = 'define' ]; then
+	test "$usethreads" = 'define' || setvar 'usethreads' 'define'
 else
-	test "$usethreads" == 'define' || setvar 'usethreads' 'undef'
+	test "$usethreads" = 'define' || setvar 'usethreads' 'undef'
 fi
 
 mstart "Checking which libs to use for perl"
@@ -66,7 +66,7 @@ if not hinted 'perllibs'; then
 	result "$_libs"
 fi
 
-if [ "$soname" == "define" -o "$usesoname" == "define" ]; then
+if [ "$soname" = "define" -o "$usesoname" = "define" ]; then
 	setvar 'soname' "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION"
 fi
 
@@ -76,7 +76,7 @@ if not hinted libperl; then
 		setvar libperl "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION.$PERL_API_SUBVERSION"
 		setvar "useshrplib" 'true'
 		result "$libperl (SONAME $soname, dynamic)"
-	elif [ "$useshrplib" == 'true' ]; then
+	elif [ "$useshrplib" = 'true' ]; then
 		setvar libperl "libperl.so"
 		result "$libperl (dynamic)"
 	else

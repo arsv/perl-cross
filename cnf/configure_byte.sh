@@ -6,9 +6,9 @@ byteorder() {
 
 	try_start
 	try_includes "sys/types.h"
-	if [ "$uvsize" == 8 ]; then
+	if [ "$uvsize" = 8 ]; then
 		try_add "$uvtype foo = 0x8877665544332211;"
-	elif [ "$uvsize" == 4 ]; then
+	elif [ "$uvsize" = 4 ]; then
 		try_add "$uvtype foo = 0x44332211;"
 	elif [ -n "$uvsize" ]; then
 		result "unknown"

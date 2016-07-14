@@ -189,7 +189,7 @@ END
 fi
 
 setifndef 'lddlflags' "-shared"
-if [ "$mode" == 'target' -o "$mode" == 'native' ]; then
+if [ "$mode" = 'target' -o "$mode" = 'native' ]; then
 	if [ -n "$sysroot" ]; then
 		msg "Adding --sysroot to {cc,ld}flags"
 		prependvar 'ccflags' "--sysroot=$sysroot"
@@ -222,7 +222,7 @@ if not hinted 'uselargefiles'; then
 			resdef "yes, enabling it" "no, it's disabled" 'uselargefiles' 
 	esac
 fi
-if [ "$uselargefiles" == 'define' ]; then
+if [ "$uselargefiles" = 'define' ]; then
 	appendvar 'ccflags' " -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
 	log
 fi

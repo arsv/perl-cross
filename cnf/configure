@@ -11,7 +11,7 @@ echo -n > "$cfglog"
 . $base/configure_clev.sh
 . $base/configure_args.sh
 
-if [ "$mode" == 'help' ]; then
+if [ "$mode" = 'help' ]; then
 	. $base/configure_help.sh
 	exit
 fi
@@ -32,7 +32,7 @@ cfglog="$cfglog_base"
 
 if [ -z "$buildarch" -a "$mode" != "target" ]; then
 	mstart "Guessing build platform"
-	if [ "x$build" == "x" ]; then
+	if [ "x$build" = "x" ]; then
 		buildarch=`$base/config.guess 2>>$cfglog`
 	else
 		buildarch=`$base/config.sub "$build" 2>>$cfglog`
@@ -58,7 +58,7 @@ fi
 # past this point $build/$buildarch are non-empty unless we're in target mode
 
 if [ -z "$mode" ]; then
-	if [ -z "$target" -o "$target" == "$build" ]; then
+	if [ -z "$target" -o "$target" = "$build" ]; then
 		msg "Assuming native build"
 		mode='native'
 	else
@@ -68,7 +68,7 @@ if [ -z "$mode" ]; then
 fi
 # past this point $mode can't be empty
 
-if [ "$mode" == "buildmini" -o "$mode" == "native" ]; then
+if [ "$mode" = "buildmini" -o "$mode" = "native" ]; then
 	targetarch="$buildarch"
 	target="$build"
 fi
@@ -90,12 +90,12 @@ if [ -n "$target" -a -z "$targetarch" ]; then
 		fi
 	fi
 elif [ -z "$target" ]; then
-	if [ "$mode" == 'cross' -o "$mode" == 'target' ]; then
+	if [ "$mode" = 'cross' -o "$mode" = 'target' ]; then
 		die "--target must be specified for a cross build"
 	fi
 fi
 
-if [ "$mode" == "cross" ]; then
+if [ "$mode" = "cross" ]; then
 	msg "Respawning configure for build and target platforms"
 	msg
 	run $0 $hco --keeplog --mode=buildmini --build="$build" --buildarch="$buildarch"\
@@ -105,28 +105,28 @@ if [ "$mode" == "cross" ]; then
 		|| die "configure --mode=target failed"
 	msg
 	msg "Ok, back to the top-level configure"
-elif [ "$mode" == "buildmini" ]; then
+elif [ "$mode" = "buildmini" ]; then
 	targetlabel=`archlabel "$build" "$targetarch"`
 	msg "Configuring build-time miniperl for $targetlabel"
 	if [ "x$build" != "x" ]; then pf1="$build-"; else pf1=""; fi
 	pf2="$build-"
 	config='xconfig.sh'
-elif [ "$mode" == "target" ]; then
+elif [ "$mode" = "target" ]; then
 	targetlabel=`archlabel "$target" "$targetarch"`
 	msg "Configuring primary perl executable for $targetlabel"
 	if [ "x$target" != "x" ]; then pf1="$target-"; else pf1="$targetarch-"; fi
 	pf2="$target-"
 	config='config.sh'
-elif [ "$mode" == "native" ]; then 
+elif [ "$mode" = "native" ]; then 
 	msg "Configuring for native build"
 	config='config.sh'
 fi
 
-if [ "$mode" == "target" ]; then
+if [ "$mode" = "target" ]; then
 	setvar 'usecrosscompile' 'define'
 fi
 
-if [ "$mode" == 'native' -o "$mode" == 'buildmini' -o "$mode" == "target" ]; then
+if [ "$mode" = 'native' -o "$mode" = 'buildmini' -o "$mode" = "target" ]; then
 	. $base/configure_version.sh
 	. $base/configure_hint.sh
 	. $base/configure_vars.sh
@@ -147,7 +147,7 @@ if [ "$mode" == 'native' -o "$mode" == 'buildmini' -o "$mode" == "target" ]; the
 	. $base/configure_attr.sh
 	. $base/configure_link.sh
 	. $base/configure_dbug.sh
-	if [ "$usethreads" == 'define' ]; then
+	if [ "$usethreads" = 'define' ]; then
 		. $base/configure_thrd.sh
 		failpoint
 	fi
@@ -161,7 +161,7 @@ if [ "$mode" == 'native' -o "$mode" == 'buildmini' -o "$mode" == "target" ]; the
 fi
 
 
-if [ "$mode" == 'native' ]; then
+if [ "$mode" = 'native' ]; then
 	echo "Generating config.h"
 	./config_h.SH
 	echo "Generating Makefile.config"
@@ -185,7 +185,7 @@ if [ "$mode" == 'native' ]; then
 	echo " section 1 man pages:  $man1dir  (with '$man1ext' extension)"
 	echo " section 3 man pages:  $man3dir  (with '$man3ext' extension)"
 	echo
-elif [ "$mode" == 'cross' ]; then
+elif [ "$mode" = 'cross' ]; then
 	echo "Generating config.h and xconfig.h"
 	CONFIG_SH=config.sh  CONFIG_H=config.h  ./config_h.SH
 	CONFIG_SH=xconfig.sh CONFIG_H=xconfig.h ./config_h.SH
@@ -220,7 +220,7 @@ elif [ "$mode" == 'cross' ]; then
 	echo " section 1 man pages:  $man1dir  (with '$man1ext' extension)"
 	echo " section 3 man pages:  $man3dir  (with '$man3ext' extension)"
 	echo
-elif [ "$mode" == "regen" ]; then
+elif [ "$mode" = "regen" ]; then
 	if [ -f config.sh ]; then
 		CONFIG_SH=config.sh  CONFIG_H=config.h  ./config_h.SH
 	fi

@@ -5,7 +5,7 @@
 extdir() {
 	for i in $1/*; do
 		L=`basename "$i" | sed -e 's!.*-!!'`
-		if [ "$L" == "DynaLoader" ]; then
+		if [ "$L" = "DynaLoader" ]; then
 			# do nothing, it's DynaLoader
 			true
 		# just checking $i/$L.xs is NOT enough, since some extensions
@@ -20,7 +20,7 @@ extdir() {
 
 extadd() {
 	s=`modsymname "$2"`
-	if [ "$s" == "dynaloader" ]; then
+	if [ "$s" = "dynaloader" ]; then
 		msg "\tskipping $2"
 		return
 	fi
@@ -38,13 +38,13 @@ extadd() {
 		return
 	fi
 	t=`valueof "static_$s"`
-	if [ "$1" == "xs" -a -n "$t" -a "$t" != "0" ]; then
+	if [ "$1" = "xs" -a -n "$t" -a "$t" != "0" ]; then
 		msg "\tstatic $2"
 		static_ext="$static_ext$2 "
-	elif [ "$1" == "xs" -a -n "$allstatic" ]; then
+	elif [ "$1" = "xs" -a -n "$allstatic" ]; then
 		msg "\tstatic $2"
 		static_ext="$static_ext$2 "
-	elif [ "$1" == "xs" ]; then
+	elif [ "$1" = "xs" ]; then
 		msg "\tdynamic $2"
 		dynamic_ext="$dynamic_ext$2 "
 	else 
@@ -55,7 +55,7 @@ extadd() {
 
 extadddisabled() {
 	s=`modsymname "$2"`
-	if [ "$1" == "xs" ]; then
+	if [ "$1" = "xs" ]; then
 		disabled_dynamic_ext="$disabled_dynamic_ext$2 "
 	else
 		disabled_nonxs_ext="$disabled_nonxs_ext$2 "
@@ -87,26 +87,26 @@ msg "Looking which extensions should be disabled"
 test -n "$useposix" || setvar 'useposix' 'define'
 test -n "$useopcode" || setvar 'useopcode' 'define'
 
-extonlyif DB_File "$i_db" == 'define'
-extonlyif GDBM_File "$i_gdbm" == 'define'
-extonlyif NDBM_File "$i_ndbm" == 'define'
-extonlyif ODBM_File "$i_odbm" == 'define'
-extonlyif I18N/Langinfo "$i_langinfo" == 'define' -a "$d_nl_langinfo" == 'define'
-extonlyif IPC/SysV "$i_msg" == 'define' -o "$i_shm" == 'define' -o "$d_sem" == 'define'
-extonlyif Opcode "$useopcode" == 'define'
-extonlyif POSIX "$useposix" == 'true'
-extonlyif Socket "$d_socket" == 'define'
-extonlyif Sys/Syslog "$d_socket" == 'define'
+extonlyif DB_File "$i_db" = 'define'
+extonlyif GDBM_File "$i_gdbm" = 'define'
+extonlyif NDBM_File "$i_ndbm" = 'define'
+extonlyif ODBM_File "$i_odbm" = 'define'
+extonlyif I18N/Langinfo "$i_langinfo" = 'define' -a "$d_nl_langinfo" = 'define'
+extonlyif IPC/SysV "$i_msg" = 'define' -o "$i_shm" = 'define' -o "$d_sem" = 'define'
+extonlyif Opcode "$useopcode" = 'define'
+extonlyif POSIX "$useposix" = 'true'
+extonlyif Socket "$d_socket" = 'define'
+extonlyif Sys/Syslog "$d_socket" = 'define'
 extonlyif cpan/List-Util "$usedl" != 'undef'
-extonlyif XS/APItest "$usedl" == 'define'
-extonlyif XS/Typemap "$usedl" == 'define'
-extonlyif VMS-DCLsym "$osname" == "vms"		# XXX: is it correct?
-extonlyif VMS-Stdio "$osname" == "vms"
-extonlyif VMS-Filespec "$osname" == "vms"
-extonlyif Amiga-ARexx "$osname" == "amiga"
-extonlyif Amiga-Exec "$osname" == "amiga"
+extonlyif XS/APItest "$usedl" = 'define'
+extonlyif XS/Typemap "$usedl" = 'define'
+extonlyif VMS-DCLsym "$osname" = "vms"		# XXX: is it correct?
+extonlyif VMS-Stdio "$osname" = "vms"
+extonlyif VMS-Filespec "$osname" = "vms"
+extonlyif Amiga-ARexx "$osname" = "amiga"
+extonlyif Amiga-Exec "$osname" = "amiga"
 
-extonlyif Thread "$usethreads" == 'define'
+extonlyif Thread "$usethreads" = 'define'
 
 for d in ext cpan dist; do
 	msg "Looking for extensions recursively under $d/"

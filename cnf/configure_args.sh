@@ -1,9 +1,9 @@
 #!/bin/bash
 
 defineyesno() {
-	if [ "$2" == "yes" ]; then
+	if [ "$2" = "yes" ]; then
 		setvaru "$1" "$3"
-	elif [ "$2" == "no" ]; then
+	elif [ "$2" = "no" ]; then
 		setvaru "$1" "$4"
 	elif [ -z "$2" ]; then
 		setvaru "$1" "$3"

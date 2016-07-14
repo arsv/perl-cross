@@ -52,12 +52,12 @@ EOM
 	fi
 fi
 
-if [ "$usethreads" == 'define' ]; then
+if [ "$usethreads" = 'define' ]; then
 	mstart 'Looking whether to use interpreter threads'
-	if [ "$useithreads" == 'define' ]; then
+	if [ "$useithreads" = 'define' ]; then
 		setvar 'useithreads' 'define'
 		result 'yes, using ithreads'	
-	elif [ "$use5005threads" == 'define' ]; then
+	elif [ "$use5005threads" = 'define' ]; then
 		setvar 'useithreads' 'undef'
 		result 'no, using 5.005 threads'
 	else 

@@ -16,7 +16,7 @@ hashdr() {
 }
 
 check hashdr 'stdio.h'
-test "$i_stdio" == 'define' ||\
+test "$i_stdio" = 'define' ||\
 	die "Can't include <stdio.h>, check compiler configuration"
 
 check hashdr 'arpa/inet.h'
@@ -108,18 +108,18 @@ check hashdr 'varargs.h'
 check hashdr 'vfork.h'
 check hashdr 'xlocale.h'
 
-if [ "$usethreads" == 'define' ]; then
+if [ "$usethreads" = 'define' ]; then
 	check hashdr 'pthread.h'
 fi
 
 # simplified approach, compared to what Configure has.
 # assume header is usable as long as it's there
 mstart "Looking which header to use for varargs"
-if [ "$i_stdarg" == 'define' ]; then
+if [ "$i_stdarg" = 'define' ]; then
 	setvar 'i_varargs' 'undef'
 	setvar 'i_varhdr' 'stdarg.h'
 	result '<stdarg.h>'	
-elif [ "$i_varargs" == 'define' ]; then
+elif [ "$i_varargs" = 'define' ]; then
 	setvar 'i_stdarg' 'undef'
 	setvar 'i_varhdr' 'varargs.h'
 	result '<varargs.h>'
