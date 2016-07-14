@@ -1,4 +1,4 @@
-#! /usr/bin/false
+#!/usr/bin/env false
 #
 # $Id: MD5.pm,v 1.19 2004/02/14 02:25:32 lackas Exp $
 #

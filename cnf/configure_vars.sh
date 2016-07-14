@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 if [ "$mode" == "buildmini" ]; then
 	V="HOST"
@@ -7,7 +7,8 @@ else
 fi
 
 # setfromvar what SHELLVAR
-function setfromvar {
+setfromvar()
+{
 	v=`valueof "$1"`
 	w=`valueof "$V$2"`
 	if [ -z "$v" -a -n "$w" ]; then

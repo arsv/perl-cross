@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Since 5.10.1 the module dirs are flat, so there's no need
 # for recursive search etc.
-function extdir {
+extdir()
+{
 	for i in $1/*; do
 		L=`basename "$i" | sed -e 's!.*-!!'`
 		if [ "$L" == "DynaLoader" ]; then
@@ -18,7 +19,8 @@ function extdir {
 	done
 }
 
-function extadd {
+extadd()
+{
 	s=`modsymname "$2"`
 	if [ "$s" == "dynaloader" ]; then
 		msg "\tskipping $2"
@@ -53,7 +55,8 @@ function extadd {
 	fi
 }
 
-function extadddisabled {
+extadddisabled()
+{
 	s=`modsymname "$2"`
 	if [ "$1" == "xs" ]; then
 		disabled_dynamic_ext="$disabled_dynamic_ext$2 "
@@ -62,7 +65,8 @@ function extadddisabled {
 	fi
 }
 
-function extonlyif {
+extonlyif()
+{
 	m="$1"; shift
 	s=`modsymname "$m"`
 	if [ "$@" ]; then
@@ -75,7 +79,8 @@ function extonlyif {
 
 }
 
-function settrimspaces {
+settrimspaces()
+{
 	_k="$1"
 	_v="$2"
 	_v=`echo "$_v" | sed -r -e 's/\s+/ /g' -e 's/^\s+//' -e 's/\s+$//'`

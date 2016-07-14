@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-function defineyesno {
+defineyesno()
+{
 	if [ "$2" == "yes" ]; then
 		setvaru "$1" "$3"
 	elif [ "$2" == "no" ]; then
@@ -12,11 +13,19 @@ function defineyesno {
 	fi
 }
 
-function defyes { defineyesno "$1" "$2" 'define' 'undef'; }
-function defno  { defineyesno "$1" "$2" 'undef' 'define'; }
+defyes()
+{
+	defineyesno "$1" "$2" 'define' 'undef';
+}
+
+defno()
+{
+	defineyesno "$1" "$2" 'undef' 'define';
+}
 
 # setordefine key hasarg arg default-a default-b
-function setordefine {
+setordefine()
+{
 	if [ -n "$2" ]; then
 		setvaru "$1" "$3"
 	else case "$1" in
@@ -33,22 +42,24 @@ function setordefine {
 }
 
 # pushvar stem value
-function pushnvar {
-	eval n_$1=\$[n_$1+0]
+pushnvar()
+{
+	eval 'n_'$1'=$((n_'$1'+0))'
 	eval n_=\${n_$1}
 	eval $1_$n_="'$2'"
-	eval n_$1=\$[n_$1+1]
+	eval 'n_'$1'=$((n_'$1'+1))'
 	unset -v n_
 }
 
 # pushvar stem key value
-function pushnvarkvx {
-	eval n_$1=\$[n_$1+0]
+pushnvarkvx()
+{
+	eval 'n_'$1'=$((n_'$1'+0))'
 	eval n_=\${n_$1}
 	eval $1_k_$n_="'$2'"
 	eval $1_v_$n_="'$3'"
 	eval $1_x_$n_="'$4'"
-	eval n_$1=\$[n_$1+1]
+	eval 'n_'$1'=$((n_'$1'+1))'
 	unset -v n_
 }
 
@@ -64,7 +75,7 @@ n=''	# next opt
 while [ $i -le $# -o -n "$n" ]; do
 	# in case we've got a short-opt cluster (-abc etc.)
 	if [ -z "$n" ]; then
-		eval a="\${$i}"; i=$[i+1]	# arg ("set" or 'D')
+		eval a="\${$i}"; i=$((i+1))	# arg ("set" or 'D')
 	else
 		a="-$n"
 		n=''
@@ -118,7 +129,7 @@ while [ $i -le $# -o -n "$n" ]; do
 	# fetch argument if necessary (--set foo=bar)
 	# note that non-empty n means there must be no argument
 	if [ -n "$x" -a -z "$k" -a -z "$n" ]; then
-		eval k="\${$i}"; i=$[i+1]
+		eval k="\${$i}"; i=$((i+1))
 	fi
 	# split kv pair into k and v (k=foo v=bar)
 	case "$k" in
@@ -247,10 +258,16 @@ done
 unset -v i a k v x n
 
 # Process -f args (if any) after all options have been parsed
-test -n "$n_loadfile" && for((i=0;i<n_loadfile;i++)); do
-	f=`valueof "loadfile_$i"`
-	sourcenopath $f
-done
+test -n "$n_loadfile" &&
+{
+	i=0
+	while [ $i -lt $n_loadfile ]
+	do
+		f=`valueof "loadfile_$i"`
+		sourcenopath $f
+		i=$((i+1))
+	done
+}
 unset -v i f
 
 # Handle -O

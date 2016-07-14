@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-function byteorder {
+byteorder()
+{
 	mstart "Guessing byte order"
 	ifhint 'byteorder' && return 0
 

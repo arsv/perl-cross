@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 # perl-cross, being an overlaid changeset, is not particulary
 # git- or github-friendly.

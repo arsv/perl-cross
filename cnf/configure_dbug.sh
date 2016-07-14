@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Handle -DEBUGGING
 mstart "Checking whether to enable -g"

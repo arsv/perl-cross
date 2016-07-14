@@ -1,11 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # This is called before _gencfg is invoked for the second time
 # to generate tconfig.sh
 # It should forcibly set cc & Co. to some non-cross values.
 # Note: this is *not* tested, and probably can't be.
 
-function setvardefault {
+setvardefault()
+{
 	if [ -n "$2" ]; then
 		setvar "$1" "$2"
 	else
@@ -13,7 +14,8 @@ function setvardefault {
 	fi
 }
 
-function default_tnat {
+default_tnat()
+{
 	v=`valueof "target_$1"`
 	w=`valueof "$1"`
 	if [ -n "$v" -a "$v" != ' ' ]; then
