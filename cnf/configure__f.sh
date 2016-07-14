@@ -333,14 +333,6 @@ modsymname() {
 	echo "$1" | sed -r -e 's!^(ext|cpan|dist|lib)/!!' -e 's![:/-]!_!g' | tr A-Z a-z
 }
 
-# like source but avoid $PATH searches for simple file names
-sourcenopath() {
-	case "$1" in
-		/*) source "$1" ;;
-		*) source "./$1" ;;
-	esac
-}
-
 # appendsvar vardst value-to-append
 appendvar() {
 	v=`valueof "$1"`

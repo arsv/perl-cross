@@ -32,15 +32,6 @@ setordefine() {
 	esac fi
 }
 
-# pushvar stem value
-pushnvar() {
-	eval 'n_'$1'=$((n_'$1'+0))'
-	eval n_=\${n_$1}
-	eval $1_$n_="'$2'"
-	eval 'n_'$1'=$((n_'$1'+1))'
-	unset -v n_
-}
-
 # pushvar stem key value
 pushnvarkvx() {
 	eval 'n_'$1'=$((n_'$1'+0))'
@@ -52,9 +43,22 @@ pushnvarkvx() {
 	unset -v n_
 }
 
+# Like source but avoid $PATH searches for simple file names.
+# Also guards loop variables from being clobbered by the loaded file.
+sourcenopath() {
+	case "$1" in
+		/*) source "$1" ;;
+		*) source "./$1" ;;
+	esac
+	shift
+	eval "$@"
+}
+
 config_arg0="$0"
 config_argc=$#
 config_args="$*"
+
+loadfile=''
 
 # Do *not* use shifts here! The args may be used later
 # to call configure --mode=target, and saving them
@@ -235,7 +239,7 @@ while [ $i -le $# -o -n "$n" ]; do
 			setordefine "$k" "$x" "" 'undef' 'false' # "" is *not* a typo here!
 			;;
 		O) overwrite=1 ;;
-		f) pushnvar loadfile "$v" ;;
+		f) sourcenopath "$v" "i=$i" "n=$n" ;;
 		A)	# see configure_hint
 			pushnvarkvx appendlist "$k" "$v" "$x" ;;
 		S|V|K) die "-$a is not supported" ;;
@@ -245,13 +249,6 @@ while [ $i -le $# -o -n "$n" ]; do
 	esac
 done
 unset -v i a k v x n
-
-# Process -f args (if any) after all options have been parsed
-test -n "$n_loadfile" && for((i=0;i<n_loadfile;i++)); do
-	f=`valueof "loadfile_$i"`
-	sourcenopath $f
-done
-unset -v i f
 
 # Handle -O
 if [ -n "$overwrite" -a -n "$uservars" ]; then
