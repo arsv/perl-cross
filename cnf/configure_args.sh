@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function defineyesno {
+defineyesno() {
 	if [ "$2" == "yes" ]; then
 		setvaru "$1" "$3"
 	elif [ "$2" == "no" ]; then
@@ -12,11 +12,11 @@ function defineyesno {
 	fi
 }
 
-function defyes { defineyesno "$1" "$2" 'define' 'undef'; }
-function defno  { defineyesno "$1" "$2" 'undef' 'define'; }
+defyes() { defineyesno "$1" "$2" 'define' 'undef'; }
+defno()  { defineyesno "$1" "$2" 'undef' 'define'; }
 
 # setordefine key hasarg arg default-a default-b
-function setordefine {
+setordefine() {
 	if [ -n "$2" ]; then
 		setvaru "$1" "$3"
 	else case "$1" in
@@ -33,7 +33,7 @@ function setordefine {
 }
 
 # pushvar stem value
-function pushnvar {
+pushnvar() {
 	eval 'n_'$1'=$((n_'$1'+0))'
 	eval n_=\${n_$1}
 	eval $1_$n_="'$2'"
@@ -42,7 +42,7 @@ function pushnvar {
 }
 
 # pushvar stem key value
-function pushnvarkvx {
+pushnvarkvx() {
 	eval 'n_'$1'=$((n_'$1'+0))'
 	eval n_=\${n_$1}
 	eval $1_k_$n_="'$2'"

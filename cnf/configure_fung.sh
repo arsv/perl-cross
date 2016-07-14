@@ -2,7 +2,7 @@
 
 # Some guessing after we have all d_funcs ready
 
-function logvars {
+logvars() {
 	for i in $*; do
 		v=`valueof $i`
 		log -n "$i=$v "
@@ -10,7 +10,7 @@ function logvars {
 	log ""
 }
 
-function alldefined {
+alldefined() {
 	logvars $*
 	for i in $*; do
 		v=`valueof $i`
@@ -98,7 +98,7 @@ fi
 
 
 # checkfpclass func D1 D2 D3 ....
-function checkfpclass {
+checkfpclass() {
 	f="$1"; shift
 	v=`valueof "d_$f"`	
 	if [ "$v" == 'define' ]; then

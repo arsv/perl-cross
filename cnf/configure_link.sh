@@ -9,7 +9,7 @@
 # but this complicates hint/cache reporting and processing.
 
 # linkvar old new
-function linkvar {
+linkvar() {
 	eval _v1="\"\$$1\""
 	eval _v2="\"\$$2\""
 	if [ -z "$_v1" ]; then

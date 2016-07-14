@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # checkintdefined DEF "includes"
-function checkintdefined {
+checkintdefined() {
 	k=`echo "$1" | tr A-Z a-z | sed -e 's/^/d_/'`
 	mstart "Checking whether $1 is defined"
 	ifhint "$k" && return 0
@@ -13,7 +13,7 @@ function checkintdefined {
 }
 
 # checkdefined DEF var "Message" "includes"
-function checkdefinedmsg {
+checkdefinedmsg() {
 	mstart "$3"
 	ifhint "$2" && return 0
 	try_start
@@ -26,7 +26,7 @@ function checkdefinedmsg {
 	resdef 'yes' 'no' $2
 }
 
-function checkdefined {
+checkdefined() {
 	checkdefinedmsg "$1" "d_$1" "Checking whether $1 is defined in $2" "$2"
 }
 

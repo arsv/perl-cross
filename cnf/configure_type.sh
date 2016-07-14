@@ -3,7 +3,7 @@
 # Check availability of some types, and possibly their size
 
 # hastype name 'includes'
-function hastype {
+hastype() {
 	_typename=`symbolname "$1"`
 	
 	mstart "Checking type $1"
@@ -26,7 +26,7 @@ function hastype {
 # to objdump if possible
 
 # typesize name 'includes'
-function typesize {
+typesize() {
 	_typename=`symbolname "$1"`
 
 	mstart "Checking size of $1"

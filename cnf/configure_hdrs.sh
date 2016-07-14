@@ -4,7 +4,7 @@
 # headers). And, in fact, we need not to. All we want to know is whether it's
 # safe to include this header, i.e., that it won't break compilation.
 
-function hashdr {
+hashdr() {
 	_hdrname=`symbolname "$1"`
 	
 	mstart "Checking whether to include <$1>"

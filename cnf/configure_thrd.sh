@@ -33,7 +33,7 @@ free_type_letters='T S D R'
 # a pointer to some struct)
 
 # hasfuncr func_r includes 'P_ROTO1 P_ROTO2 ...' 'T=type_T' 'S=type_S' ...
-function hasfuncr {
+hasfuncr() {
 	w="$1"
 	D="d_$w"
 	i="pthread.h $2"
@@ -90,7 +90,7 @@ function hasfuncr {
 }
 
 # hasfuncr_assign_types 'T=type_T' 'S=type_S' ...
-function hasfuncr_assign_types
+hasfuncr_assign_types()
 {
 	for cl in $free_type_letters; do 
 		eval "type_$cl='undef'"
@@ -106,7 +106,7 @@ function hasfuncr_assign_types
 }
 
 # hasfuncr_proto func_r 'include.h' P_ROTO 
-function hasfuncr_proto {
+hasfuncr_proto() {
 	mstart "\tis it $3"
 	try_start
 	try_includes $2
@@ -123,7 +123,7 @@ function hasfuncr_proto {
 }
 
 # hasfuncr_proto func_r P_ROTO -> "type_P func_r(type_R, type_O, type_T, type_O);"
-function hasfuncr_proto_str {
+hasfuncr_proto_str() {
 	cf="$1"
 	cP="$2"
 

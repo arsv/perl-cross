@@ -7,7 +7,7 @@
 # checkattr attr <<END
 #    test file goes here
 # END
-function checkattr {
+checkattr() {
 	mstart "Checking if compiler supports __attribute__($1)"
 	ifhintdefined "d_attribute_$1" "yes" "no" && return 0
 
@@ -26,7 +26,7 @@ function checkattr {
 # check_if_compiles tag "message" << END
 #     test file goes here
 # END
-function check_if_compiles {
+check_if_compiles() {
 	mstart "Checking $2"
 	ifhintdefined "d_$1" "yes" "no" && return 0
 

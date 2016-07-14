@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # hasfield name struct field 'includes'
-function hasfield {
+hasfield() {
 	mstart "Checking whether $2 has $3"
 	ifhintdefined "$1" 'yes' 'no' && return 0
 	

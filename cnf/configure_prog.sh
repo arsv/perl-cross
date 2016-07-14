@@ -3,7 +3,7 @@
 # Find out which progs to use (mostly by trying prefixes based on $target)
 
 # whichprog msg symbol fail prog1 prog2 ...
-function whichprog {
+whichprog() {
 	_what="$1"; shift
 	_symbol="$1"; shift
 	_fail="$1"; shift

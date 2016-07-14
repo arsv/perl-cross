@@ -6,7 +6,7 @@
 # typeselect symb required-size it1 ut1 it2 ut2 ...
 # Note: types are always selected in pairs, signed-unsigned,
 # and it's assumed that sizeof(it[j]) == sizeof(ut[j])
-function typeselect () {
+typeselect() {
 	_rqsize="$1"; shift
 	_symboli="$1"; shift
 	_symbolu="$1"; shift
@@ -33,7 +33,7 @@ function typeselect () {
 }
 
 # unsigned of type -> unsigned-type
-function unsignedof {
+unsignedof() {
 	case "$1" in
 		int*_t) echo "u$1" ;;
 		*) echo "unsigned $1" ;;
@@ -87,7 +87,7 @@ msg "	NV will be "$nvtype", $nvsize bytes"
 
 # typeorfallback base primary-type
 # typeorfallback base primary-type fallback-type
-function typeorfallback {
+typeorfallback() {
 	isset "${1}type" && isset "${1}size" && return 0		
 
 	mstart "Looking which type to use as ${1}type"

@@ -5,7 +5,7 @@
 # It should forcibly set cc & Co. to some non-cross values.
 # Note: this is *not* tested, and probably can't be.
 
-function setvardefault {
+setvardefault() {
 	if [ -n "$2" ]; then
 		setvar "$1" "$2"
 	else
@@ -13,7 +13,7 @@ function setvardefault {
 	fi
 }
 
-function default_tnat {
+default_tnat() {
 	v=`valueof "target_$1"`
 	w=`valueof "$1"`
 	if [ -n "$v" -a "$v" != ' ' ]; then

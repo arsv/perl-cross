@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function byteorder {
+byteorder() {
 	mstart "Guessing byte order"
 	ifhint 'byteorder' && return 0
 
