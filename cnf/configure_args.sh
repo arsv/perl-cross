@@ -34,21 +34,21 @@ function setordefine {
 
 # pushvar stem value
 function pushnvar {
-	eval n_$1=\$[n_$1+0]
+	eval 'n_'$1'=$((n_'$1'+0))'
 	eval n_=\${n_$1}
 	eval $1_$n_="'$2'"
-	eval n_$1=\$[n_$1+1]
+	eval 'n_'$1'=$((n_'$1'+1))'
 	unset -v n_
 }
 
 # pushvar stem key value
 function pushnvarkvx {
-	eval n_$1=\$[n_$1+0]
+	eval 'n_'$1'=$((n_'$1'+0))'
 	eval n_=\${n_$1}
 	eval $1_k_$n_="'$2'"
 	eval $1_v_$n_="'$3'"
 	eval $1_x_$n_="'$4'"
-	eval n_$1=\$[n_$1+1]
+	eval 'n_'$1'=$((n_'$1'+1))'
 	unset -v n_
 }
 
@@ -64,7 +64,7 @@ n=''	# next opt
 while [ $i -le $# -o -n "$n" ]; do
 	# in case we've got a short-opt cluster (-abc etc.)
 	if [ -z "$n" ]; then
-		eval a="\${$i}"; i=$[i+1]	# arg ("set" or 'D')
+		eval a="\${$i}"; i=$((i+1))	# arg ("set" or 'D')
 	else
 		a="-$n"
 		n=''
@@ -118,7 +118,7 @@ while [ $i -le $# -o -n "$n" ]; do
 	# fetch argument if necessary (--set foo=bar)
 	# note that non-empty n means there must be no argument
 	if [ -n "$x" -a -z "$k" -a -z "$n" ]; then
-		eval k="\${$i}"; i=$[i+1]
+		eval k="\${$i}"; i=$((i+1))
 	fi
 	# split kv pair into k and v (k=foo v=bar)
 	case "$k" in

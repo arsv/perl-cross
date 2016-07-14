@@ -38,7 +38,7 @@ for sig in HUP INT QUIT ILL TRAP ABRT BUS FPE KILL USR1\
 			siginit="$siginit, \"$sig\""
 			signums="$signums $num"
 			signumi="$signumi, $num"
-			sigsize=$[sigsize+1]
+			sigsize=$((sigsize+1))
 		fi
 	fi
 done

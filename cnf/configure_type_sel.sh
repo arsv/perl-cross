@@ -168,7 +168,7 @@ fi
 
 mstart "Deciding whether nv preserves full uv"
 if not hinted "d_nv_preserves_uv"; then
-	test $nv_preserves_uv_bits -gt 0 -a $[8*uvsize] == $nv_preserves_uv_bits
+	test $nv_preserves_uv_bits -gt 0 -a $((8*uvsiz)) == $nv_preserves_uv_bits
 	resdef "apparently so" "probably no" d_nv_preserves_uv
 fi
 
