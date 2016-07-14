@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # These tests only provide (unsafe) defaults. Proper values must be hinted.
 

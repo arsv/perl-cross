@@ -1,9 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Find out which progs to use (mostly by trying prefixes based on $target)
 
 # whichprog msg symbol fail prog1 prog2 ...
-function whichprog {
+whichprog()
+{
 	_what="$1"; shift
 	_symbol="$1"; shift
 	_fail="$1"; shift
@@ -12,7 +13,7 @@ function whichprog {
 	mstart "Checking for $_what"
 
 	if [ -n "$_force" ]; then
-		if which "$_force" >&/dev/null; then
+		if command -v "$_force" 1>/dev/null 2>/dev/null; then
 			setvar "$_symbol" "$_force"
 			result "$_force ($_src)"
 			return 0
@@ -27,7 +28,7 @@ function whichprog {
 	
 	for p in "$@"; do
 		if [ -n "$p" ]; then
-			if which "$p" >&/dev/null; then
+			if command -v "$p" 1>/dev/null 2>/dev/null; then
 				setvar "$_symbol" "$p"
 				result "$p"
 				return 0

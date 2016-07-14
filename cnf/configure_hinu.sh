@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Second part of configure_hint.sh
 # By this point, $cctype may be known, and thus it may be a good
@@ -21,26 +21,33 @@ fi
 log
 
 # Process -A arguments, if any
-test -n "$n_appendlist" && for((i=0;i<n_appendlist;i++)); do
-	k=`valueof "appendlist_k_$i"`
-	v=`valueof "appendlist_v_$i"`
-	x=`valueof "appendlist_x_$i"`
-	if [ -z "$k" -a -n "$v" ]; then
-		k="$v"
-		v=""
-	fi
-	case "$k" in
-		*:*) a=${k/%:*/}; k=${k/#*:/} ;;
-		*) a='append-sp' ;;
-	esac
-	case "$a" in
-		append-sp) setvaru $k "`valueof $k` $v" 'user' ;;
-		append) setvaru $k "`valueof $k`$v" 'user' ;;
-		prepend) setvaru $k "$v`valueof $k`" 'user' ;;
-		define) setordefine "$k" "$x" "$v" 'define' ;;
-		undef) setordefine "$k" "$x" "" 'undef' ;;
-		clear) setvaru $k '' 'user' ;;
-		eval) setvaru $k `eval "$v"` 'user' ;;
-		*) die "Bad -A action $a" ;;
-	esac
-done
+test -n "$n_appendlist" &&
+{
+	i=0
+	while [ $i -lt $n_appendlist ]
+	do
+		k=`valueof "appendlist_k_$i"`
+		v=`valueof "appendlist_v_$i"`
+		x=`valueof "appendlist_x_$i"`
+		if [ -z "$k" -a -n "$v" ]; then
+			k="$v"
+			v=""
+		fi
+		case "$k" in
+			*:*) a=${k/%:*/}; k=${k/#*:/} ;;
+			*) a='append-sp' ;;
+		esac
+		case "$a" in
+			append-sp) setvaru $k "`valueof $k` $v" 'user' ;;
+			append) setvaru $k "`valueof $k`$v" 'user' ;;
+			prepend) setvaru $k "$v`valueof $k`" 'user' ;;
+			define) setordefine "$k" "$x" "$v" 'define' ;;
+			undef) setordefine "$k" "$x" "" 'undef' ;;
+			clear) setvaru $k '' 'user' ;;
+			eval) setvaru $k `eval "$v"` 'user' ;;
+			*) die "Bad -A action $a" ;;
+		esac
+		
+		i=$((i+1))
+	done
+}

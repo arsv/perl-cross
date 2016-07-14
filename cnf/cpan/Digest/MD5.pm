@@ -1,4 +1,4 @@
-#! /usr/bin/false
+#!/usr/bin/env false
 
 package Digest::MD5;
 use Digest::Perl::MD5 qw(md5 md5_hex md5_base64);

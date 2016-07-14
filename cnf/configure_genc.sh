@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Missing variable in config.sh may result in syntactically incorrect
 # config.h (or even more nasty things, if it's in the right part of #define)
@@ -15,7 +15,8 @@ if [ -z "$cleanonly" ]; then
 	# do a real write to $config
 
 	# default name value
-	function default {
+	default()
+	{
 		v=`valueof "$1"`
 		if [ -z "$v" ]; then
 			putvar "$1" "$2"
@@ -24,7 +25,8 @@ if [ -z "$cleanonly" ]; then
 		fi
 	}
 
-	function default_if_defined {
+	default_if_defined()
+	{
 		v=`valueof "$1"`
 		if [ "$v" = "define" ]; then
 			log "$1 is set, setting $2"
@@ -35,7 +37,8 @@ if [ -z "$cleanonly" ]; then
 		fi
 	}
 
-	function default_inst {
+	default_inst()
+	{
 		if [ -n "$2" ]; then
 			z="$2"
 			s="$1"
@@ -52,7 +55,8 @@ if [ -z "$cleanonly" ]; then
 	}
 
 	# required name
-	function required {
+	required()
+	{
 		v=`valueof "$1"`
 		if [ -n "$v" ]; then
 			putvar "$1" "$v"
@@ -61,21 +65,27 @@ if [ -z "$cleanonly" ]; then
 		fi
 	}
 
-	function const {
+	const()
+	{
 		putvar "$1" "$2"
 	}
 
 	test -n "$config" || die "Can't generate don't-know-what (no \$config set)"
 	msg "Generating $config"
-	echo -ne "#!/bin/sh\n\n" > $config
+	echo -ne "#!/usr/bin/env sh\n\n" > $config
 else 
 	# clean up the environment
 
-	function default { unset -v "$1"; }
-	function default_if_defined { unset -v "$1"; }
-	function default_inst { unset -v "$1"; }
-	function required { unset -v "$1"; }
-	function const { unset -v "$1"; }
+	default()
+	{ unset -v "$1"; }
+	default_if_defined()
+	{ unset -v "$1"; }
+	default_inst()
+	{ unset -v "$1"; }
+	required()
+	{ unset -v "$1"; }
+	const()
+	{ unset -v "$1"; }
 fi
 
 required archname
@@ -1189,7 +1199,7 @@ default ssizetype
 default st_ino_sign 1
 default st_ino_size 4
 default startperl "$sharpbang$perlpath"
-default startsh '#!/bin/sh'
+default startsh '#!/usr/bin/env sh'
 default static_ext
 default stdchar char
 default stdio_base

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Names of some variables in Configure are shortened
 # (e.g. i_niin for <netinet/in.h>), and it breaks strict pattern
@@ -9,7 +9,8 @@
 # but this complicates hint/cache reporting and processing.
 
 # linkvar old new
-function linkvar {
+linkvar()
+{
 	eval _v1="\"\$$1\""
 	eval _v2="\"\$$2\""
 	if [ -z "$_v1" ]; then

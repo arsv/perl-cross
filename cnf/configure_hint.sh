@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # We want to see
 #	var=value
@@ -8,11 +8,12 @@
 # Unlike pretty much any other place in cnf/, the last assignment is
 # effective here.
 
-function tryhints {
+tryhints()
+{
 	hintfile="$base/hints/$1"
 	if [ -f "$hintfile" ]; then
 		msg "	using $hintfile"
-		sed -r -e "/^([A-Za-z0-9_]+)+=/s//happend \1 /" \
+		sed -r -e "/^([A-Za-z0-9_]+)\+=/s//happend \1 /" \
 		       -e "/^([A-Za-z0-9_]+)=/s//hint \1 /"\
 			"$hintfile" > config.hint.tmp
 		. ./config.hint.tmp
@@ -22,12 +23,14 @@ function tryhints {
 	fi
 }
 
-function hint {
+hint()
+{
 	_v=`valueof "$1"`
 	test -z "$_v" && setvaru "$1" "$2" 'hinted'
 }
 
-function happend {
+happend()
+{
 	_v=`valueof "$1"`
 	_s=`valueof "x_$1"`
 	if [ -z "$_v" ]; then
@@ -39,7 +42,8 @@ function happend {
 
 # trypphints prefix hint
 # tries hint then prefix-hint
-function tryphints {
+tryphints()
+{
 	test -n "$2" && tryhints "$2"
 	test -n "$1" -a -n "$2" && tryhints "$1-$2"
 }

@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 root=`dirname "$0"`
 
-function earlydie() {
+earlydie()
+{
 	echo "$@" >&2
 	exit 1
 }

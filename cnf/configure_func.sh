@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # hasfunc name args includes
 # WARNING: some compilers do have built-in notions on how certain
@@ -6,7 +6,8 @@
 # are called in a "wrong" way. 
 # So far it looks like the safest option is to provide type-compatible arguments,
 # i.e., "0" for ints, "NULL" for pointers etc.
-function hasfunc {
+hasfunc()
+{
 	if [ -n "$4" ] ; then _s="$4"; else _s="d_$1"; fi
 
 	require 'cc'
@@ -29,7 +30,8 @@ function hasfunc {
 # hasvar name includes [symbol]
 # We use try_link here instead of try_compile to be sure we have the
 # variable in question not only declared but also present somewhere in the libraries.
-function hasvar {
+hasvar()
+{
 	if [ -n "$4" ] ; then _s="$4"; else _s="d_$1"; fi
 
 	require 'cc'
@@ -44,7 +46,8 @@ function hasvar {
 	resdef 'found' 'not found' "$_s"
 }
 
-function isvoid {
+isvoid()
+{
 	require 'cc'
 	mstart "Checking whether $1 is void"
 	ifhint "d_$1" && return

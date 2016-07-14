@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 mstart "Deciding whether to use DynaLoader"
 if [ -z "$usedl" ]; then

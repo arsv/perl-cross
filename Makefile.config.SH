@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 if [ ! -f config.sh ]; then
 	echo "config.sh not found" >&2
@@ -39,7 +39,8 @@ if [ "$usecrosscompile" == 'define' ]; then
 	. ./config.sh
 fi
 
-function ifprefixed() {
+ifprefixed()
+{
 	val=`echo "$2" | sed -e "s/^$1//"`
 	if [ "$1$val" == "$2" ]; then
 		echo "\$(CROSS)$val"
