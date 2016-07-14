@@ -12,7 +12,7 @@ function whichprog {
 	mstart "Checking for $_what"
 
 	if [ -n "$_force" ]; then
-		if which "$_force" >&/dev/null; then
+		if command -v "$_force" 1>/dev/null 2>/dev/null; then
 			setvar "$_symbol" "$_force"
 			result "$_force ($_src)"
 			return 0
@@ -27,7 +27,7 @@ function whichprog {
 	
 	for p in "$@"; do
 		if [ -n "$p" ]; then
-			if which "$p" >&/dev/null; then
+			if command -v "$p" 1>/dev/null 2>/dev/null; then
 				setvar "$_symbol" "$p"
 				result "$p"
 				return 0
