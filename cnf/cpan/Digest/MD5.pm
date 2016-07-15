@@ -4,7 +4,7 @@ package Digest::MD5;
 # with docs, OOP and some other unnecessary things removed.
 # See http://search.cpan.org/dist/Digest-Perl-MD5/
 
-# Some of install scritps depend on Digest::MD5,
+# Some of the install scripts depend on Digest::MD5,
 # but regular Digest::MD5 is an XS module and cannot
 # be used with miniperl, so this code is used instead.
 
