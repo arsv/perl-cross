@@ -1,5 +1,3 @@
-#!/bin/bash
-
 cat <<EOF
 Usage:
 	configure [options]

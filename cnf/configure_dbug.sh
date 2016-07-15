@@ -1,6 +1,5 @@
-#!/bin/bash
-
 # Handle -DEBUGGING
+
 mstart "Checking whether to enable -g"
 case "$DEBUGGING" in
 	-g|both|define)

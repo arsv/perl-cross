@@ -1,4 +1,4 @@
-#!/bin/bash
+# Import common environment variables into config.sh
 
 if [ "$mode" = "buildmini" ]; then
 	V="HOST"

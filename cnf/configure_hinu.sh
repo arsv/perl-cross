@@ -1,6 +1,5 @@
-#!/bin/bash
-
 # Second part of configure_hint.sh
+
 # By this point, $cctype may be known, and thus it may be a good
 # idea to check for compiler-specific hints
 

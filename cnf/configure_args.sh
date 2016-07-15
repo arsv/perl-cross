@@ -1,4 +1,4 @@
-#!/bin/bash
+# Arguments parsing.
 
 defineyesno() {
 	if [ "$2" = "yes" ]; then

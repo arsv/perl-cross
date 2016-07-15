@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Thread support
 # Called only if $usethreads is set (which is not by default)
 

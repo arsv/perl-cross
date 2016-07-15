@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # checkintdefined DEF "includes"
 checkintdefined() {
 	k=`echo "$1" | tr A-Z a-z | sed -e 's/^/d_/'`

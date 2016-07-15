@@ -1,4 +1,4 @@
-#!/bin/bash
+# Tests for availability of libc functions.
 
 # hasfunc name args includes
 # WARNING: some compilers do have built-in notions on how certain

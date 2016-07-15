@@ -1,4 +1,4 @@
-#!/bin/bash
+# Target byte order check
 
 byteorder() {
 	mstart "Guessing byte order"

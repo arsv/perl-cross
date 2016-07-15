@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Some final tweaks that do not fit in any other file
 
 # Use $ldflags as default value for $lddlflags, together with whatever

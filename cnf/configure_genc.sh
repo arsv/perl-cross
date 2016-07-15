@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Missing variable in config.sh may result in syntactically incorrect
 # config.h (or even more nasty things, if it's in the right part of #define)
 # This file should write all possible variables to $config, either taking

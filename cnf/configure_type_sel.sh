@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # After we known what types we have, we've got to chose which
 # of them to use.
 

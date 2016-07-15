@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Figure out cf_by and related constants
 
 mstart "Checking how to get hostname"

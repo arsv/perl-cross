@@ -1,4 +1,4 @@
-#!/bin/bash
+# configure variables linking/aliasing
 
 # Names of some variables in Configure are shortened
 # (e.g. i_niin for <netinet/in.h>), and it breaks strict pattern

@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Find out which progs to use (mostly by trying prefixes based on $target)
 
 # whichprog msg symbol fail prog1 prog2 ...

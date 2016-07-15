@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # General-purpose functions used by most of other modules
 
 # Note: one-letter variables are "local"

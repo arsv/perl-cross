@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Checking compiler's reaction to __attribute__s.
 # Which basically boils down to compiling predefined
 # fragments and watching for errors.

@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # These tests only provide (unsafe) defaults. Proper values must be hinted.
 
 # Assumption: floating-point endianess matches integer endianess

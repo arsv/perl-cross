@@ -1,4 +1,4 @@
-#!/bin/bash
+# Hint files loading.
 
 # We want to see
 #	var=value

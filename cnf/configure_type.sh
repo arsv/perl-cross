@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Check availability of some types, and possibly their size
 
 # hastype name 'includes'

@@ -1,4 +1,4 @@
-#!/bin/bash
+# Perl version has to be extracted from patchlevel.h
 
 # setverpart name NAME
 setverpart() {

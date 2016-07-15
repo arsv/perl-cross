@@ -1,4 +1,4 @@
-#!/bin/bash
+# In-tree perl modules discovery.
 
 # Since 5.10.1 the module dirs are flat, so there's no need
 # for recursive search etc.

@@ -1,4 +1,4 @@
-#!/bin/bash
+# Check whether structure X has field Y.
 
 # hasfield name struct field 'includes'
 hasfield() {

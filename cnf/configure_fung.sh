@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Some guessing after we have all d_funcs ready
 
 logvars() {
