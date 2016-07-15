@@ -23,7 +23,6 @@ if not hinted 'libs'; then
 	try_dump
 
 	_libs=""
-	shift
 	for l in $libswanted; do
 		if try_link_libs -l$l; then
 			_libs="$_libs -l$l"
