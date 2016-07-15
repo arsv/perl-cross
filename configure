@@ -61,5 +61,4 @@ if [ -n "$root" -a "$root" != "." -a ! -f "MANIFEST" ]; then
 	echo "Symlinking done, proceeding with configure."
 fi
 
-export base="cnf"
-$base/configure "$@"
+cnf/configure "$@"

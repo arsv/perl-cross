@@ -1,6 +1,7 @@
 #!/bin/sh
 
-if [ -z "$base" ]; then export base=.; else export base; fi
+base=`dirname "$0"`
+
 config='config.bad'
 cfglog_base="config.log"
 cfglog="$cfglog_base.$$"
@@ -160,6 +161,7 @@ if [ "$mode" = 'native' -o "$mode" = 'buildmini' -o "$mode" = "target" ]; then
 	failpoint
 fi
 
+test -f ./config_h.SH || die "Not in perl base directory, aborting"
 
 if [ "$mode" = 'native' ]; then
 	echo "Generating config.h"
