@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ ! -f config.sh ]; then
 	echo "config.sh not found" >&2
@@ -9,7 +9,7 @@ disabledmods=''
 
 . ./config.sh
 echo -n > Makefile.config
-if [ "$usecrosscompile" == 'define' ]; then
+if [ "$usecrosscompile" = 'define' ]; then
 	unset cc
 	unset ccflags
 	unset ar
@@ -39,7 +39,7 @@ if [ "$usecrosscompile" == 'define' ]; then
 	. ./config.sh
 fi
 
-function ifprefixed() {
+ifprefixed() {
 	val=`echo "$2" | sed -e "s/^$1//"`
 	if [ "$1$val" == "$2" ]; then
 		echo "\$(CROSS)$val"
@@ -56,9 +56,9 @@ else
 fi
 
 cflags="-DPERL_CORE $ccflags $optimize"
-test "$useshrplib" == 'true' && cflags="$cflags $cccdlflags"
+test "$useshrplib" = 'true' && cflags="$cflags $cccdlflags"
 
-if [ "$usecrosscompile" == "define" ]; then
+if [ "$usecrosscompile" = "define" ]; then
 test -n "$toolsprefix" && cross="$toolsprefix" || cross="$target_name-"
 cat >> Makefile.config <<END
 CROSS = $cross
@@ -141,7 +141,7 @@ static_ext = $static_ext
 nonxs_ext = $nonxs_ext
 END
 
-if [ "$disabledmods" == 'define' ]; then
+if [ "$disabledmods" = 'define' ]; then
 	cat >> Makefile.config << END
 disabled_dynamic_ext=$disabled_dynamic_ext
 disabled_nonxs_ext=$disabled_nonxs_ext

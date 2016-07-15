@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # This script can be used to run Makefile.PL 
 # Note that is relies on $0 to tell where lib/ is; typically
@@ -6,7 +6,8 @@
 # This script replaces lib/buildcustomize.pl functionality
 # Check write_buildcustomize.pl for the list of modules to include here
 
-top=`dirname "$0"`
+top=${0%/*}; test -z "$top" && top=.
+
 if [ ! -f $top/miniperl ]; then
 	echo "$0: no $top/miniperl found; build it before using miniperl_top"
 	exit 1
