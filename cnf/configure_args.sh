@@ -59,6 +59,7 @@ config_argc=$#
 config_args="$*"
 
 loadfile=''
+appendlist=''
 
 # Do *not* use shifts here! The args may be used later
 # to call configure --mode=target, and saving them
@@ -240,8 +241,8 @@ while [ $i -le $# -o -n "$n" ]; do
 			;;
 		O) msg "WARNING: -O ignored" ;;
 		f) sourcenopath "$v" "i=$i" "n=$n" ;;
-		A)	# see configure_hint
-			pushnvarkvx appendlist "$k" "$v" "$x" ;;
+		A) appendvarsilent "a_$k" "$v"
+		   appendvarsilent 'appendlist' "$k" ;;
 		S|V|K) die "-$a is not supported" ;;
 		d|r) msg "WARNING: -$a makes no sense for this version of configure and was ignored" ;;
 		e|E) msg "WARNING: -$a ignored; you'll have to proceed with 'make' anyway" ;;

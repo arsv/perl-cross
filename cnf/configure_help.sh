@@ -91,20 +91,7 @@ symbols.
 		-U symbol=   symbol gets completely empty
 		e.g.:  -Uversiononly
 
-	-A [a:]symbol=value	manipulate symbol after the platform specific
-				hints have been applied:
-		-A append:symbol=value   append value to symbol
-		-A symbol=value          like append:, but with a separating space
-		-A define:symbol=value   define symbol to have value
-		-A clear:symbol          define symbol to be ''
-		-A define:symbol         define symbol to be 'define'
-		-A eval:symbol=value     define symbol to be eval of value
-		-A prepend:symbol=value  prepend value to symbol
-		-A undef:symbol          define symbol to be 'undef'
-		-A undef:symbol=         define symbol to be ''
-		e.g.:   -A prepend:libswanted='cl pthread '
-			-A ccflags=-DSOME_MACRO
-
+	-A symbol=value		append value to symbol
 
 	--enable-<something>		Set use<something> to 'define'
 	--has-<function>		Set d_<function> to 'define'

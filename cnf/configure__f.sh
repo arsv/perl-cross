@@ -353,6 +353,6 @@ prependvar() {
 }
 
 appendvarsilent() {
-	v=`valueof "$1"`
-	test -n "$v" && eval $1="'$v $2'" || eval $1="'$2'"
+	_=`valueof "$1"`
+	test -n "$_" && eval $1="'$_ $2'" || eval $1="'$2'"
 }
