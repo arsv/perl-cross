@@ -16,12 +16,12 @@ result() {
 }
 
 log() {
-	echo -e "$@" >> $cfglog
+	echo "$@" >> $cfglog
 }
 
 msg() {
-	echo -e "$@" >> $cfglog
-	echo -e "$@" >&2
+	echo "$@" >> $cfglog
+	echo "$@" >&2
 }
 
 run() {
@@ -42,8 +42,8 @@ failpoint() {
 }
 
 mstart() {
-	echo -e "$@" >> $cfglog
-	echo -ne "$* ... " >& 2
+	echo "$@" >> $cfglog
+	echo -n "$* ... " >& 2
 }
 
 # setenv name value

@@ -7,7 +7,7 @@ if [ -n "$ldflags" -a "$x_lddlflags" != "user" ]; then
 	for f in $ldflags; do 
 		case "$f" in
 			-L*|-R*|-Wl,-R*)
-				msg "\tadded $f"
+				msg "    added $f"
 				appendvar 'lddlflags' "$f"
 				;;
 		esac

@@ -21,34 +21,34 @@ extdir() {
 extadd() {
 	s=`modsymname "$2"`
 	if [ "$s" = "dynaloader" ]; then
-		msg "\tskipping $2"
+		msg "    skipping $2"
 		return
 	fi
 	appendvarsilent 'known_extensions' "$2"
 	o=`valueof "only_$s"`
 	if [ -n "$onlyext" -a -z "$o" ]; then
-		msg "\tskipping $2"
+		msg "    skipping $2"
 		extadddisabled "$1" "$2"
 		return
 	fi
 	d=`valueof "disable_$s"`
 	if [ -n "$d" -a "$d" != "0" ]; then
-		msg "\tdisabled $2"
+		msg "    disabled $2"
 		extadddisabled "$1" "$2"
 		return
 	fi
 	t=`valueof "static_$s"`
 	if [ "$1" = "xs" -a -n "$t" -a "$t" != "0" ]; then
-		msg "\tstatic $2"
+		msg "    static $2"
 		static_ext="$static_ext$2 "
 	elif [ "$1" = "xs" -a -n "$allstatic" ]; then
-		msg "\tstatic $2"
+		msg "    static $2"
 		static_ext="$static_ext$2 "
 	elif [ "$1" = "xs" ]; then
-		msg "\tdynamic $2"
+		msg "    dynamic $2"
 		dynamic_ext="$dynamic_ext$2 "
 	else 
-		msg "\tnon-xs $2"
+		msg "    non-xs $2"
 		nonxs_ext="$nonxs_ext$2 "
 	fi
 }
@@ -69,7 +69,7 @@ extonlyif() {
 		return
 	else
 		log "pre-disabling $s"
-		msg "\tpre-disabling $s"
+		msg "    pre-disabling $s"
 		eval "disable_$s=1"
 	fi
 

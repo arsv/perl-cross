@@ -65,7 +65,8 @@ if [ -z "$cleanonly" ]; then
 
 	test -n "$config" || die "Can't generate don't-know-what (no \$config set)"
 	msg "Generating $config"
-	echo -ne "#!/bin/sh\n\n" > $config
+	echo "#!/bin/sh" > $config
+	echo >> $config
 else 
 	# clean up the environment
 

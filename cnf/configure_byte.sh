@@ -12,11 +12,11 @@ byteorder() {
 		try_add "$uvtype foo = 0x44332211;"
 	elif [ -n "$uvsize" ]; then
 		result "unknown"
-		msg "\tcan't check byte order with uvsize=$uvsize"
+		msg "    can't check byte order with uvsize=$uvsize"
 		exit 1
 	else
 		result "unknown"
-		msg "\tcan't check byte order without known uvsize"
+		msg "    can't check byte order without known uvsize"
 		exit 1
 	fi
 
@@ -28,9 +28,9 @@ byteorder() {
 				result "$byteorder"
 				return 0
 			else
-				msg "\tcannot determine byteorder for this target"
-				msg "\tplease supply -Dbyteorder= in the command line"
-				msg "\tcommon values: 1234 for 32bit little-endian, 4321 for 32bit big-endian"
+				msg "    cannot determine byteorder for this target"
+				msg "    please supply -Dbyteorder= in the command line"
+				msg "    common values: 1234 for 32bit little-endian, 4321 for 32bit big-endian"
 				exit 1
 			fi
 		fi

@@ -67,7 +67,7 @@ hasfuncr() {
 		if [ "$cz" = "yn" -o "$cz" = "ny" ]; then
 			return 0;
 		elif [ "$cz" = 'yy' ]; then
-			msg "\tdouble positive, $w has no declared prototype"
+			msg "    double positive, $w has no declared prototype"
 			break;
 		fi
 	done
@@ -77,13 +77,13 @@ hasfuncr() {
 		# prototypes these functions can have, so it should always
 		# return negative.
 		if hasfuncr_proto "$w" "$i" "V_Z" "$@"; then
-			msg "\tdouble positive, $w has no declared prototype"
+			msg "    double positive, $w has no declared prototype"
 		else
 			return 0
 		fi
 	fi
 	setvar "$D" 'undef'
-	msg "\tassuming $w is unusable"
+	msg "    assuming $w is unusable"
 	return 1
 }
 

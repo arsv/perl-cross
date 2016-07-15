@@ -94,7 +94,7 @@ typeorfallback() {
 		_sym=`symbolname "$t"`
 		_def=`valueof "d_$_sym"`
 		_size=`valueof "${_sym}size"`
-		log "\tsym=$_sym def=$_def size=$_size"
+		log "    sym=$_sym def=$_def size=$_size"
 		if [ "$_def" = 'define' ]; then
 			setvar "${_dst}type" "$t"
 			setvar "${_dst}size" "$_size"	
