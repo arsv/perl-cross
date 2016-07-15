@@ -4,7 +4,7 @@
 # for recursive search etc.
 extdir() {
 	for i in $1/*; do
-		L=`basename "$i" | sed -e 's!.*-!!'`
+		L=`echo ${i##*/} | sed -e 's!.*-!!'`
 		if [ "$L" = "DynaLoader" ]; then
 			# do nothing, it's DynaLoader
 			true

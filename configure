@@ -1,11 +1,8 @@
 #!/bin/sh
 
-root=`dirname "$0"`
+earlydie() { echo "$@" >&2; exit 1; }
 
-earlydie() {
-	echo "$@" >&2
-	exit 1
-}
+root=${0%/*}; test -z "$root" && root=. # dirname($0)
 
 test -f "$root/MANIFEST" || earlydie "Can't find MANIFEST, perl-cross is not deployed properly."
 
@@ -18,7 +15,7 @@ if [ -n "$root" -a "$root" != "." -a ! -f "MANIFEST" ]; then
 
 	# perl distribution files are all listed in MANIFEST
 	cat "$root/MANIFEST" | sed -e 's/\s.*//' | while read i; do
-		d=`dirname "$i"`
+		d=${i%/*}; test -z "$d" && d=. # dirname($i)
 		mkdir -p "$d"
 		test "$d" != "." && u=`echo "$d" | sed -e 's![^/]\+!..!g' -e 's!$!/!'` || u=''
 		test -n "$abs" && relroot="$root" || relroot="$u$root"
@@ -41,7 +38,7 @@ if [ -n "$root" -a "$root" != "." -a ! -f "MANIFEST" ]; then
 	# to store locks there
 	mkdir cnf
 	for i in "$root/cnf/"*; do
-		bn=`basename "$i"`
+		bn=${i##*/}
 		test -n "$abs" && rel="" || rel="../"
 		test "$bn" != 'diffs' && ln -s "$rel$i" "cnf/$bn"
 	done

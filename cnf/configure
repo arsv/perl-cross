@@ -1,6 +1,6 @@
 #!/bin/sh
 
-base=`dirname "$0"`
+base=${0%/*}; test -z "$base" && base=.
 
 config='config.bad'
 cfglog_base="config.log"
