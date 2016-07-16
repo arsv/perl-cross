@@ -1,7 +1,7 @@
 # Check availability of some types, and possibly their size
 
-# hastype name 'includes'
-hastype() {
+# checktype name 'includes'
+checktype() {
 	_typename=`symbolname "$1"`
 	
 	mstart "Checking type $1"
@@ -62,44 +62,44 @@ typesize() {
 	result "$result $_bytes"
 }
 
-check typesize 'char'
-check typesize 'short'
-check typesize 'int'
-check typesize 'long'
-check typesize 'double'
-check typesize 'long double'
-check typesize 'long long'
-check typesize 'void*'
-check typesize int64_t 'stdint.h'
-check typesize int32_t 'stdint.h'
-check typesize int16_t 'stdint.h'
-check typesize int8_t 'stdint.h'
+typesize 'char'
+typesize 'short'
+typesize 'int'
+typesize 'long'
+typesize 'double'
+typesize 'long double'
+typesize 'long long'
+typesize 'void*'
+typesize int64_t 'stdint.h'
+typesize int32_t 'stdint.h'
+typesize int16_t 'stdint.h'
+typesize int8_t 'stdint.h'
 
-check typesize 'off_t' sys/types.h
-check typesize 'size_t' sys/types.h
-check typesize 'ssize_t' sys/types.h
-check typesize 'uid_t' sys/types.h
-check typesize 'gid_t' sys/types.h
-check typesize 'fpos_t' stdio.h sys/types.h
+typesize 'off_t' sys/types.h
+typesize 'size_t' sys/types.h
+typesize 'ssize_t' sys/types.h
+typesize 'uid_t' sys/types.h
+typesize 'gid_t' sys/types.h
+typesize 'fpos_t' stdio.h sys/types.h
 failpoint
 
-check hastype 'time_t' time.h
-check hastype 'clock_t' 'sys/times.h'
-check hastype 'fd_set' 'sys/types.h' 
-check hastype 'fpos64_t' 'stdio.h'
-check hastype 'off64_t' 'sys/types.h'
-check hastype 'ptrdiff_t' 'stddef.h'
-check hastype 'struct cmsghdr' 'netinet/in.h'
-check hastype 'struct fs_data' 'sys/vfs.h'
-check hastype 'struct msghdr' 'sys/types.h sys/socket.h sys/uio.h'
-check hastype 'struct statfs' 'sys/types.h sys/param.h sys/mount.h sys/vfs.h sys/statfs.h'
-check hastype 'union semun' 'sys/types.h sys/ipc.h sys/sem.h'
-check hastype 'socklen_t' 'sys/types.h sys/socket.h'
+checktype 'time_t' time.h
+checktype 'clock_t' 'sys/times.h'
+checktype 'fd_set' 'sys/types.h' 
+checktype 'fpos64_t' 'stdio.h'
+checktype 'off64_t' 'sys/types.h'
+checktype 'ptrdiff_t' 'stddef.h'
+checktype 'struct cmsghdr' 'netinet/in.h'
+checktype 'struct fs_data' 'sys/vfs.h'
+checktype 'struct msghdr' 'sys/types.h sys/socket.h sys/uio.h'
+checktype 'struct statfs' 'sys/types.h sys/param.h sys/mount.h sys/vfs.h sys/statfs.h'
+checktype 'union semun' 'sys/types.h sys/ipc.h sys/sem.h'
+checktype 'socklen_t' 'sys/types.h sys/socket.h'
 
 # These checks are simplified compared to what Configure does.
-check hastype 'ip_mreq' 'sys/types.h sys/socket.h netinet/in.h'
-check hastype 'ip_mreq_source' 'sys/types.h sys/socket.h netinet/in.h'
-check hastype 'ipv6_mreq' 'sys/types.h sys/socket.h netinet/in.h'
-check hastype 'ipv6_mreq_source' 'sys/types.h sys/socket.h netinet/in.h'
+checktype 'ip_mreq' 'sys/types.h sys/socket.h netinet/in.h'
+checktype 'ip_mreq_source' 'sys/types.h sys/socket.h netinet/in.h'
+checktype 'ipv6_mreq' 'sys/types.h sys/socket.h netinet/in.h'
+checktype 'ipv6_mreq_source' 'sys/types.h sys/socket.h netinet/in.h'
 
-check hastype 'bool' 'stdio.h stdbool.h'
+checktype 'bool' 'stdio.h stdbool.h'

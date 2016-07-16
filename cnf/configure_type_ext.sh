@@ -1,7 +1,7 @@
 # Check whether structure X has field Y.
 
-# hasfield name struct field 'includes'
-hasfield() {
+# checkfield name struct field 'includes'
+checkfield() {
 	mstart "Checking whether $2 has $3"
 	ifhintdefined "$1" 'yes' 'no' && return 0
 	
@@ -24,27 +24,27 @@ hasfield() {
 	fi
 }
 
-check hasfield d_statfs_f_flags 'struct statfs' f_flags sys/vfs.h
-check hasfield d_tm_tm_zone 'struct tm' tm_zone time.h
-check hasfield d_tm_tm_gmtoff 'struct tm' tm_gmtoff time.h
-check hasfield d_pwquota 'struct passwd' pw_quota pwd.h
-check hasfield d_pwage 'struct passwd' pw_age pwd.h
-check hasfield d_pwchange 'struct passwd' pw_change pwd.h
-check hasfield d_pwclass 'struct passwd' pw_class pwd.h
-check hasfield d_pwexpire 'struct passwd' pw_expire pwd.h
-check hasfield d_pwcomment 'struct passwd' pw_comment pwd.h
-check hasfield d_pwgecos 'struct passwd' pw_gecos pwd.h
-check hasfield d_pwpasswd 'struct passwd' pw_passwd pwd.h
-check hasfield d_statblks 'struct stat' st_blocks 'sys/types.h sys/stat.h'
-check hasfield d_dirnamlen 'struct dirent' d_namelen 'sys/types.h'
-check hasfield d_grpasswd 'struct group' gr_passwd grp.h
-check hasfield d_sockaddr_sa_len 'struct sockaddr' sa_len 'sys/types.h sys/socket.h'
-check hasfield d_sin6_scope_id 'struct sockaddr_in6' sin6_scope_id 'sys/types.h sys/socket.h netinet/in.h'
+checkfield d_statfs_f_flags 'struct statfs' f_flags sys/vfs.h
+checkfield d_tm_tm_zone 'struct tm' tm_zone time.h
+checkfield d_tm_tm_gmtoff 'struct tm' tm_gmtoff time.h
+checkfield d_pwquota 'struct passwd' pw_quota pwd.h
+checkfield d_pwage 'struct passwd' pw_age pwd.h
+checkfield d_pwchange 'struct passwd' pw_change pwd.h
+checkfield d_pwclass 'struct passwd' pw_class pwd.h
+checkfield d_pwexpire 'struct passwd' pw_expire pwd.h
+checkfield d_pwcomment 'struct passwd' pw_comment pwd.h
+checkfield d_pwgecos 'struct passwd' pw_gecos pwd.h
+checkfield d_pwpasswd 'struct passwd' pw_passwd pwd.h
+checkfield d_statblks 'struct stat' st_blocks 'sys/types.h sys/stat.h'
+checkfield d_dirnamlen 'struct dirent' d_namelen 'sys/types.h'
+checkfield d_grpasswd 'struct group' gr_passwd grp.h
+checkfield d_sockaddr_sa_len 'struct sockaddr' sa_len 'sys/types.h sys/socket.h'
+checkfield d_sin6_scope_id 'struct sockaddr_in6' sin6_scope_id 'sys/types.h sys/socket.h netinet/in.h'
 
-check hasfield d_siginfo_si_errno 'struct siginfo' si_errno 'signal.h'
-check hasfield d_siginfo_si_pid 'struct siginfo' si_pid 'signal.h'
-check hasfield d_siginfo_si_uid 'struct siginfo' si_uid 'signal.h'
-check hasfield d_siginfo_si_addr 'struct siginfo' si_addr 'signal.h'
-check hasfield d_siginfo_si_band 'struct siginfo' si_band 'signal.h'
-check hasfield d_siginfo_si_value 'struct siginfo' si_value 'signal.h'
-check hasfield d_siginfo_si_fd 'struct siginfo' si_fd 'signal.h'
+checkfield d_siginfo_si_errno 'struct siginfo' si_errno 'signal.h'
+checkfield d_siginfo_si_pid 'struct siginfo' si_pid 'signal.h'
+checkfield d_siginfo_si_uid 'struct siginfo' si_uid 'signal.h'
+checkfield d_siginfo_si_addr 'struct siginfo' si_addr 'signal.h'
+checkfield d_siginfo_si_band 'struct siginfo' si_band 'signal.h'
+checkfield d_siginfo_si_value 'struct siginfo' si_value 'signal.h'
+checkfield d_siginfo_si_fd 'struct siginfo' si_fd 'signal.h'

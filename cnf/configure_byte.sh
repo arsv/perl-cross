@@ -40,4 +40,4 @@ byteorder() {
 	exit 1
 }
 
-check byteorder
+byteorder

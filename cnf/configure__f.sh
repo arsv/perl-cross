@@ -125,11 +125,6 @@ setvardefault() {
 	fi
 }
 
-# Was more meaningful in the past, but now just a stub.
-check() {
-	"$@"
-}
-
 not() { if "$@"; then false; else true; fi; }
 
 require() {
