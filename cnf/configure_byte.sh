@@ -1,9 +1,7 @@
 # Target byte order check
 
-byteorder() {
-	mstart "Guessing byte order"
-	ifhint 'byteorder' && return 0
-
+mstart "Guessing byte order"
+if nothinted 'byteorder'; then
 	try_start
 	try_includes "sys/types.h"
 	if [ "$uvsize" = 8 ]; then
@@ -12,32 +10,29 @@ byteorder() {
 		try_add "$uvtype foo = 0x44332211;"
 	elif [ -n "$uvsize" ]; then
 		result "unknown"
-		msg "    can't check byte order with uvsize=$uvsize"
-		exit 1
+		fail "Cannot check byte order with uvsize=$uvsize"
 	else
 		result "unknown"
-		msg "    can't check byte order without known uvsize"
-		exit 1
+		fail "Cannot check byte order without known uvsize"
 	fi
 
-	if try_compile; then
-		# Most targets use .data but PowerPC has .sdata instead
-		if try_objdump -j .data -j .sdata -s; then
-			byteorder=`grep '11' try.out | grep '44' | sed -e 's/  .*//' -e 's/[^1-8]//g' -e 's/\([1-8]\)\1/\1/g'`
-			if [ -n "$byteorder" ]; then
-				result "$byteorder"
-				return 0
-			else
-				msg "    cannot determine byteorder for this target"
-				msg "    please supply -Dbyteorder= in the command line"
-				msg "    common values: 1234 for 32bit little-endian, 4321 for 32bit big-endian"
-				exit 1
-			fi
-		fi
+	failpoint
+
+	# Most targets use .data but PowerPC has .sdata instead
+	if try_compile && try_objdump -j .data -j .sdata -s; then
+		byteorder=`grep '11' try.out | grep '44' | sed -e 's/  .*//' -e 's/[^1-8]//g' -e 's/\([1-8]\)\1/\1/g'`
+	else
+		byteorder=''
 	fi
 
-	result 'unknown'
-	exit 1
-}
+	if [ -n "$byteorder" ]; then
+		result "$byteorder"
+	else
+		result "unknown"
+		fail "Cannot determine byteorder for this target,"
+		msg "please supply -Dbyteorder= in the command line."
+		msg "Common values: 1234 for 32bit little-endian, 4321 for 32bit big-endian."
+	fi
 
-byteorder
+	failpoint
+fi
