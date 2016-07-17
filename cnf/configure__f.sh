@@ -245,12 +245,6 @@ bytes() { test "$1" = 1 && echo "byte" || echo "bytes"; }
 
 valueof() { eval echo "\"\$$1\""; }
 
-# $1=$$2
-pullval() {
-	log "Setting $1 from $2"
-	eval "$1=\"\$$2\""
-}
-
 ifhint() {
 	h=`valueof "$1"`
 	x=`valueof "x_$1"`
