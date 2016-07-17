@@ -3,7 +3,7 @@
 # It should forcibly set cc & Co. to some non-cross values.
 # Note: this is *not* tested, and probably can't be.
 
-setvardefault() {
+setvareither() {
 	if [ -n "$2" ]; then
 		setvar "$1" "$2"
 	else
@@ -22,17 +22,17 @@ default_tnat() {
 
 }
 
-setvardefault 'cc' "$target_cc" 'cc'
-setvardefault 'cpp' "$target_cpp" "$cc -E"
-setvardefault 'ld' "$target_ld" 'ld'
-setvardefault 'ar' "$target_ar" 'ar'
-setvardefault 'objdump' "$target_objdump" 'objdump'
-setvardefault 'ranlib' "$target_ranlib" 'ranlib'
+setvareither 'cc' "$target_cc" 'cc'
+setvareither 'cpp' "$target_cpp" "$cc -E"
+setvareither 'ld' "$target_ld" 'ld'
+setvareither 'ar' "$target_ar" 'ar'
+setvareither 'objdump' "$target_objdump" 'objdump'
+setvareither 'ranlib' "$target_ranlib" 'ranlib'
 
 setvar 'cpprun' "$cpp"
 setvar 'cppstdin' "$cpp"
 
-setvardefault installprefix "$target_installprefix" ''
+setvareither installprefix "$target_installprefix" ''
 
 default_tnat html1dir
 default_tnat html3dir
