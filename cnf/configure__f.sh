@@ -276,12 +276,6 @@ ifhintsilent() {
 	fi
 }
 
-# just an alias for the above functions, to avoid awkward
-# lines like "if ifhint"
-hinted() {
-	ifhint "$@"
-}
-
 ifhintdefined() {
 	h=`valueof "$1"`
 	x=`valueof "x_$1"`

@@ -139,7 +139,7 @@ fi
 # Signedness of uvtype doesn't generally matter, except when it's long double vs 64bit int.
 # However, uvtype should always be unsigned, and the code above makes sure it is.
 mstart "Guessing nv_preserves_uv_bits value"
-if not hinted "nv_preserves_uv_bits"; then
+if nothinted "nv_preserves_uv_bits"; then
 	case "$nvsize:$uvsize" in
 		4:*)
 			setvar nv_preserves_uv_bits 16
@@ -165,7 +165,7 @@ if not hinted "nv_preserves_uv_bits"; then
 fi
 
 mstart "Deciding whether nv preserves full uv"
-if not hinted "d_nv_preserves_uv"; then
+if nothinted "d_nv_preserves_uv"; then
 	test $nv_preserves_uv_bits -gt 0 -a $((8*uvsiz)) = $nv_preserves_uv_bits
 	resdef "apparently so" "probably no" d_nv_preserves_uv
 fi
@@ -173,7 +173,7 @@ fi
 # nv_overflows_integers_at is a property of nvtype alone, it doesn't depend on uvtype at all.
 # Assuming IEEE 754 floats here once again.
 mstart "Checking integer capacity of nv"
-if not hinted "nv_overflows_integers_at"; then
+if nothinted "nv_overflows_integers_at"; then
 	case "$nvsize" in
 		10)	setvar nv_overflows_integers_at '256.0*256.0*256.0*256.0*256.0*256.0*256.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0'
 			result "long double"

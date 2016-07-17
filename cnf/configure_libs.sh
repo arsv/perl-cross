@@ -16,7 +16,7 @@ if [ "$usedl" = 'undef' -a -z "$allstatic" ]; then
 fi
 
 mstart "Checking which libraries are available"
-if not hinted 'libs'; then
+if nothinted 'libs'; then
 	require 'cc'
 	try_start
 	try_add "int main(void) { return 0; }"
@@ -41,7 +41,7 @@ else
 fi
 
 mstart "Checking which libs to use for perl"
-if not hinted 'perllibs'; then
+if nothinted 'perllibs'; then
 	# $libs lists available libs; $perllibs lists libs that the perl executable
 	# should be linked with.
 	# The whole idea is wrong, wrong, wrong, but it's tied to MakeMaker.
@@ -70,7 +70,7 @@ if [ "$soname" = "define" -o "$usesoname" = "define" ]; then
 fi
 
 mstart "Deciding how to name libperl"
-if not hinted libperl; then
+if nothinted libperl; then
 	if [ -n "$soname" ]; then
 		setvar libperl "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION.$PERL_API_SUBVERSION"
 		setvar "useshrplib" 'true'

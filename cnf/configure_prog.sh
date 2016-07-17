@@ -64,7 +64,7 @@ failpoint
 
 # some more info on the compiler
 mstart "Checking for GNU cc in disguise and/or its version number"
-if not hinted 'gccversion'; then
+if nothinted 'gccversion'; then
 	try_start
 	try_cat <<END
 #if defined(__GNUC__) && !defined(__INTEL_COMPILER)
@@ -92,7 +92,7 @@ fi
 
 if [ -z "$cctype" ]; then
 	mstart "Trying to guess what kind of compiler \$cc is"
-	if not hinted 'cctype'; then
+	if nothinted 'cctype'; then
 		if $cc -V >try.out 2>&1; then
 			_cl=`head -1 try.out`
 		elif $cc --version >try.out 2>&1; then
@@ -133,7 +133,7 @@ if [ -z "$cctype" ]; then
 fi
 
 mstart "Checking whether $cc is a C++ compiler"
-if not hinted 'd_cplusplus'; then
+if nothinted 'd_cplusplus'; then
 	try_start
 	try_cat <<END
 #if defined(__cplusplus)
@@ -157,7 +157,7 @@ END
 fi
 
 mstart "Deciding how to declare external symbols"
-if not hinted "extern_C"; then
+if nothinted "extern_C"; then
 	case "$d_cplusplus" in
 		define)
 			setvar "extern_C" 'extern "C"'
@@ -189,7 +189,7 @@ fi
 # This must be done very early since it affects $ccflags, and thus the compiler behavior
 # including type sizes.
 mstart "Checking whether it's ok to enable large file support"
-if not hinted 'uselargefiles'; then
+if nothinted 'uselargefiles'; then
 	# Adding -D_FILE_OFFSET_BITS is mostly harmless, except
 	# when dealing with uClibc that was compiled w/o largefile
 	# support
@@ -209,7 +209,7 @@ if [ "$uselargefiles" = 'define' ]; then
 	log
 fi
 
-if not hinted 'osname'; then
+if nothinted 'osname'; then
 	log "Android target test"
 	run $cc -v > try.out 2>&1
 	try_dump_out

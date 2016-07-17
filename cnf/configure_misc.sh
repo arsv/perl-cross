@@ -15,7 +15,7 @@ if [ -n "$ldflags" -a "$x_lddlflags" != "user" ]; then
 fi
 
 mstart "Checking whether ld supports scripts"
-if not hinted 'ld_can_script'; then
+if nothinted 'ld_can_script'; then
 	cat > try.c <<EOM
 void foo() {}
 void bar() {}
