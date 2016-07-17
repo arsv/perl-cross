@@ -280,9 +280,9 @@ default ccsymbols
 default ccversion
 default charbits 8
 default charsize 1
-default cf_by unknown
-default cf_email nobody@nowhere.land
-default cf_time "`LC_ALL=C date`"
+default cf_by ''
+default cf_email ''
+default cf_time ''
 default chgrp
 default chmod chmod
 default chown
