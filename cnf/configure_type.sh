@@ -118,6 +118,8 @@ checktype d_ip_mreq 'struct ip_mreq' \
 	'sys/types.h sys/socket.h netinet/in.h'
 checktype d_ip_mreq_source 'struct ip_mreq_source' \
 	'sys/types.h sys/socket.h netinet/in.h'
+checktype d_ipv6_mreq 'struct ipv6_mreq' \
+	'sys/types.h sys/socket.h netinet/in.h'
 
 # For these mainline perl does some guessing like int64_t instead
 # of possibly missing off_t, but we won't do that.
