@@ -30,12 +30,6 @@ msg "	IV will be "$ivtype", $ivsize bytes"
 msg "	UV will be "$uvtype", $uvsize bytes"
 msg "	NV will be "$nvtype", $nvsize bytes"
 
-# Configure checks for "bool" type but uses i_stdbool for the result
-if [ "$i_stdbool" = 'define' -a "$d_bool" != "define" ]; then
-	msg "Disabling <stdbool.h> because bool type wasn't usable"
-	setvar i_stdbool undef
-fi
-
 # The following code may be wrong, but there's no way to
 # tell for sure without running on-target tests.
 # And "undef" as a safe default fails op/range.t on some targets.
