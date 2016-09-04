@@ -1,21 +1,25 @@
 # Check availability of some types, and possibly their size
 
-# checktype name 'includes'
+# useinttype namesym type sizesym size
+useitype() {
+	setvar $1 "$2"
+	setvar $3 "$4"
+}
+
+# checktype symbol type 'includes'
 checktype() {
-	_typename=`symbolname "$1"`
-	
-	mstart "Checking type $1"
-	ifhintdefined "d_${_typename}" 'found' 'missing' && return 0
+	mstart "Checking type $2"
+	ifhintdefined $1 'found' 'missing' && return 0
 
 	try_start
-	try_includes $2
-	try_add "$1 foo;"
+	try_includes $3
+	try_add "$2 foo;"
 	if not try_compile; then
 		result 'missing'
 		return 1
 	fi
 
-	setvar "d_${_typename}" "define"
+	setvar $1 "define"
 	result "found"
 }
 
@@ -23,83 +27,107 @@ checktype() {
 # TODO: add test for readelf usability, and switch
 # to objdump if possible
 
-# typesize name 'includes'
-typesize() {
-	_typename=`symbolname "$1"`
-
-	mstart "Checking size of $1"
-	ifhintsilent "d_${_typename}" && ifhint "${_typename}size" && return 0
+# checksize symbol type 'includes'
+checksize() {
+	mstart "Checking size of $2"
+	ifhint $1 && return 0
 	
-	# Test d_type and typesize separately; this allows hinting typesize
-	# even for types that may be unavailable
 	try_start
-	try_includes $2
-	try_add "$1 foo;"
+	try_includes $3
+	try_add "$2 foo;"
 	if not try_compile; then
 		result 'missing'
 		return 1
 	fi
-	setvar "d_${_typename}" "define"
-
-	# Avoid running fragile typesize test unless really necessary
-	ifhint "${_typename}size" && return 0
 
 	if not try_readelf -s > try.out 2>>$cfglog; then
 		result 'unknown'
-		fail "Can't determine sizeof($_typename), use -D{$_typename}size="
+		fail "Cannot determine sizeof($2), use -D${1}size="
 		return 1
 	fi
 
 	result=`grep foo try.out | sed -r -e 's/.*: [0-9]+ +//' -e 's/ .*//'`
 	if [ -z "$result" -o "$result" -le 0 ]; then
 		result "unknown"
-		fail "Can't determine sizeof($_typename)"
+		fail "Cannot determine sizeof($2)"
 		return 1
 	fi
 
-	setvar "${_typename}size" "$result"
-	_bytes=`bytes "$result"`
-	result "$result $_bytes"
+	setvar $1 "$result"
+	result $result\ `bytes $result`
 }
 
-typesize 'char'
-typesize 'short'
-typesize 'int'
-typesize 'long'
-typesize 'double'
-typesize 'long double'
-typesize 'long long'
-typesize 'void*'
-typesize int64_t 'stdint.h'
-typesize int32_t 'stdint.h'
-typesize int16_t 'stdint.h'
-typesize int8_t 'stdint.h'
+# usetypesize typesym sizesym type 'includes'
+usetypesize() {
+	mstart "Checking $1"
+	if nothinted $1; then
+		result "$3"
+		setvar $1 $3
+		checksize $2 $3 "$4"
+	else
+		checksize $2 "`valueof $1`" "$4"
+	fi
+}
 
-typesize 'off_t' sys/types.h
-typesize 'size_t' sys/types.h
-typesize 'ssize_t' sys/types.h
-typesize 'uid_t' sys/types.h
-typesize 'gid_t' sys/types.h
-typesize 'fpos_t' stdio.h sys/types.h
+# Mainline perl Configure implements/-ed a kind of crude stdint.h
+# replacement in case the header is not available. No point in hinting
+# any of these either.
+
+test "$i_stdint" = 'define' || fail "Cannot proceed without <stdint.h>"
 failpoint
 
-checktype 'time_t' time.h
-checktype 'clock_t' 'sys/times.h'
-checktype 'fd_set' 'sys/types.h' 
-checktype 'fpos64_t' 'stdio.h'
-checktype 'off64_t' 'sys/types.h'
-checktype 'ptrdiff_t' 'stddef.h'
-checktype 'struct cmsghdr' 'netinet/in.h'
-checktype 'struct fs_data' 'sys/vfs.h'
-checktype 'struct msghdr' 'sys/types.h sys/socket.h sys/uio.h'
-checktype 'struct statfs' 'sys/types.h sys/param.h sys/mount.h sys/vfs.h sys/statfs.h'
-checktype 'union semun' 'sys/types.h sys/ipc.h sys/sem.h'
-checktype 'socklen_t' 'sys/types.h sys/socket.h'
+useitype  u8type  uint8_t  u8size 1
+useitype u16type uint16_t u16size 2
+useitype u32type uint32_t u32size 4
+useitype u64type uint64_t u64size 8
+
+useitype  i8type  int8_t  i8size 1
+useitype i16type int16_t i16size 2
+useitype i32type int32_t i32size 4
+useitype i64type int64_t i64size 8
+
+setvar d_quad define
+setvar quadtype int64_t
+setvar uquadtype uint64_t
+setvar quadkind QUAD_IS_INT64_t
+
+checksize charsize 'char'
+checksize shortsize 'short'
+checksize intsize 'int'
+checksize longsize 'long'
+checksize doublesize 'double'
+checksize longlongsize 'long long'
+checksize longdblsize 'long double'
+checksize ptrsize 'void*'
+
+checktype d_fd_set 'fd_set' 'sys/types.h'
+checktype d_fpos64_t 'fpos64_t' 'stdio.h'
+checktype d_off64_t 'off64_t' 'sys/types.h'
+checktype d_ptrdiff_t 'ptrdiff_t' 'stddef.h'
+checktype d_cmsghdr_s 'struct cmsghdr' 'netinet/in.h'
+checktype d_fs_data_s 'struct fs_data' 'sys/vfs.h'
+checktype d_msghdr_s 'struct msghdr' 'sys/types.h sys/socket.h sys/uio.h'
+checktype d_statfs_s 'struct statfs' \
+	'sys/types.h sys/param.h sys/mount.h sys/vfs.h sys/statfs.h'
+checktype d_union_semun 'union semun' 'sys/types.h sys/ipc.h sys/sem.h'
+checktype d_socklen_t 'socklen_t' 'sys/types.h sys/socket.h'
+checktype d_sockaddr_in6 'struct sockaddr_in6' 'sys/socket.h netinet/in.h'
 
 # These checks are simplified compared to what Configure does.
-checktype 'ip_mreq' 'sys/types.h sys/socket.h netinet/in.h'
-checktype 'ip_mreq_source' 'sys/types.h sys/socket.h netinet/in.h'
-checktype 'ipv6_mreq' 'sys/types.h sys/socket.h netinet/in.h'
-checktype 'ipv6_mreq_source' 'sys/types.h sys/socket.h netinet/in.h'
+checktype d_ip_mreq 'struct ip_mreq' \
+	'sys/types.h sys/socket.h netinet/in.h'
+checktype d_ip_mreq_source 'struct ip_mreq_source' \
+	'sys/types.h sys/socket.h netinet/in.h'
 
-checktype 'bool' 'stdio.h stdbool.h'
+# For these mainline perl does some guessing like int64_t instead
+# of possibly missing off_t, but we won't do that.
+# We do still need to check type sizes.
+
+usetypesize sizetype sizesize 'size_t' 'sys/types.h'
+usetypesize fpostype fpossize 'fpos_t' 'stdio.h sys/types.h'
+usetypesize lseektype lseeksize 'off_t' 'unistd.h'
+usetypesize uidtype uidsize 'uid_t' 'sys/types.h'
+usetypesize gidtype gidsize 'gid_t' 'sys/types.h'
+usetypesize timetype timesize 'time_t' 'sys/types.h'
+setvar ssizetype 'ssize_t'
+setvar uidsign '1'
