@@ -461,6 +461,7 @@ default d_fsync undef
 default d_ftello undef
 default d_ftime undef
 default d_futimes undef
+default d_gai_strerror undef
 default d_gdbm_ndbm_h_uses_prototypes define
 default d_gdbm_ndbm_h_uses_prototypes undef
 default d_gdbmndbm_h_uses_prototypes define
@@ -661,6 +662,7 @@ default d_pwpasswd undef
 default d_pwquota undef
 default d_qgcvt undef
 default d_quad undef
+default d_querylocale undef
 default d_random_r undef
 default d_readdir undef
 default d_readdir64_r undef
@@ -770,6 +772,7 @@ default d_strcoll undef
 default d_strctcpy define
 default d_strerrm 'strerror(e)'
 default d_strerror undef
+default d_strerror_l undef
 default d_strerror_r undef
 default d_strftime undef
 default d_strlcat undef

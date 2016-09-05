@@ -211,6 +211,7 @@ checkfunc pthread_atfork
 checkfunc pthread_attr_setscope
 checkfunc pthread_yield
 checkfunc prctl
+checkfunc querylocale
 checkfunc rand
 checkfunc random
 checkfunc re_comp
