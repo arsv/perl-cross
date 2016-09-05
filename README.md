@@ -1,26 +1,29 @@
-**perl-cross** provides alternative configure script, top-level Makefile
-as well as some auxiliary files for [perl](http://www.perl.org),
-with the primary emphasis on cross-compiling the source.
+**perl-cross** provides configure script, top-level Makefile
+and some auxiliary files for [perl](http://www.perl.org),  
+with the primary emphasis on cross-compiling the source.  
 
+    # Get perl and perl-cross sources
+    curl -L -O http://www.cpan.org/src/5.0/perl-5.24.0.tar.gz
+    curl -L -o perl-cross.tar.gz https://github.com/arsv/perl-cross/archive/master.tar.gz
 
-## Download
+    # Unpack perl-cross over perl, overwriting Makefile
+    tar -zxf perl-5.24.0.tar.gz
+    cd perl-5.24.0
+    tar --strip-components=1 -zxf ../perl-cross.tar.gz
 
-Since version 0.9, downloads are available on the github
-[releases](https://github.com/arsv/perl-cross/releases) page.
+    # Proceed as usual with most autoconfed packages
+    ./configure --target=arm-linux-gnueabi --prefix=/usr -Duseshrplib
+    make -j4
+    make DESTDIR=/path/to/staging/dir install
 
-For older releases check the [releases](https://github.com/arsv/perl-cross/tree/releases) branch.
+Unlike mainline Perl, this configure never runs any target executables,  
+relying solely on compile/link tests and pre-defined hints.  
+On the flip side, it is only meant to run on resonably sane modern unix systems.  
 
-Alternatively, clone the git tree and run 0pack.sh to get a usable tarball.
-
-## Usage
-
-Check [project pages](http://arsv.github.io/perl-cross/).
-
-In particular, [configure usage](http://arsv.github.io/perl-cross/usage.html) page
+Check [project pages](http://arsv.github.io/perl-cross/) for more info.  
+In particular, [configure usage](http://arsv.github.io/perl-cross/usage.html)
 lists available configure options.
 
-## Licensing
-
-perl-cross is a free software licensed under the same terms
-as the original perl source.
+Perl-cross is a free software licensed under the same terms
+as the original perl source.  
 See LICENSE, Copying and Artistic files.
