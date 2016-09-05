@@ -179,8 +179,7 @@ try_dump_h() {
 
 try_preproc() {
 	require 'cpp'
-	#try_dump
-	run $cpp $ccflags try.c > try.out 2>> $cfglog
+	run $cc $ccflags -E -P try.c > try.out 2>> $cfglog
 }
 
 try_compile() {
