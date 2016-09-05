@@ -45,7 +45,7 @@ disabled_ext_makefiles = $(pathsubst %,%/Makefile,$(disabled_ext))
 # Note: the files are patched in-place, and so do not make valid make-rules
 # Because of this, they are only applied loosely, allowing the user to intervene
 # if need be.
-CROSSPATCHES = $(shell find cnf/diffs -name '*.patch')
+CROSSPATCHES = $(shell find cnf/diffs/$(patchset) -name '*.patch')
 CROSSPATCHED = $(patsubst %.patch,%.applied,$(CROSSPATCHES))
 
 crosspatch: $(CROSSPATCHED)
