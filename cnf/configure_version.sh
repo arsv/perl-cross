@@ -48,3 +48,17 @@ setvar PERL_API_REVISION $api_revision
 setvar PERL_API_VERSION $api_version
 setvar PERL_API_SUBVERSION $api_subversion
 setvar api_versionstring "$api_revision.$api_version.$api_subversion"
+
+# Detect cperl to apply cperl-specific settings, here and in other files as well
+# Note $base points to cnf/ not the top-level source dir.
+
+mstart "Checking perl variant"
+if [ -f $base/../pod/perlcperl.pod ]; then
+	setvaru usecperl define '' # force this into config.sh
+	setvar package 'cperl'
+	setvar perlname 'cperl'
+	setvar spackage 'cPerl'
+	result "cperl"
+else
+	result "mainline"
+fi

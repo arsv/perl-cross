@@ -79,12 +79,13 @@ fi
 
 required archname
 default package perl5
+default perlname perl
 default version "$PERL_REVISION.$PERL_VERSION.$PERL_SUBVERSION"
 
 default prefix "/usr"
 default sharedir "$prefix/share"
-default html1dir "$sharedir/doc/perl/html"
-default html3dir "$sharedir/doc/perl/html"
+default html1dir "$sharedir/doc/$perlname/html"
+default html3dir "$sharedir/doc/$perlname/html"
 default man1dir "$sharedir/man/man1"
 default man1ext "1"
 default man3dir "$sharedir/man/man3"
@@ -96,7 +97,7 @@ default otherlibdirs ' '
 default libsdirs ' '
 default privlib "$prefix/lib/$package/$version"
 default archlib "$prefix/lib/$package/$version/$archname"
-default perlpath "$prefix/bin/perl"
+default perlpath "$prefix/bin/$perlname"
 
 default sitebin	"$prefix/bin"
 default sitelib_stem "$prefix/lib/$package/site_perl"

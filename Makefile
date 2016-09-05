@@ -24,6 +24,9 @@ obj += sv$o pp$o scope$o pp_ctl$o pp_sys$o doop$o doio$o regexec$o utf8$o
 obj += taint$o deb$o universal$o globals$o perlio$o perlapi$o numeric$o
 obj += mathoms$o locale$o pp_pack$o pp_sort$o keywords$o caretx$o time64$o
 
+obj-cperl += pp_type$o xsutils$o
+obj += $(obj-$(package))
+
 static_tgt = $(patsubst %,%/pm_to_blib,$(static_ext))
 dynamic_tgt = $(patsubst %,%/pm_to_blib,$(dynamic_ext))
 nonxs_tgt = $(patsubst %,%/pm_to_blib,$(nonxs_ext))
@@ -278,10 +281,12 @@ $(UNICOPY):
 	mkdir -p $@
 
 # The following rules ensure that modules listed in mkppport.lst get
-# their ppport.h installed
+# their ppport.h installed.
 mkppport_lst = $(shell cat mkppport.lst | grep '^[a-z]')
 
 $(patsubst %,%/pm_to_blib,$(mkppport_lst)): %/pm_to_blib: %/ppport.h
+# This one does not fit the above pattern
+cpan/YAML-LibYAML/pm_to_blib: cpan/YAML-LibYAML/LibYAML/ppport.h
 # Having %/ppport.h here isn't a very good idea since the initial ppport.h matches
 # the pattern too
 $(patsubst %,%/ppport.h,$(mkppport_lst)): cpan/Devel-PPPort/ppport.h
@@ -341,7 +346,14 @@ modules.list: $(CONFIGPM) $(MODLISTS) cflags
 	./modconfig_all
 
 # ---[ pods ]-------------------------------------------------------------------
-perltoc_pod_prereqs = extra.pods pod/perl$(perlversion)delta.pod pod/perlapi.pod pod/perlintern.pod pod/perlmodlib.pod pod/perluniprops.pod
+perltoc_pod_prereqs_cperl = pod/perl$(perlversion)cdelta.pod
+perltoc_pod_prereqs = extra.pods \
+	pod/perlapi.pod \
+	pod/perlintern.pod \
+	pod/perlmodlib.pod \
+	pod/perluniprops.pod \
+	pod/perl$(perlversion)delta.pod \
+	$(perltoc_pod_prereqs_$(package))
 
 pods: pod/perltoc.pod
 
@@ -358,6 +370,9 @@ pod/perlmodlib.pod: pod/perlmodlib.PL MANIFEST | miniperl$X
 
 pod/perl$(perlversion)delta.pod: pod/perldelta.pod
 	ln -sf perldelta.pod pod/perl$(perlversion)delta.pod
+
+pod/perl$(perlversion)cdelta.pod: pod/perlcdelta.pod
+	ln -sf perlcdelta.pod pod/perl$(perlversion)cdelta.pod
 
 extra.pods: | miniperl$X
 	-@test ! -f extra.pods || rm -f `cat extra.pods`
