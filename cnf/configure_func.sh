@@ -104,9 +104,9 @@ checkfunc flock "0,0" 'unistd.h sys/file.h'
 checkfunc fork "" 'unistd.h'
 checkfunc fp_class
 checkfunc fpathconf "0,0" 'unistd.h'
-checkfunc fpclass
-checkfunc fpclassify
-checkfunc fpclassl
+checkfunc fpclass "1.0" 'math.h ieeefp.h'
+checkfunc fpclassify "1.0" 'math.h'
+checkfunc fpclassl "1.0" 'math.h ieeefp.h'
 checkfunc frexpl '0,NULL' 'stdlib.h math.h'
 checkfunc fseeko 'NULL,0,0'
 checkfunc fsetpos 'NULL,0'

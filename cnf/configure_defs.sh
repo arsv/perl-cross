@@ -38,6 +38,7 @@ if [ "$d_fpclassify" != 'undef' -o "$d_fpclass" != 'undef' ]; then
 	checkdefined FP_SNAN "math.h"
 	checkdefined FP_QNAN "math.h"
 	if [ "$d_fpclassify" != 'undef' ]; then
+		checkdefined FP_NAN "math.h"
 		checkdefined FP_INFINITE "math.h"
 		checkdefined FP_NORMAL "math.h"
 		checkdefined FP_SUBNORMAL "math.h"
