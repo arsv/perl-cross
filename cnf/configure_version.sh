@@ -21,15 +21,9 @@ if [ -r patchlevel.h ]; then
 	msg "	patchlevel=$v"
 	setvar perl_patchlevel "$v"
 else
-	msg "	You do not have patchlevel.h.  Eek."
-	revision=0
-	patchlevel=0
-	subversion=0
-	api_revision=0
-	api_version=0
-	api_subversion=0
-	perl_patchlevel=0
+	die "No patchlevel.h found, aborting"
 fi
+
 # Define a handy string here to avoid duplication in myconfig.SH and configpm.
 version_patchlevel_string="version $patchlevel subversion $subversion"
 if [ "$perl_patchlevel" != '' -a "$perl_patchlevel" != '0' ]; then
@@ -60,5 +54,19 @@ if [ -f $base/../pod/perlcperl.pod ]; then
 	setvar spackage 'cPerl'
 	result "cperl"
 else
+	setvar package 'perl5'
+	setvar perlname 'perl'
+	setvar spackage 'Perl5'
 	result "mainline"
+fi
+
+# Check for patches. Missing patchset indicates unsupported version,
+# and almost certain build failure.
+
+version="$PERL_REVISION.$PERL_VERSION.$PERL_SUBVERSION"
+
+if [ ! -d "$base/diffs/$package-$version" ]; then
+	msg "No patchset found for $package-$version in $base/diffs"
+	msg "This perl version is probably not supported by perl-cross"
+	die "Aborting"
 fi

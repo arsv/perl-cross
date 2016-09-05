@@ -78,8 +78,9 @@ else
 fi
 
 required archname
-default package perl5
-default perlname perl
+required package
+required perlname
+required spackage
 default version "$PERL_REVISION.$PERL_VERSION.$PERL_SUBVERSION"
 
 default prefix "/usr"
@@ -1191,7 +1192,6 @@ default sockethdr
 default socketlib
 default socksizetype socklen_t
 default sort sort
-default spackage Perl5
 default spitshell cat
 default srand48_r_proto 0
 default srandom_r_proto 0
