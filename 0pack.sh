@@ -8,21 +8,22 @@
 # source tree, it's better not to have those files.
 #
 # Berlios versions were packed to match relevant perl directory
-# name, and it worked well. So the idea here is to keep
-# Github-friendly directory structure for Github, and have this
-# script to pack the files into an easily-applicable tarball
-# for deploying.
-#
-# Tar with --xform option support is expected.
+# name, and it worked well at the time.
+# However now with the possibility of supporting several perl versions
+# and cperl, it makes little sense to keep a single perl version
+# in the package name. In most cases, the bundle will be unpacked
+# with --strip-compontents=1 anyway.
 
-PV=5.24.0
+V=1.1
 
-tar -zcf perl-cross.tar.gz\
+tar -zcf perl-cross-$V.tar.gz\
 	--exclude README.md\
 	--exclude LICENSE\
 	--exclude Artistic\
 	--exclude Copying\
 	--exclude 0pack.sh\
 	--exclude perl-cross.tar\
-	--xform "s!^!perl-$PV/!"\
+	--exclude perl-cross\*.tar.gz\
+	--exclude tags\
+	--xform "s!^!perl-cross-$V/!"\
 	*
