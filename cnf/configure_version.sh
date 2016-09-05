@@ -68,5 +68,5 @@ version="$PERL_REVISION.$PERL_VERSION.$PERL_SUBVERSION"
 if [ ! -d "$base/diffs/$package-$version" ]; then
 	msg "No patchset found for $package-$version in $base/diffs"
 	msg "This perl version is probably not supported by perl-cross"
-	die "Aborting"
+	exit 255
 fi
