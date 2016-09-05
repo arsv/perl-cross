@@ -1015,7 +1015,7 @@ default i_values undef
 default i_varargs undef
 default i_varhdr undef
 default i_vfork undef
-default i_xocale undef
+default i_xlocale undef
 default ignore_versioned_solibs
 default inc_version_list
 default inc_version_list_init
