@@ -1325,8 +1325,6 @@ if [ -z "$cleanonly" ]; then
 			putvar "$k" "$v"
 		fi
 	done
-
-	failpoint
 fi
 
 unset -f default

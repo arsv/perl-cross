@@ -60,8 +60,6 @@ fi
 
 setvar 'cpp' "$cc -E"
 
-failpoint
-
 # some more info on the compiler
 mstart "Checking for GNU cc in disguise and/or its version number"
 if nothinted 'gccversion'; then

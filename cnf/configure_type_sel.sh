@@ -95,5 +95,3 @@ if nothinted "nv_overflows_integers_at"; then
 			;;
 	esac
 fi
-
-failpoint

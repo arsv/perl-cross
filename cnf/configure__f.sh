@@ -32,13 +32,7 @@ run() {
 # Let user see the whole bunch of errors instead of stopping on the first
 fail() {
 	echo "ERROR: $*" >& 2
-	fail=1
-}
-
-failpoint() {
-	if [ -n "$fail" ]; then
-		exit 255
-	fi
+	exit 255
 }
 
 mstart() {

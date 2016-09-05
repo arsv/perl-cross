@@ -149,15 +149,12 @@ if [ "$mode" = 'native' -o "$mode" = 'buildmini' -o "$mode" = "target" ]; then
 	. $base/configure_dbug.sh
 	if [ "$usethreads" = 'define' ]; then
 		. $base/configure_thrd.sh
-		failpoint
 	fi
 	. $base/configure_misc.sh
 	if [ "$mode" != "buildmini" ]; then
 		. $base/configure_mods.sh
-		failpoint
 	fi
 	. $base/configure_genc.sh
-	failpoint
 fi
 
 test -f ./config_h.SH || die "Not in perl base directory, aborting"

@@ -74,7 +74,6 @@ usetypesize() {
 # any of these either.
 
 test "$i_stdint" = 'define' || fail "Cannot proceed without <stdint.h>"
-failpoint
 
 useitype  u8type  uint8_t  u8size 1
 useitype u16type uint16_t u16size 2
