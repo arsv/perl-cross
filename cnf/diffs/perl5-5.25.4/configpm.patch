@@ -1,0 +1,30 @@
+In vanilla perl, extensions lists in config.sh contain old-style (5.10 I think)
+module names, like File/DosGlob for a module called File::DosGlob residiing
+in ext/File-DosGlob.
+
+In perl-cross, it's always the exact directory name, ext/File-DosGlob in this case.
+
+--- a/configpm
++++ b/configpm
+@@ -54,9 +54,9 @@
+ # wonderfully easy to instrument, and no longer exists.
+ $Common{$_} = $_ foreach qw(dlext so);
+ 
+-# names of things which may need to have slashes changed to double-colons
++# modules lists -- config.sh uses different format for these
+ my %Extensions = map {($_,$_)}
+-                 qw(dynamic_ext static_ext extensions known_extensions);
++                 qw(dynamic_ext static_ext extensions known_extensions nonxs_ext);
+ 
+ # The plan is that this information is used by ExtUtils::MakeMaker to generate
+ # Makefile dependencies, rather than hardcoding a list, which has become out
+@@ -252,7 +255,8 @@
+     $in_v = $val !~ /$quote\n/;
+     next if $in_v;
+ 
+-    s,/,::,g if $Extensions{$name};
++    $val =~ s,\b(cpan|dist|ext)/,,g if $Extensions{$name};
++    $val =~ s,-,/,g if $Extensions{$name};
+ 
+     $val =~ s/$quote\n?\z//;
+ 
