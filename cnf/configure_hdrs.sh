@@ -3,7 +3,11 @@
 # safe to include this header, i.e., that it won't break compilation.
 
 checkhdr() {
-	_hdrname=`symbolname "$1"`
+	if [ -n "$2" ]; then
+		_hdrname=$2
+	else
+		_hdrname=`symbolname "$1"`
+	fi
 	
 	mstart "Checking whether to include <$1>"
 	ifhintdefined "i_${_hdrname}" 'yes' 'no' && return $__
@@ -48,6 +52,9 @@ checkhdr 'net/errno.h'
 checkhdr 'netdb.h'
 checkhdr 'netinet/in.h'
 checkhdr 'netinet/tcp.h'
+checkhdr 'netinet/ip.h' i_netinet_ip
+checkhdr 'netinet/ip6.h' i_netinet_ip6
+checkhdr 'netinet6/in6.h' i_netinet6_in6
 checkhdr 'nlist.h'
 checkhdr 'poll.h'
 checkhdr 'pwd.h'

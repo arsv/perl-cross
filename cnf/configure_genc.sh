@@ -346,6 +346,7 @@ default d_attribute_nonnull undef
 default d_attribute_noreturn undef
 default d_attribute_pure undef
 default d_attribute_unused undef
+default d_attribute_used undef
 default d_attribute_warn_unused_result undef
 default d_backtrace undef
 default d_bcmp undef
@@ -353,8 +354,11 @@ default d_bcopy undef
 default d_bsd undef
 default d_bsdgetpgrp undef
 default d_bsdsetpgrp undef
+default d_builtin_arith_overflow define
 default d_builtin_choose_expr define
+default d_builtin_ctz define
 default d_builtin_expect undef
+default d_builtin_prefetch define
 default d_bzero undef
 default d_c99_variadic_macros define
 default d_casti32 undef
@@ -556,6 +560,7 @@ default d_ldexpl undef
 default d_lgamma undef
 default d_lgamma_r undef
 default d_libm_lib_version undef
+default d_libname_unique undef
 default d_link undef
 default d_llrint undef
 default d_llrintl undef
@@ -816,6 +821,7 @@ default d_void_closedir undef
 default d_voidsig undef
 default d_voidtty
 default d_volatile undef
+default d_vms_case_sensitive_symbols undef
 default d_vprintf undef
 default d_vsnprintf undef
 default d_wait4 undef
@@ -826,6 +832,7 @@ default d_writev undef
 default d_xenix undef
 default d_wcscmp undef
 default d_wcsxfrm undef
+default dl_so_eq_ext define
 default doublekind -1
 default perl_static_inline static
 default_if_defined usevendorprefix d_vendorarch define undef
@@ -946,6 +953,9 @@ default i_ndbm undef
 default i_netdb undef
 default i_neterrno undef
 default i_netinettcp undef
+default i_netinet_ip undef
+default i_netinet_ip6 undef
+default i_netinet6_in6 undef
 default i_niin undef
 default i_poll undef
 default i_prot undef
@@ -1058,6 +1068,7 @@ default mistrustnm
 default mkdir mkdir
 default mmaptype 'void *'
 default modetype mode_t
+default d_modfl_pow32_bug undef
 default more more
 default multiarch undef
 default mv

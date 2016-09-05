@@ -71,6 +71,11 @@ checkattr 'unused' <<END
 int do_something( int dummy __attribute__((unused)), int n );
 END
 
+checkattr 'used' <<END
+#include <stdio.h>
+int used_somewhere(void) __attribute__((used));
+END
+
 checkattr 'warn_unused_result' <<END
 #include <stdio.h>
 int I_will_not_be_ignored(void) __attribute__((warn_unused_result));
