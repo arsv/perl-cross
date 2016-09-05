@@ -41,7 +41,7 @@ fi
 
 ifprefixed() {
 	val=`echo "$2" | sed -e "s/^$1//"`
-	if [ "$1$val" == "$2" ]; then
+	if [ "$1$val" = "$2" ]; then
 		echo "\$(CROSS)$val"
 	else
 		echo "$2"
@@ -49,7 +49,7 @@ ifprefixed() {
 }
 
 perlversion="$PERL_REVISION$PERL_VERSION$PERL_SUBVERSION"
-if [ "$usedl" == 'undef' ]; then
+if [ "$usedl" = 'undef' ]; then
 	dynaloader=''
 else
 	dynaloader="DynaLoader"
