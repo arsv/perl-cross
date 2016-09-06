@@ -14,17 +14,14 @@ echo -n > "$cfglog"
 
 if [ "$mode" = 'help' ]; then
 	. $base/configure_help.sh
-	exit
-fi
-
-if [ -z "$keeplog" -a "$mode" != 'regen' ]; then
+	exit 0
+elif [ -z "$keeplog" -a "$mode" != 'regen' ]; then
 	cat "$cfglog" > "$cfglog_base"
 else
 	cat "$cfglog" >> "$cfglog_base"
 fi
 rm -f "$cfglog"
 cfglog="$cfglog_base"
-
 
 # Possible modes are: (none), native, cross, buildmini, target
 # Default mode, (none), means -z $mode -a -z $target
@@ -41,19 +38,7 @@ if [ -z "$buildarch" -a "$mode" != "target" ]; then
 	if [ -n "$buildarch" ]; then
 		result "$buildarch"
 	else
-		gccbuild=`gcc -v 2>&1 | grep Target | sed -e 's/Target: *//'`
-		buildarch=`$base/config.sub "$gccbuild" 2>>$cfglog`
-		if [ -n "$gccbuild" ]; then
-			result "$buildarch"
-		else
-			if [ -n "$build" ]; then
-				setvar 'buildarch' "$build"
-			else
-				setvar 'buildarch' 'unknown'
-			fi
-			result "$buildarch"
-			msg "WARNING: Couldn't guess build platform, using '$buildarch'"
-		fi
+		fail "cannot determine build platform"
 	fi
 fi
 # past this point $build/$buildarch are non-empty unless we're in target mode
@@ -80,15 +65,7 @@ if [ -n "$target" -a -z "$targetarch" ]; then
 	if [ -n "$targetarch" ]; then
 		result "$targetarch"
 	else
-		gcctarget=`$target-gcc -v 2>&1 | grep Target | sed -e 's/Target: *//'`
-		targetarch=`$base/config.sub "$gcctarget" 2>>$cfglog`
-		if [ -n "$targetarch" ]; then
-			result "$targetarch"
-		else
-			result "($target)"
-			targetarch="$target"
-			msg "WARNING: Couldn't determine target architecture, using '$target'"
-		fi
+		fail "cannot determine target platform"
 	fi
 elif [ -z "$target" ]; then
 	if [ "$mode" = 'cross' -o "$mode" = 'target' ]; then
