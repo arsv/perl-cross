@@ -118,6 +118,14 @@ if nothinted 'cctype'; then
 	esac; fi
 fi
 
+# gcc 4.9 by default does some optimizations that break perl.
+# see perl ticket 121505.
+case "$cctype-$ccversion" in
+	gcc-4.9*|gcc-5.*|gcc-6.*)
+		appendvar 'ccflags' '-fwrapv -fno-strict-aliasing'
+		;;
+esac
+
 mstart "Checking whether $cc is a C++ compiler"
 if nothinted 'd_cplusplus'; then
 	try_start
