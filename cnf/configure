@@ -129,7 +129,6 @@ fi
 
 if [ "$mode" = 'native' -o "$mode" = 'buildmini' -o "$mode" = "target" ]; then
 	. $base/configure_version.sh
-	. $base/configure_vars.sh
 	. $base/configure_hint.sh
 	. $base/configure_tool.sh
 	. $base/configure_hdrs.sh

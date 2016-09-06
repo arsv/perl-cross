@@ -1,5 +1,29 @@
 # Toolchain detection
 
+# Import common environment variables into config.sh
+# setfromvar what SHELLVAR HOSTSHELLVAR
+setfromvar() {
+	v=`valueof "$1"`
+	if [ "$mode" = "buildmini" ]; then
+		w=`valueof "$3"`
+	else
+		w=`valueof "$2"`
+	fi
+	if [ -z "$v" -a -n "$w" ]; then
+		log "Using $V$2 for $1"
+		setvar "$1" "$w"
+	fi
+}
+
+setfromvar cc CC HOSTCC
+setfromvar ccflags CFLAGS HOSTCFLAGS
+setfromvar cppflags CPPFLAGS HOSTCPPFLAGS
+setfromvar ld LD HOSTLD
+setfromvar ldflags LDFLAGS HOSTLDFLAGS
+setfromvar ar AR HOSTAR
+setfromvar ranlib RANLIB HOSTRANLIB
+setfromvar objdump OBJDUMP HOSTOBJDUMP
+
 # whichprog msg symbol fail prog1 prog2 ...
 whichprog() {
 	_what="$1"; shift
