@@ -1,4 +1,4 @@
-# Find out which progs to use (mostly by trying prefixes based on $target)
+# Toolchain detection
 
 # whichprog msg symbol fail prog1 prog2 ...
 whichprog() {
