@@ -108,3 +108,9 @@ fi
 
 # Add separator to log file
 log
+
+# Process -A arguments, if any
+for k in $appendlist; do
+	v=`valueof "a_$k"`
+	appendvar "$k" "$v"
+done
