@@ -297,3 +297,9 @@ EOM
 		result "no"
 	fi
 fi
+
+# File name extensions
+
+setifndef _o '.o'
+setifndef _a '.a'
+setifndef so 'so'

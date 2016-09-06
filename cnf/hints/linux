@@ -9,6 +9,8 @@
 # very likely to end up as i586-pc-linux-gnu or something along those lines,
 # even if uClibc is used.
 
+useposix=true
+
 # Linux syscalls
 d_voidsig=define
 d_nanosleep=define
@@ -21,6 +23,13 @@ d_clock=define
 usemallocwrap=define
 
 # *NOT* checked! that's how original Configure set them.
-# 
 d_semctl_semid_ds=define
 d_semctl_semun=define
+
+# modules
+disable_win32=1
+disable_win32api_file=1
+disable_win32core=1
+
+# libraries to test
+libswanted='m crypt pthread nm ndbm gdbm dbm db dl gdbm_compat'
