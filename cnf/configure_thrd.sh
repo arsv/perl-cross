@@ -1,6 +1,18 @@
 # Thread support
 # Called only if $usethreads is set (which is not by default)
 
+mstart 'Looking whether to use interpreter threads'
+if [ "$useithreads" = 'define' ]; then
+	setvar 'useithreads' 'define'
+	result 'yes, using ithreads'
+elif [ "$use5005threads" = 'define' ]; then
+	setvar 'useithreads' 'undef'
+	result 'no, using 5.005 threads'
+else
+	setvar 'useithreads' 'define'
+	result 'yes, using ithreads'
+fi
+
 # Both presence *and* prototype for the function are checked here,
 # with the prototype encoded the same way as the constants from config.h:
 # 	[A-Za-z]_[A-Za-z]+
