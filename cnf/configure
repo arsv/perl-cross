@@ -117,8 +117,8 @@ if [ "$mode" = 'native' -o "$mode" = 'buildmini' -o "$mode" = "target" ]; then
 	. $base/configure_sigs.sh
 	. $base/configure_libs.sh
 	. $base/configure_func.sh
-	. $base/configure_defs.sh
-	. $base/configure_fung.sh
+	. $base/configure_func_ext.sh
+	. $base/configure_func_sel.sh
 	. $base/configure_attr.sh
 	. $base/configure_link.sh
 	. $base/configure_dbug.sh

@@ -26,36 +26,6 @@ checkfunc() {
 	resdef 'found' 'not found' "$_s"
 }
 
-# checkvar name includes [symbol]
-# We use try_link here instead of try_compile to be sure we have the
-# variable in question not only declared but also present somewhere in the libraries.
-checkvar() {
-	if [ -n "$4" ] ; then _s="$4"; else _s="d_$1"; fi
-
-	require 'cc'
-	mstart "Checking for $1"
-	ifhintdefined "$_s" 'present' 'missing' && return $__
-
-	try_start
-	try_includes $2
-	try_add "void foo() { };"
-	try_add "int main() { foo($1); return 0; }"
-	try_link
-	resdef 'found' 'not found' "$_s"
-}
-
-isvoid() {
-	require 'cc'
-	mstart "Checking whether $1 is void"
-	ifhint "d_$1" && return
-
-	try_start
-	try_includes $3
-	try_add "int main() { return $1($2); }"
-	not try_compile
-	resdef 'yes' 'no' "d_void_$1"
-}
-
 checkfunc _fwalk
 checkfunc access "NULL,0" 'stdlib.h unistd.h'
 checkfunc accessx
@@ -104,8 +74,8 @@ checkfunc flock "0,0" 'unistd.h'
 checkfunc fork "" 'unistd.h'
 checkfunc fp_class
 checkfunc fpathconf "0,0" 'unistd.h'
-checkfunc fpclass "1.0" 'math.h ieeefp.h'
-checkfunc fpclassify "1.0" 'math.h'
+#checkfunc fpclass "1.0" 'math.h ieeefp.h' # see func_dbl
+#checkfunc fpclassify "1.0" 'math.h'       # see func_dbl
 checkfunc fpclassl "1.0" 'math.h ieeefp.h'
 checkfunc frexpl '0,NULL' 'stdlib.h math.h'
 checkfunc fseeko 'NULL,0,0'
@@ -372,10 +342,6 @@ checkfunc truncl '0.0' 'math.h'
 
 checkfunc backtrace 'NULL, 0' 'execinfo.h'
 checkfunc dladdr 'NULL, NULL' 'dlfcn.h'
-
-isvoid closedir "NULL" 'sys/types.h dirent.h'
-checkvar sys_errlist 'stdio.h'
-checkvar tzname 'time.h'
 
 checkfunc newlocale '0,NULL,0' 'stdlib.h locale.h'
 checkfunc freelocale '0' 'locale.h'
