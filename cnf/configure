@@ -121,7 +121,6 @@ if [ "$mode" = 'native' -o "$mode" = 'buildmini' -o "$mode" = "target" ]; then
 	. $base/configure_func_sel.sh
 	. $base/configure_attr.sh
 	. $base/configure_link.sh
-	. $base/configure_dbug.sh
 	if [ "$usethreads" = 'define' ]; then
 		. $base/configure_thrd.sh
 	fi
