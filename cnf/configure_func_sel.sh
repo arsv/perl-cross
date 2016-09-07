@@ -56,9 +56,9 @@ fi
 
 # It's a bit more complicated in original Configure, but let's
 # assume that if there's clock_t defined then that's what times() returns.
+mstart "Looking what times() may return"
+log "d_times=$d_times d_clock_t=$d_clock_t"
 if [ "$d_times" = 'define' ]; then
-	mstart "Looking what times() may return"
-	log "d_clock_t=$d_clock_t"
 	if nothinted clocktype; then
 		if [ "$d_clock_t" = 'define' ]; then
 			setvar clocktype 'clock_t'
@@ -68,4 +68,6 @@ if [ "$d_times" = 'define' ]; then
 			result "it's not clock_t, assuming long"
 		fi
 	fi
+else
+	result "irrelevant"
 fi

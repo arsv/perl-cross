@@ -114,6 +114,7 @@ checktype d_statfs_s 'struct statfs' \
 checktype d_union_semun 'union semun' 'sys/types.h sys/ipc.h sys/sem.h'
 checktype d_socklen_t 'socklen_t' 'sys/types.h sys/socket.h'
 checktype d_sockaddr_in6 'struct sockaddr_in6' 'sys/socket.h netinet/in.h'
+checktype d_clock_t 'clock_t' 'sys/times.h' # not in Glossary, for d_times
 
 # These checks are simplified compared to what Configure does.
 checktype d_ip_mreq 'struct ip_mreq' \
