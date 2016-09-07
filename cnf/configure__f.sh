@@ -128,13 +128,6 @@ require() {
 	fi
 }
 
-symbolname() {
-	echo "$1" | sed -e 's/^\(struct\|enum\|union\|unsigned\) /s_/'\
-		-e 's/\*/ptr/g' -e 's/\.h$//' -e 's/[^A-Za-z0-9_]//' \
-		-e 's/^s_\(.*\)/\1_s/' -e 's/_//g' |\
-		tr 'A-Z' 'a-z'
-}
-
 try_start() {
 	echo -n > try.c
 }
