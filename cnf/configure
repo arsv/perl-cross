@@ -112,7 +112,6 @@ if [ "$mode" = 'native' -o "$mode" = 'buildmini' -o "$mode" = "target" ]; then
 	. $base/configure_type.sh
 	. $base/configure_type_ext.sh
 	. $base/configure_type_sel.sh
-	. $base/configure_byte.sh
 	. $base/configure_type_dbl.sh
 	. $base/configure_sigs.sh
 	. $base/configure_libs.sh
