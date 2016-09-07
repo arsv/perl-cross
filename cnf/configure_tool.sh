@@ -268,7 +268,13 @@ if nothinted 'osname'; then
 	esac
 fi
 
-# Handle -DEBUGGING
+# Check whether debugging should be enabled
+# Allow -DEBUGGING as well (sets EBUGGING=define)
+case "$DEBUGGING:$EBUGGING" in
+	:*)
+		DEBUGGING=$EBUGGING
+		;;
+esac
 
 mstart "Checking whether to enable -g"
 case "$DEBUGGING" in
