@@ -1,349 +1,349 @@
 # Tests for availability of libc functions.
 
-# checkfunc name args includes
+# checkfunc d_name 'name' args includes
 # WARNING: some compilers do have built-in notions on how certain
 # function should be called, and will produce errors if those functions
 # are called in a "wrong" way. 
 # So far it looks like the safest option is to provide type-compatible arguments,
 # i.e., "0" for ints, "NULL" for pointers etc.
 checkfunc() {
-	if [ -n "$4" ] ; then _s="$4"; else _s="d_$1"; fi
+	_sym="$1"
+	_fun="$2"
+	_arg="$3"
+	_inc="$4"
 
 	require 'cc'
-	mstart "Checking for $1"
-	ifhintdefined "$_s" 'present' 'missing' && return $__
-
-	try_start
-	try_includes $3
-	case "$2" in
-		*NULL*) case "$3" in
-			*stdlib.h*) ;;
-			*) try_includes "stdlib.h"
-		esac ;;
-	esac
-	try_add "int main(void) { $1($2); return 0; }"
-	try_link -O0 -fno-builtin
-	resdef 'found' 'not found' "$_s"
+	mstart "Checking for $_fun"
+	if nothinted $_sym; then
+		try_start
+		try_includes $_inc
+		try_add "int main(void) { $_fun($_arg); return 0; }"
+		try_link -O0 -fno-builtin
+		resdef 'found' 'not found' "$_sym"
+	fi
 }
 
-checkfunc _fwalk
-checkfunc access "NULL,0" 'stdlib.h unistd.h'
-checkfunc accessx
-checkfunc aintl
-checkfunc alarm "0" 'unistd.h'
-checkfunc asctime64
-checkfunc atolf
-checkfunc atoll
-checkfunc bcmp "NULL,NULL,0" 'stdlib.h string.h'
-checkfunc bcopy "NULL,NULL,0" 'stdlib.h string.h'
-checkfunc bzero "NULL,0" 'stdlib.h string.h'
-checkfunc chown "NULL,0,0" 'stdlib.h unistd.h'
-checkfunc chroot "NULL" 'unistd.h'
-checkfunc chsize "0,0"
-checkfunc class
-checkfunc clearenv "" 'stdlib.h'
-checkfunc closedir "NULL" 'stdlib.h'
-checkfunc copysignl "0.0,0.0" 'math.h'
-checkfunc crypt
-checkfunc ctermid
-checkfunc ctime64
-checkfunc cuserid
-checkfunc difftime "0,0"
-checkfunc difftime64
-checkfunc dirfd
-checkfunc dlopen
-checkfunc dlerror
-checkfunc drand48
-checkfunc dup2 "0,0"
-checkfunc eaccess
-checkfunc endgrent
-checkfunc endhostent
-checkfunc endnetent
-checkfunc endprotoent
-checkfunc endpwent
-checkfunc endservent
-checkfunc fchdir "0" 'unistd.h'
-checkfunc fchmod "0,0" 'unistd.h'
-checkfunc fchown "0,0,0" 'unistd.h'
-checkfunc fcntl "0,0" 'unistd.h fcntl.h'
-checkfunc fdclose
-checkfunc fgetpos "NULL, 0" 'stdlib.h stdio.h'
-checkfunc finite "0.0" 'math.h'
-checkfunc finitel "0.0" 'math.h'
-checkfunc flock "0,0" 'unistd.h'
-checkfunc fork "" 'unistd.h'
-checkfunc fp_class
-checkfunc fpathconf "0,0" 'unistd.h'
-#checkfunc fpclass "1.0" 'math.h ieeefp.h' # see func_dbl
-#checkfunc fpclassify "1.0" 'math.h'       # see func_dbl
-checkfunc fpclassl "1.0" 'math.h ieeefp.h'
-checkfunc frexpl '0,NULL' 'stdlib.h math.h'
-checkfunc fseeko 'NULL,0,0'
-checkfunc fsetpos 'NULL,0'
-checkfunc fstatfs
-checkfunc fstatvfs
-checkfunc fsync
-checkfunc ftello
-checkfunc futimes
-checkfunc getaddrinfo
-checkfunc getcwd 'NULL,0'
-checkfunc getespwnam
-checkfunc getfsstat
-checkfunc getgrent
-checkfunc getgroups
-checkfunc gethostbyaddr
-checkfunc gethostbyname
-checkfunc gethostent
-checkfunc gethostname
-checkfunc getitimer
-checkfunc getlogin
-checkfunc getmnt
-checkfunc getmntent
-checkfunc getnameinfo
-checkfunc getnetbyaddr
-checkfunc getnetbyname
-checkfunc getnetent
-checkfunc getpagesize
-checkfunc getpgid
-checkfunc getpgrp "" 'unistd.h'
-checkfunc getpgrp2
-checkfunc getppid
-checkfunc getpriority "0,0" 'sys/time.h sys/resource.h'
-checkfunc getprotobyaddr
-checkfunc getprotobyname
-checkfunc getprotobynumber
-checkfunc getprotoent
-checkfunc getprpwnam
-checkfunc getpwent
-checkfunc getservbyaddr
-checkfunc getservbyname
-checkfunc getservbyport
-checkfunc getservent
-checkfunc getspnam
-checkfunc gettimeofday 'NULL,NULL'
-checkfunc gmtime64
-checkfunc hasmntopt
-checkfunc htonl "0" 'stdio.h sys/types.h netinet/in.h arpa/inet.h'
-checkfunc ilogbl
-checkfunc index "NULL,0" 'stdlib.h string.h strings.h'
-checkfunc inet_aton
-checkfunc inet_ntop
-checkfunc inet_pton
-checkfunc isascii "'A'" 'stdio.h stdlib.h ctype.h'
-checkfunc isblank "' '" 'stdio.h stdlib.h ctype.h'
-checkfunc isfinite "0.0" 'math.h'
-checkfunc isinf "0.0" 'math.h'
-checkfunc isnan "0.0" 'math.h'
-checkfunc isnanl "0.0" 'math.h'
-checkfunc killpg
-checkfunc lchown "NULL, 0, 0" 'stdlib.h unistd.h'
-checkfunc link 'NULL,NULL' 'stdlib.h'
-checkfunc localeconv
-checkfunc localtime64
-checkfunc lockf
-checkfunc lstat
-checkfunc madvise
-checkfunc malloc_good_size
-checkfunc malloc_size
-checkfunc mblen
-checkfunc mbstowcs
-checkfunc mbtowc
-checkfunc memchr "NULL, 0, 0" 'stdlib.h string.h'
-checkfunc memcmp "NULL, NULL, 0" 'stdlib.h string.h'
-checkfunc memcpy "NULL, NULL, 0" 'stdlib.h string.h'
-checkfunc memmem "NULL, 0, NULL, 0" 'stdlib.h string.h'
-checkfunc memmove "NULL, NULL, 0" 'stdlib.h string.h'
-checkfunc memset "NULL, 0, 0" 'stdlib.h string.h'
-checkfunc mkdir 'NULL, 0' 'stdlib.h'
-checkfunc mkdtemp
-checkfunc mkfifo
-checkfunc mkstemp 'NULL' 'stdlib.h'
-checkfunc mkstemps
-checkfunc mktime 'NULL' 'stdlib.h'
-checkfunc mktime64
-checkfunc mmap
-checkfunc modfl "0.0,NULL" 'stdlib.h math.h'
-checkfunc mprotect
-checkfunc msgctl
-checkfunc msgget
-checkfunc msgrcv
-checkfunc msgsnd
-checkfunc msync
-checkfunc munmap
-checkfunc nice '0'
-checkfunc nl_langinfo
-checkfunc open "NULL,0,0" 'stdlib.h sys/types.h sys/stat.h fcntl.h' d_open3
-checkfunc pathconf
-checkfunc pause
-checkfunc pipe 'NULL'
-checkfunc poll
-checkfunc pthread_atfork
-checkfunc pthread_attr_setscope
-checkfunc pthread_yield
-checkfunc prctl
-checkfunc querylocale
-checkfunc rand
-checkfunc random
-checkfunc re_comp
-checkfunc readdir 'NULL'
-checkfunc readlink
-checkfunc readv
-checkfunc recvmsg
-checkfunc regcmp
-checkfunc regcomp
-checkfunc rename 'NULL,NULL'
-checkfunc rewinddir
-checkfunc rmdir 'NULL'
-checkfunc scalbnl "0.0,0" 'math.h'
-checkfunc sched_yield
-checkfunc seekdir
-checkfunc select '0,NULL,NULL,NULL,NULL'
-checkfunc semctl
-checkfunc semget
-checkfunc semop
-checkfunc sendmsg
-checkfunc setegid
-checkfunc seteuid
-checkfunc setgrent
-checkfunc setgroups
-checkfunc sethostent
-checkfunc setitimer
-checkfunc setlinebuf
-checkfunc setlocale "0,NULL" 'stdlib.h locale.h'
-checkfunc setnetent
-checkfunc setpgid
-checkfunc setpgrp
-checkfunc setpgrp2
-checkfunc setpriority
-checkfunc setproctitle
-checkfunc setprotoent
-checkfunc setpwent
-checkfunc setregid
-checkfunc setresgid
-checkfunc setresuid
-checkfunc setreuid
-checkfunc setrgid
-checkfunc setruid
-checkfunc setservent
-checkfunc setsid
-checkfunc setvbuf 'NULL,NULL,0,0'
-checkfunc sfreserve "" 'sfio.h'
-checkfunc shmat
-checkfunc shmctl
-checkfunc shmdt
-checkfunc shmget
-checkfunc sigaction
-checkfunc signbit '.0' 'math.h'
-checkfunc sigprocmask
-checkfunc sigsetjmp "NULL,0" 'stdlib.h setjmp.h'
-checkfunc snprintf
-checkfunc sockatmark
-checkfunc socket "0,0,0" 'sys/types.h sys/socket.h'
-checkfunc socketpair
-checkfunc socks5_init
-checkfunc sqrtl "0.0" 'math.h'
-checkfunc stat
-checkfunc statvfs
-checkfunc strchr "NULL,0" 'stdlib.h string.h strings.h'
-checkfunc strcoll "NULL,NULL" 'stdlib.h string.h'
-checkfunc strerror "0" 'string.h stdlib.h'
-checkfunc strftime "NULL,0,NULL,NULL" 'stdlib.h time.h'
-checkfunc strlcat
-checkfunc strlcpy
-checkfunc strtod 'NULL,NULL'
-checkfunc strtol 'NULL,NULL,0'
-checkfunc strtold
-checkfunc strtoll
-checkfunc strtoq
-checkfunc strtoul 'NULL,NULL,0'
-checkfunc strtoull 'NULL,NULL,0'
-checkfunc strtouq
-checkfunc strxfrm
-checkfunc symlink
-checkfunc syscall
-checkfunc sysconf '0'
-checkfunc system 'NULL'
-checkfunc tcgetpgrp
-checkfunc tcsetpgrp
-checkfunc telldir
-checkfunc time 'NULL'
-checkfunc timegm
-checkfunc times 'NULL'
-checkfunc truncate 'NULL,0'
-checkfunc ualarm
-checkfunc umask '0'
-checkfunc uname
-checkfunc unordered
-checkfunc unsetenv
-checkfunc usleep
-checkfunc ustat
-##checkfunc vfork
-checkfunc vprintf 'NULL,0'
-checkfunc vsnprintf
-checkfunc wait4
-checkfunc waitpid '0,NULL,0'
-checkfunc wcscmp
-checkfunc wcstombs 'NULL,NULL,0'
-checkfunc wcsxfrm
-checkfunc wctomb
-checkfunc writev
+# The naming scheme looks regular but it isn't!
+# In most cases func() defines d_func but sometimes it's something like d_fnc.
 
-checkfunc acosh '0.0' 'math.h'
-checkfunc asinh '0.0' 'math.h'
-checkfunc atanh '0.0' 'math.h'
-checkfunc cbrt '0.0' 'math.h'
-checkfunc copysign '0.0, 0.0' 'math.h'
-checkfunc erf '0.0' 'math.h'
-checkfunc erfc '0.0' 'math.h'
-checkfunc exp2 '0.0' 'math.h'
-checkfunc expm1 '0.0' 'math.h'
-checkfunc fdim '0.0, 0.0' 'math.h'
-checkfunc fegetround '' 'fenv.h'
-checkfunc fma '0.0, 0.0, 0.0' 'math.h'
-checkfunc fmax '0.0, 0.0' 'math.h'
-checkfunc fmin '0.0, 0.0' 'math.h'
-checkfunc fp_classify '0.0' 'math.h'
-checkfunc fp_classl '0.0' 'math.h'
-checkfunc fpgetround '' 'fenv.h'
-checkfunc hypot '0.0, 0.0' 'math.h'
-checkfunc ilogb '0.0' 'math.h'
-checkfunc isfinitel '0.0' 'math.h'
-checkfunc isinfl '0.0' 'math.h'
-checkfunc isless '0.0, 0.0' 'math.h'
-checkfunc isnormal '0.0' 'math.h'
-checkfunc j0 '0.0' 'math.h'
-checkfunc j0l '0.0' 'math.h'
-checkfunc ldexpl '0.0, 0' 'math.h'
-checkfunc lgamma '0.0' 'math.h'
-checkfunc lgamma_r '0.0, NULL' 'math.h'
-checkfunc llrint '0.0' 'math.h'
-checkfunc llrintl '0.0' 'math.h'
-checkfunc llround '0.0' 'math.h'
-checkfunc llroundl '0.0' 'math.h'
-checkfunc log1p '0.0' 'math.h'
-checkfunc log2 '0.0' 'math.h'
-checkfunc logb '0.0' 'math.h'
-checkfunc lrint '0.0' 'math.h'
-checkfunc lrintl '0.0' 'math.h'
-checkfunc lround '0.0' 'math.h'
-checkfunc lroundl '0.0' 'math.h'
-checkfunc nan 'NULL' 'math.h'
-checkfunc nearbyint '0.0' 'math.h'
-checkfunc nextafter '0.0, 0.0' 'math.h'
-checkfunc nexttoward '0.0, 0.0' 'math.h'
-checkfunc remainder '0.0, 0.0' 'math.h'
-checkfunc remquo '0.0, 0.0, NULL' 'math.h'
-checkfunc rint '0.0' 'math.h'
-checkfunc round '0.0' 'math.h'
-checkfunc scalbn '0.0, 0' 'math.h'
-checkfunc tgamma '0.0' 'math.h'
-checkfunc trunc '0.0' 'math.h'
-checkfunc truncl '0.0' 'math.h'
+checkfunc d__fwalk '_fwalk'
+checkfunc d_access 'access' "NULL,0" 'stdlib.h unistd.h'
+checkfunc d_accessx 'accessx'
+checkfunc d_aintl 'aintl'
+checkfunc d_alarm 'alarm' "0" 'unistd.h'
+checkfunc d_asctime64 'asctime64'
+checkfunc d_atolf 'atolf'
+checkfunc d_atoll 'atoll'
+checkfunc d_bcmp 'bcmp' "NULL,NULL,0" 'stdlib.h string.h'
+checkfunc d_bcopy 'bcopy' "NULL,NULL,0" 'stdlib.h string.h'
+checkfunc d_bzero 'bzero' "NULL,0" 'stdlib.h string.h'
+checkfunc d_chown 'chown' "NULL,0,0" 'stdlib.h unistd.h'
+checkfunc d_chroot 'chroot' "NULL" 'unistd.h'
+checkfunc d_chsize 'chsize' "0,0"
+checkfunc d_class 'class'
+checkfunc d_clearenv 'clearenv' "" 'stdlib.h'
+checkfunc d_closedir 'closedir' "NULL" 'stdlib.h'
+checkfunc d_copysignl 'copysignl' "0.0,0.0" 'math.h'
+checkfunc d_crypt 'crypt'
+checkfunc d_ctermid 'ctermid'
+checkfunc d_ctime64 'ctime64'
+checkfunc d_cuserid 'cuserid'
+checkfunc d_difftime 'difftime' "0,0"
+checkfunc d_difftime64 'difftime64'
+checkfunc d_dirfd 'dirfd'
+checkfunc d_dlopen 'dlopen'
+checkfunc d_dlerror 'dlerror'
+checkfunc d_drand48 'drand48'
+checkfunc d_dup2 'dup2' "0,0"
+checkfunc d_eaccess 'eaccess'
+checkfunc d_endgrent 'endgrent'
+checkfunc d_endhent 'endhostent'
+checkfunc d_endnent 'endnetent'
+checkfunc d_endpent 'endprotoent'
+checkfunc d_endpwent 'endpwent'
+checkfunc d_endservent 'endservent'
+checkfunc d_fchdir 'fchdir' "0" 'unistd.h'
+checkfunc d_fchmod 'fchmod' "0,0" 'unistd.h'
+checkfunc d_fchown 'fchown' "0,0,0" 'unistd.h'
+checkfunc d_fcntl 'fcntl' "0,0" 'unistd.h fcntl.h'
+checkfunc d_fdclose 'fdclose'
+checkfunc d_fgetpos 'fgetpos' "NULL, 0" 'stdlib.h stdio.h'
+checkfunc d_finite 'finite' "0.0" 'math.h'
+checkfunc d_finitel 'finitel' "0.0" 'math.h'
+checkfunc d_flock 'flock' "0,0" 'unistd.h'
+checkfunc d_fork 'fork' "" 'unistd.h'
+checkfunc d_fp_class 'fp_class'
+checkfunc d_fpathconf 'fpathconf' "0,0" 'unistd.h'
+# d_fpclass see func_ext
+# d_fpclassify see func_ext
+checkfunc d_fpclassl 'fpclassl' "1.0" 'math.h ieeefp.h'
+checkfunc d_frexpl 'frexpl' '0,NULL' 'stdlib.h math.h'
+checkfunc d_fseeko 'fseeko' 'NULL,0,0' 'stdlib.h'
+checkfunc d_fsetpos 'fsetpos' 'NULL,0' 'stdlib.h'
+checkfunc d_fstatfs 'fstatfs'
+checkfunc d_fstatvfs 'fstatvfs'
+checkfunc d_fsync 'fsync'
+checkfunc d_ftello 'ftello'
+checkfunc d_futimes 'futimes'
+checkfunc d_getaddrinfo 'getaddrinfo'
+checkfunc d_getcwd 'getcwd' 'NULL,0' 'stdlib.h'
+checkfunc d_getespwnam 'getespwnam'
+checkfunc d_getfsstat 'getfsstat'
+checkfunc d_getgrent 'getgrent'
+checkfunc d_getgrps 'getgroups'
+checkfunc d_gethbyaddr 'gethostbyaddr'
+checkfunc d_gethbyname 'gethostbyname'
+checkfunc d_gethent 'gethostent'
+checkfunc d_gethname 'gethostname'
+checkfunc d_getitimer 'getitimer'
+checkfunc d_getlogin 'getlogin'
+checkfunc d_getmnt 'getmnt'
+checkfunc d_getmntent 'getmntent'
+checkfunc d_getnameinfo 'getnameinfo'
+checkfunc d_getnetbyaddr 'getnetbyaddr'
+checkfunc d_getnetbyname 'getnetbyname'
+checkfunc d_getnent 'getnetent'
+checkfunc d_getpagsz 'getpagesize'
+checkfunc d_getpgid 'getpgid'
+checkfunc d_getpgrp 'getpgrp' "" 'unistd.h'
+checkfunc d_getpgrp2 'getpgrp2'
+checkfunc d_getppid 'getppid'
+checkfunc d_getprior 'getpriority' "0,0" 'sys/time.h sys/resource.h'
+checkfunc d_getpbyaddr 'getprotobyaddr'
+checkfunc d_getpbyname 'getprotobyname'
+checkfunc d_getpbynumber 'getprotobynumber'
+checkfunc d_getpent 'getprotoent'
+checkfunc d_getprpwnam 'getprpwnam'
+checkfunc d_getpwent 'getpwent'
+checkfunc d_getsbyaddr 'getservbyaddr'
+checkfunc d_getsbyname 'getservbyname'
+checkfunc d_getsbyport 'getservbyport'
+checkfunc d_getsent 'getservent'
+checkfunc d_getspnam 'getspnam'
+checkfunc d_gettimeod 'gettimeofday' 'NULL,NULL' 'stdlib.h'
+checkfunc d_gmtime64 'gmtime64'
+checkfunc d_hasmntopt 'hasmntopt'
+checkfunc d_htonl 'htonl' "0" 'stdio.h sys/types.h netinet/in.h arpa/inet.h'
+checkfunc d_ilogbl 'ilogbl'
+checkfunc d_index 'index' "NULL,0" 'stdlib.h string.h strings.h'
+checkfunc d_inetaton 'inet_aton'
+checkfunc d_inetntop 'inet_ntop'
+checkfunc d_inetpton 'inet_pton'
+checkfunc d_isascii 'isascii' "'A'" 'stdio.h stdlib.h ctype.h'
+checkfunc d_isblank 'isblank' "' '" 'stdio.h stdlib.h ctype.h'
+checkfunc d_isfinite 'isfinite' "0.0" 'math.h'
+checkfunc d_isinf 'isinf' "0.0" 'math.h'
+checkfunc d_isnan 'isnan' "0.0" 'math.h'
+checkfunc d_isnanl 'isnanl' "0.0" 'math.h'
+checkfunc d_killpg 'killpg'
+checkfunc d_lchown 'lchown' "NULL, 0, 0" 'stdlib.h unistd.h'
+checkfunc d_link 'link' 'NULL,NULL' 'stdlib.h'
+checkfunc d_locconv 'localeconv'
+checkfunc d_localtime64 'localtime64'
+checkfunc d_lockf 'lockf'
+checkfunc d_lstat 'lstat'
+checkfunc d_madvise 'madvise'
+checkfunc d_malloc_good_size 'malloc_good_size'
+checkfunc d_malloc_size 'malloc_size'
+checkfunc d_mblen 'mblen'
+checkfunc d_mbstowcs 'mbstowcs'
+checkfunc d_mbtowc 'mbtowc'
+checkfunc d_memchr 'memchr' "NULL, 0, 0" 'stdlib.h string.h'
+checkfunc d_memcmp 'memcmp' "NULL, NULL, 0" 'stdlib.h string.h'
+checkfunc d_memcpy 'memcpy' "NULL, NULL, 0" 'stdlib.h string.h'
+checkfunc d_memmem 'memmem' "NULL, 0, NULL, 0" 'stdlib.h string.h'
+checkfunc d_memmove 'memmove' "NULL, NULL, 0" 'stdlib.h string.h'
+checkfunc d_memset 'memset' "NULL, 0, 0" 'stdlib.h string.h'
+checkfunc d_mkdir 'mkdir' 'NULL, 0' 'stdlib.h'
+checkfunc d_mkdtemp 'mkdtemp'
+checkfunc d_mkfifo 'mkfifo'
+checkfunc d_mkstemp 'mkstemp' 'NULL' 'stdlib.h'
+checkfunc d_mkstemps 'mkstemps'
+checkfunc d_mktime 'mktime' 'NULL' 'stdlib.h'
+checkfunc d_mktime64 'mktime64'
+checkfunc d_mmap 'mmap'
+checkfunc d_modfl 'modfl' "0.0,NULL" 'stdlib.h math.h'
+checkfunc d_mprotect 'mprotect'
+checkfunc d_msgctl 'msgctl'
+checkfunc d_msgget 'msgget'
+checkfunc d_msgrcv 'msgrcv'
+checkfunc d_msgsnd 'msgsnd'
+checkfunc d_msync 'msync'
+checkfunc d_munmap 'munmap'
+checkfunc d_nice 'nice' '0'
+checkfunc d_nl_langinfo 'nl_langinfo'
+checkfunc d_open 'open' "NULL,0,0" 'stdlib.h sys/types.h sys/stat.h fcntl.h' d_open3
+checkfunc d_pathconf 'pathconf'
+checkfunc d_pause 'pause'
+checkfunc d_pipe 'pipe' 'NULL' 'stdlib.h'
+checkfunc d_poll 'poll'
+checkfunc d_pthread_atfork 'pthread_atfork'
+checkfunc d_pthread_attr_setscope 'pthread_attr_setscope'
+checkfunc d_pthread_yield 'pthread_yield'
+checkfunc d_prctl 'prctl'
+checkfunc d_querylocale 'querylocale'
+checkfunc d_rand 'rand'
+checkfunc d_random 'random'
+checkfunc d_re_comp 're_comp'
+checkfunc d_readdir 'readdir' 'NULL' 'stdlib.h'
+checkfunc d_readlink 'readlink'
+checkfunc d_readv 'readv'
+checkfunc d_recvmsg 'recvmsg'
+checkfunc d_regcmp 'regcmp'
+checkfunc d_regcomp 'regcomp'
+checkfunc d_rename 'rename' 'NULL,NULL' 'stdlib.h'
+checkfunc d_rewinddir 'rewinddir'
+checkfunc d_rmdir 'rmdir' 'NULL' 'stdlib.h'
+checkfunc d_scalbnl 'scalbnl' "0.0,0" 'math.h'
+checkfunc d_sched_yield 'sched_yield'
+checkfunc d_seekdir 'seekdir'
+checkfunc d_select 'select' '0,NULL,NULL,NULL,NULL' 'stdlib.h'
+checkfunc d_semctl 'semctl'
+checkfunc d_semget 'semget'
+checkfunc d_semop 'semop'
+checkfunc d_sendmsg 'sendmsg'
+checkfunc d_setegid 'setegid'
+checkfunc d_seteuid 'seteuid'
+checkfunc d_setgrent 'setgrent'
+checkfunc d_setgrps 'setgroups'
+checkfunc d_sethent 'sethostent'
+checkfunc d_setitimer 'setitimer'
+checkfunc d_setlinebuf 'setlinebuf'
+checkfunc d_setlocale 'setlocale' "0,NULL" 'stdlib.h locale.h'
+checkfunc d_setnent 'setnetent'
+checkfunc d_setpgid 'setpgid'
+checkfunc d_setpgrp 'setpgrp'
+checkfunc d_setpgrp2 'setpgrp2'
+checkfunc d_setprior 'setpriority'
+checkfunc d_setproctitle 'setproctitle'
+checkfunc d_setpent 'setprotoent'
+checkfunc d_setpwent 'setpwent'
+checkfunc d_setregid 'setregid'
+checkfunc d_setresgid 'setresgid'
+checkfunc d_setresuid 'setresuid'
+checkfunc d_setreuid 'setreuid'
+checkfunc d_setrgid 'setrgid'
+checkfunc d_setruid 'setruid'
+checkfunc d_setent 'setservent'
+checkfunc d_setsid 'setsid'
+checkfunc d_setvbuf 'setvbuf' 'NULL,NULL,0,0' 'stdlib.h'
+checkfunc d_sfreserve 'sfreserve' "" 'sfio.h'
+checkfunc d_shmat 'shmat'
+checkfunc d_shmctl 'shmctl'
+checkfunc d_shmdt 'shmdt'
+checkfunc d_shmget 'shmget'
+checkfunc d_sigaction 'sigaction'
+checkfunc d_signbit 'signbit' '.0' 'math.h'
+checkfunc d_sigprocmask 'sigprocmask'
+checkfunc d_sigsetjmp 'sigsetjmp' "NULL,0" 'stdlib.h setjmp.h'
+checkfunc d_snprintf 'snprintf'
+checkfunc d_sockatmark 'sockatmark'
+checkfunc d_socket 'socket' "0,0,0" 'sys/types.h sys/socket.h'
+checkfunc d_socketpair 'socketpair'
+checkfunc d_socks5_init 'socks5_init'
+checkfunc d_sqrtl 'sqrtl' "0.0" 'math.h'
+checkfunc d_stat 'stat'
+checkfunc d_statvfs 'statvfs'
+checkfunc d_strchr 'strchr' "NULL,0" 'stdlib.h string.h strings.h'
+checkfunc d_strcoll 'strcoll' "NULL,NULL" 'stdlib.h string.h'
+checkfunc d_strerror 'strerror' "0" 'string.h stdlib.h'
+checkfunc d_strftime 'strftime' "NULL,0,NULL,NULL" 'stdlib.h time.h'
+checkfunc d_strlcat 'strlcat'
+checkfunc d_strlcpy 'strlcpy'
+checkfunc d_strtod 'strtod' 'NULL,NULL' 'stdlib.h'
+checkfunc d_strtol 'strtol' 'NULL,NULL,0' 'stdlib.h'
+checkfunc d_strtold 'strtold'
+checkfunc d_strtoll 'strtoll'
+checkfunc d_strtoq 'strtoq'
+checkfunc d_strtoul 'strtoul' 'NULL,NULL,0' 'stdlib.h'
+checkfunc d_strtoull 'strtoull' 'NULL,NULL,0' 'stdlib.h'
+checkfunc d_strtouq 'strtouq'
+checkfunc d_strxfrm 'strxfrm'
+checkfunc d_symlink 'symlink'
+checkfunc d_syscall 'syscall'
+checkfunc d_sysconf 'sysconf' '0'
+checkfunc d_system 'system' 'NULL' 'stdlib.h'
+checkfunc d_tcgetpgrp 'tcgetpgrp'
+checkfunc d_tcsetpgrp 'tcsetpgrp'
+checkfunc d_telldir 'telldir'
+checkfunc d_time 'time' 'NULL' 'stdlib.h'
+checkfunc d_timegm 'timegm'
+checkfunc d_times 'times' 'NULL' 'stdlib.h'
+checkfunc d_truncate 'truncate' 'NULL,0' 'stdlib.h'
+checkfunc d_ualarm 'ualarm'
+checkfunc d_umask 'umask' '0'
+checkfunc d_uname 'uname'
+checkfunc d_unordered 'unordered'
+checkfunc d_unsetenv 'unsetenv'
+checkfunc d_usleep 'usleep'
+checkfunc d_ustat 'ustat'
+setvar d_vfork 'undef' # unnecessary
+checkfunc d_vprintf 'vprintf' 'NULL,0' 'stdlib.h'
+checkfunc d_vsnprintf 'vsnprintf'
+checkfunc d_wait4 'wait4'
+checkfunc d_waitpid 'waitpid' '0,NULL,0' 'stdlib.h'
+checkfunc d_wcscmp 'wcscmp'
+checkfunc d_wcstombs 'wcstombs' 'NULL,NULL,0' 'stdlib.h'
+checkfunc d_wcsxfrm 'wcsxfrm'
+checkfunc d_wctomb 'wctomb'
+checkfunc d_writev 'writev'
 
-checkfunc backtrace 'NULL, 0' 'execinfo.h'
-checkfunc dladdr 'NULL, NULL' 'dlfcn.h'
+checkfunc d_acosh 'acosh' '0.0' 'math.h'
+checkfunc d_asinh 'asinh' '0.0' 'math.h'
+checkfunc d_atanh 'atanh' '0.0' 'math.h'
+checkfunc d_cbrt 'cbrt' '0.0' 'math.h'
+checkfunc d_copysign 'copysign' '0.0, 0.0' 'math.h'
+checkfunc d_erf 'erf' '0.0' 'math.h'
+checkfunc d_erfc 'erfc' '0.0' 'math.h'
+checkfunc d_exp2 'exp2' '0.0' 'math.h'
+checkfunc d_expm1 'expm1' '0.0' 'math.h'
+checkfunc d_fdim 'fdim' '0.0, 0.0' 'math.h'
+checkfunc d_fegetround 'fegetround' '' 'fenv.h'
+checkfunc d_fma 'fma' '0.0, 0.0, 0.0' 'math.h'
+checkfunc d_fmax 'fmax' '0.0, 0.0' 'math.h'
+checkfunc d_fmin 'fmin' '0.0, 0.0' 'math.h'
+checkfunc d_fp_classify 'fp_classify' '0.0' 'math.h'
+checkfunc d_fp_classl 'fp_classl' '0.0' 'math.h'
+checkfunc d_fpgetround 'fpgetround' '' 'fenv.h'
+checkfunc d_hypot 'hypot' '0.0, 0.0' 'math.h'
+checkfunc d_ilogb 'ilogb' '0.0' 'math.h'
+checkfunc d_isfinitel 'isfinitel' '0.0' 'math.h'
+checkfunc d_isinfl 'isinfl' '0.0' 'math.h'
+checkfunc d_isless 'isless' '0.0, 0.0' 'math.h'
+checkfunc d_isnormal 'isnormal' '0.0' 'math.h'
+checkfunc d_j0 'j0' '0.0' 'math.h'
+checkfunc d_j0l 'j0l' '0.0' 'math.h'
+checkfunc d_ldexpl 'ldexpl' '0.0, 0' 'math.h'
+checkfunc d_lgamma 'lgamma' '0.0' 'math.h'
+checkfunc d_lgamma_r 'lgamma_r' '0.0, NULL' 'stdlib.h math.h'
+checkfunc d_llrint 'llrint' '0.0' 'math.h'
+checkfunc d_llrintl 'llrintl' '0.0' 'math.h'
+checkfunc d_llround 'llround' '0.0' 'math.h'
+checkfunc d_llroundl 'llroundl' '0.0' 'math.h'
+checkfunc d_log1p 'log1p' '0.0' 'math.h'
+checkfunc d_log2 'log2' '0.0' 'math.h'
+checkfunc d_logb 'logb' '0.0' 'math.h'
+checkfunc d_lrint 'lrint' '0.0' 'math.h'
+checkfunc d_lrintl 'lrintl' '0.0' 'math.h'
+checkfunc d_lround 'lround' '0.0' 'math.h'
+checkfunc d_lroundl 'lroundl' '0.0' 'math.h'
+checkfunc d_nan 'nan' 'NULL' 'stdlib.h math.h'
+checkfunc d_nearbyint 'nearbyint' '0.0' 'math.h'
+checkfunc d_nextafter 'nextafter' '0.0, 0.0' 'math.h'
+checkfunc d_nexttoward 'nexttoward' '0.0, 0.0' 'math.h'
+checkfunc d_remainder 'remainder' '0.0, 0.0' 'math.h'
+checkfunc d_remquo 'remquo' '0.0, 0.0, NULL' 'stdlib.h math.h'
+checkfunc d_rint 'rint' '0.0' 'math.h'
+checkfunc d_round 'round' '0.0' 'math.h'
+checkfunc d_scalbn 'scalbn' '0.0, 0' 'math.h'
+checkfunc d_tgamma 'tgamma' '0.0' 'math.h'
+checkfunc d_trunc 'trunc' '0.0' 'math.h'
+checkfunc d_truncl 'truncl' '0.0' 'math.h'
 
-checkfunc newlocale '0,NULL,0' 'stdlib.h locale.h'
-checkfunc freelocale '0' 'locale.h'
-checkfunc uselocale '0' 'locale.h'
-checkfunc duplocale '0' 'locale.h'
+checkfunc d_backtrace 'backtrace' 'NULL, 0' 'stdlib.h execinfo.h'
+checkfunc d_dladdr 'dladdr' 'NULL, NULL' 'stdlib.h dlfcn.h'
+
+checkfunc d_newlocale 'newlocale' '0,NULL,0' 'stdlib.h locale.h'
+checkfunc d_freelocale 'freelocale' '0' 'locale.h'
+checkfunc d_uselocale 'uselocale' '0' 'locale.h'
+checkfunc d_duplocale 'duplocale' '0' 'locale.h'

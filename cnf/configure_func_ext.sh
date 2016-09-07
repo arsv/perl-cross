@@ -1,62 +1,71 @@
 # Some extra compile/link tests
 
-# checkvar name includes [symbol]
+# checkvar symbol name includes
 # We use try_link here instead of try_compile to be sure we have the
 # variable in question not only declared but also present somewhere in the libraries.
 checkvar() {
-	if [ -n "$4" ] ; then _s="$4"; else _s="d_$1"; fi
-
 	require 'cc'
-	mstart "Checking for $1"
-	ifhintdefined "$_s" 'present' 'missing' && return $__
-
-	try_start
-	try_includes $2
-	try_add "void foo() { };"
-	try_add "int main() { foo($1); return 0; }"
-	try_link
-	resdef 'found' 'not found' "$_s"
-}
-
-isvoid() {
-	require 'cc'
-	mstart "Checking whether $1 is void"
-	ifhint "d_$1" && return
-
-	try_start
-	try_includes $3
-	try_add "int main() { return $1($2); }"
-	not try_compile
-	resdef 'yes' 'no' "d_void_$1"
+	mstart "Checking for $2"
+	if nothinted "$1"; then
+		try_start
+		try_includes $3
+		try_add "void foo() { };"
+		try_add "int main() { foo($2); return 0; }"
+		try_link
+		resdef 'found' 'not found' "$1"
+	fi
 }
 
 checkintdefined() {
-	k=`echo "$1" | tr A-Z a-z | sed -e 's/^/d_/'`
-	mstart "Checking whether $1 is defined"
-	ifhint "$k" && return 0
-	try_start
-	try_includes $2
-	try_add "int i = $1;"
-	try_compile
-	resdef 'yes' 'no' $k
+	mstart "Checking whether $2 is defined"
+	if nothinted "$1"; then
+		try_start
+		try_includes $3
+		try_add "int i = $2;"
+		try_compile
+		resdef 'yes' 'no' $1
+	fi
 }
 
-isvoid closedir "NULL" 'sys/types.h dirent.h'
-checkvar sys_errlist 'stdio.h'
-checkvar tzname 'time.h'
+checkvar d_syserrlst sys_errlist 'stdio.h'
+checkvar d_tzname tzname 'time.h'
 
-checkintdefined DBL_DIG 'limits.h float.h'
-checkintdefined LDBL_DIG 'limits.h float.h'
+checkintdefined d_dbl_dig DBL_DIG 'limits.h float.h'
+checkintdefined d_ldbl_dig LDBL_DIG 'limits.h float.h'
 
+mstart "Checking whether closedir is void"
+if [ "$d_closedir" = 'define' ]; then
+	if nothinted "d_void_closedir"; then
+		try_start
+		try_includes 'sys/types.h' 'dirent.h'
+		try_add "int main() { return $1($2); }"
+		if try_compile; then
+			setvar 'd_void_closedir' 'undef'
+			result 'no'
+		else
+			setvar 'd_void_closedir' 'undef'
+			result 'yes'
+		fi
+	fi
+else
+	setvar 'd_void_closedir' 'undef'
+	result 'irrelevant'
+fi
+
+mstart "Checking whether prctl supports PR_SET_NAME"
 if [ "$d_prctl" = 'define' ]; then
-	mstart "Checking whether prctl supports PR_SET_NAME"
-	try_start
-	try_includes 'sys/prctl.h'
-	try_add "int main (int argc, char *argv[]) {"
-	try_add "	return (prctl (PR_SET_NAME, \"Test\"));"
-	try_add "}"
-	try_compile
-	resdef 'yes' 'no' 'd_prctl_set_name'
+	if nothinted 'd_prctl_set_name'; then
+		try_start
+		try_includes 'sys/prctl.h'
+		try_add "int main (int argc, char *argv[]) {"
+		try_add "	return (prctl (PR_SET_NAME, \"Test\"));"
+		try_add "}"
+		try_compile
+		resdef 'yes' 'no' 'd_prctl_set_name'
+	fi
+else
+	setvar 'd_prctl_set_name' 'undef'
+	result 'irrelevant'
 fi
 
 mstart "Checking if we're using GNU libc"
