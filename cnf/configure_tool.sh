@@ -164,25 +164,15 @@ if nothinted "extern_C"; then
 	esac
 fi
 
-if nothinted 'osname'; then
-	mstart "Checking whether the target is Android"
-	run $cc -v > try.out 2>&1
-	try_dump_out
-	case "`sed -ne '/^Target: /s///p' try.out`" in
-		*-android|*-androideabi)
-			setvar osname "android"
-			result "yes"
-			;;
-		*)
-			result "no"
-			;;
-	esac
-	log
-fi
+# File name extensions, must be set before running any compile/link tests
+
+setifndef _o '.o'
+setifndef _a '.a'
+setifndef so 'so'
 
 # Set up largefile support, if needed.
-# This must be done very early since it affects $ccflags, and thus the compiler behavior
-# including type sizes.
+# This must be done very early since it affects $ccflags, and thus the compiler
+# behavior including type sizes.
 mstart "Checking whether it's ok to enable large file support"
 if nothinted 'uselargefiles'; then
 	# Adding -D_FILE_OFFSET_BITS is mostly harmless, except
@@ -270,8 +260,34 @@ EOM
 	fi
 fi
 
-# File name extensions
+# Guessing OS is better done with the toolchain available.
+# CC output is crucial here -- Android toolchains come with
+# generic armeabi prefix and "android" is one of the few osname
+# values that make difference later.
 
-setifndef _o '.o'
-setifndef _a '.a'
-setifndef so 'so'
+mstart "Trying to guess target OS"
+if nothinted 'osname'; then
+	run $cc -v > try.out 2>&1
+	try_dump_out
+
+	_ct=`sed -ne '/^Target: /s///p' try.out`
+	test -z "$_ct" && _ct="$targetarch"
+
+	case "$_ct" in
+		*-android|*-androideabi)
+			setvar osname "android"
+			result "Android"
+			;;
+		*-linux*)
+			setvar osname "linux"
+			result "Linux"
+			;;
+		*-bsd*)
+			setvar osname "bsd"
+			result "BSD"
+			;;
+		*)
+			result "no"
+			;;
+	esac
+fi
