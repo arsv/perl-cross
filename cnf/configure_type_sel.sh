@@ -16,7 +16,7 @@ define:define:?*)
 	;;
 esac
 
-case "$uselongdouble:$d_longdouble" in
+case "$uselongdouble:$d_longdbl" in
 define:define)
 	setvar nvtype "long double"
 	setvar nvsize $longdblsize

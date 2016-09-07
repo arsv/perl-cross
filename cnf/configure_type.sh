@@ -27,7 +27,7 @@ checktype() {
 # TODO: add test for readelf usability, and switch
 # to objdump if possible
 
-# checksize symbol type 'includes'
+# checksize symbol type includes
 checksize() {
 	mstart "Checking size of $2"
 	ifhint $1 && return 0
@@ -90,14 +90,17 @@ setvar quadtype int64_t
 setvar uquadtype uint64_t
 setvar quadkind QUAD_IS_INT64_t
 
+checktype d_longdbl 'long double'
+checktype d_longlong 'long long'
+
 checksize charsize 'char'
 checksize shortsize 'short'
 checksize intsize 'int'
 checksize longsize 'long'
 checksize doublesize 'double'
-checksize longlongsize 'long long'
-checksize longdblsize 'long double'
 checksize ptrsize 'void*'
+test "$d_longdbl" == 'define'  && checksize longdblsize 'long double'
+test "$d_longlong" == 'define' && checksize longlongsize 'long long'
 
 checktype d_fd_set 'fd_set' 'sys/types.h'
 checktype d_fpos64_t 'fpos64_t' 'stdio.h'

@@ -17,8 +17,6 @@ linkvar() {
 	fi
 }
 
-linkvar longdblsize longdoublesize
-
 linkvar i_sysresrc i_sysresource
 linkvar i_sysselct i_sysselect
 linkvar i_niin i_netinetin
@@ -58,9 +56,6 @@ linkvar d_setprior d_setpriority
 linkvar d_setsent d_setservent
 linkvar d_sockpair d_socketpair
 linkvar d_syserrlst d_sys_errlist
-
-linkvar ptrsize voidptrsize
-linkvar d_longdbl d_longdouble
 
 # allow -DEBUGGING
 linkvar DEBUGGING EBUGGING
