@@ -1,0 +1,7 @@
+Patchsets here are tagged with exact upstream version, but that's mostly
+to catch misapplications early, and to ensure the patches themselves remain
+readable. In most case a new version only needs minor offset tweaks.
+
+Copy the closest available version and update the patches if necessary.
+
+Note cperl comes with liblist.patch already integrated.
