@@ -30,17 +30,16 @@ hint() {
 
 msg "Checking which hints to use"
 
-# For i686-pc-linux-gnu, try linux and linux-i686
+# For i686-pc-linux-gnu, try linux and i686-linux
 arch=`echo "$targetarch" | cut -d - -f 1`
+setvardefault archname "$arch-$osname"
+
 tryhints "$osname"
-tryhints "$osname-$arch"
+tryhints "$archname"
 
 for h in `echo "$userhints" | sed -e 's/,/ /g'`; do
 	tryhints 'hint' "$h"
 done
-
-# While we're at that, set archname (for module install paths and such)
-setvardefault archname "$arch-$osname"
 
 # Check whether we'll need to append anything to archname
 # configure_version must be included somewhere before this point
