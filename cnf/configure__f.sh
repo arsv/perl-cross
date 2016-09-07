@@ -211,16 +211,6 @@ try_objdump() {
 	run $objdump $* try.o > try.out
 }
 
-isset() {
-	z=`valueof "$1"`
-	if test -n "$z"; then
-		log "Skipping check for $1, value already set ($z)"
-		true
-	else
-		false
-	fi
-}
-
 bytes() { test "$1" = 1 && echo "byte" || echo "bytes"; }
 
 valueof() { eval echo "\"\$$1\""; }
