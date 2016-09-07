@@ -131,3 +131,26 @@ else
 fi
 
 setvar i_systimek undef
+# Set up largefile support, if needed.
+# The limiting factor here is uClibc features.h, with raises error
+# if FILE_OFFSET_BITS=64 is set but the library was built w/o LFS.
+mstart "Checking whether it's ok to enable large file support"
+if nothinted 'uselargefiles'; then
+	# Adding -D_FILE_OFFSET_BITS is mostly harmless, except
+	# when dealing with uClibc that was compiled w/o largefile
+	# support
+	case "$ccflags" in
+		*-D_FILE_OFFSET_BITS=*)
+			result "already there"
+			;;
+		*)
+			try_start
+			try_includes "stdio.h"
+			try_compile -D_FILE_OFFSET_BITS=64
+			resdef "yes, enabling it" "no, it's disabled" 'uselargefiles'
+	esac
+fi
+if [ "$uselargefiles" = 'define' ]; then
+	appendvar 'ccflags' " -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+	log
+fi
