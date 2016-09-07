@@ -100,7 +100,7 @@ checkfunc fdclose
 checkfunc fgetpos "NULL, 0" 'stdlib.h stdio.h'
 checkfunc finite "0.0" 'math.h'
 checkfunc finitel "0.0" 'math.h'
-checkfunc flock "0,0" 'unistd.h sys/file.h'
+checkfunc flock "0,0" 'unistd.h'
 checkfunc fork "" 'unistd.h'
 checkfunc fp_class
 checkfunc fpathconf "0,0" 'unistd.h'

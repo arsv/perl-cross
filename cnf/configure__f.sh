@@ -141,13 +141,7 @@ try_start() {
 
 try_includes() {
 	for i in "$@"; do 
-		s=i_`symbolname "$i"`
-		v=`valueof "$s"`
-		if [ "$v" = 'define' ]; then
-			echo "#include <$i>" >> try.c
-		else 
-			echo "/* <$i> missing */" >> try.c
-		fi
+		echo "#include <${i##*:}>" >> try.c
 	done
 }
 

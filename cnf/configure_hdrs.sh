@@ -3,117 +3,114 @@
 # safe to include this header, i.e., that it won't break compilation.
 
 checkhdr() {
-	if [ -n "$2" ]; then
-		_hdrname=$2
-	else
-		_hdrname=`symbolname "$1"`
+	mstart "Checking whether to include <$2>"
+	if nothinted "$1"; then
+		try_start
+		try_add "#include <$2>"
+		try_compile
+		resdef 'yes' 'no' "$1"
 	fi
-	
-	mstart "Checking whether to include <$1>"
-	ifhintdefined "i_${_hdrname}" 'yes' 'no' && return $__
-	try_start
-	try_add "#include <$1>"
-	try_compile
-	resdef 'yes' 'no' "i_${_hdrname}"
 }
 
-checkhdr 'stdio.h'
+checkhdr i_stdio 'stdio.h'
 test "$i_stdio" = 'define' ||\
 	die "Can't include <stdio.h>, check compiler configuration"
 
-checkhdr 'arpa/inet.h'
-checkhdr 'assert.h'
-checkhdr 'bfd.h'
-checkhdr 'crypt.h'
-checkhdr 'ctype.h'
-checkhdr 'db.h'
-checkhdr 'dbm.h'
-checkhdr 'dirent.h'
-checkhdr 'dlfcn.h'
-checkhdr 'fcntl.h'
-checkhdr 'fenv.h'
-checkhdr 'float.h'
-checkhdr 'execinfo.h'
-checkhdr 'gdbm-ndbm.h'
-checkhdr 'gdbm.h'
-checkhdr 'gdbm/ndbm.h'
-checkhdr 'grp.h'
-checkhdr 'inttypes.h'
-checkhdr 'langinfo.h'
-checkhdr 'limits.h'
-checkhdr 'locale.h'
-checkhdr 'mach/cthreads.h'
-checkhdr 'malloc.h'
-checkhdr 'math.h'
-checkhdr 'memory.h'
-checkhdr 'mntent.h'
-checkhdr 'ndbm.h'
-checkhdr 'net/errno.h'
-checkhdr 'netdb.h'
-checkhdr 'netinet/in.h'
-checkhdr 'netinet/tcp.h'
-checkhdr 'netinet/ip.h' i_netinet_ip
-checkhdr 'netinet/ip6.h' i_netinet_ip6
-checkhdr 'netinet6/in6.h' i_netinet6_in6
-checkhdr 'nlist.h'
-checkhdr 'poll.h'
-checkhdr 'pwd.h'
-checkhdr 'quadmath.h'
-checkhdr 'rpcsvc/dbm.h'
-checkhdr 'setjmp.h'
-checkhdr 'sfio.h'
-checkhdr 'sgtty.h'
-checkhdr 'shadow.h'
-checkhdr 'signal.h'
-checkhdr 'stdarg.h'
-checkhdr 'stdbool.h'
-checkhdr 'stddef.h'
-checkhdr 'stdint.h'
-checkhdr 'stdlib.h'
-checkhdr 'string.h'
-checkhdr 'strings.h'
-checkhdr 'sys/access.h'
-checkhdr 'sys/dir.h'
-checkhdr 'sys/file.h'
-checkhdr 'sys/filio.h'
-checkhdr 'sys/ioctl.h'
-checkhdr 'sys/mman.h'
-checkhdr 'sys/mode.h'
-checkhdr 'sys/mount.h'
-checkhdr 'sys/ndir.h'
-checkhdr 'sys/param.h'
-checkhdr 'sys/poll.h'
-checkhdr 'sys/prctl.h'
-checkhdr 'sys/resource.h'
-checkhdr 'sys/security.h'
-checkhdr 'sys/select.h'
-checkhdr 'sys/sem.h'
-checkhdr 'sys/socket.h'
-checkhdr 'sys/sockio.h'
-checkhdr 'sys/stat.h'
-checkhdr 'sys/statfs.h'
-checkhdr 'sys/statvfs.h'
-checkhdr 'sys/time.h'
-checkhdr 'sys/times.h'
-checkhdr 'sys/types.h'
-checkhdr 'sys/uio.h'
-checkhdr 'sys/un.h'
-checkhdr 'sys/utsname.h'
-checkhdr 'sys/vfs.h'
-checkhdr 'sys/wait.h'
-checkhdr 'syslog.h'
-checkhdr 'termio.h'
-checkhdr 'termios.h'
-checkhdr 'time.h'
-checkhdr 'unistd.h'
-checkhdr 'ustat.h'
-checkhdr 'utime.h'
-checkhdr 'values.h'
-checkhdr 'varargs.h'
-checkhdr 'vfork.h'
-checkhdr 'xlocale.h'
-
-test "$usethreads" = 'define' && check checkhdr 'pthread.h'
+checkhdr i_arpainet 'arpa/inet.h'
+checkhdr i_assert 'assert.h'
+checkhdr i_bfd 'bfd.h'
+checkhdr i_bsdioctl 'sys/bsdioctl.h'
+checkhdr i_crypt 'crypt.h'
+checkhdr i_db 'db.h'
+checkhdr i_dbm 'dbm.h'
+checkhdr i_dirent 'dirent.h'
+checkhdr i_dlfcn 'dlfcn.h'
+checkhdr i_execinfo 'execinfo.h'
+checkhdr i_fcntl 'fcntl.h'
+checkhdr i_fenv 'fenv.h'
+checkhdr i_float 'float.h'
+checkhdr i_fp 'fp.h'
+checkhdr i_fp_class 'fp_class.h'
+checkhdr i_gdbm 'gdbm.h'
+checkhdr i_gdbm_ndbm 'gdbm-ndbm.h'
+checkhdr i_gdbmndbm 'gdbm/ndbm.h'
+checkhdr i_grp 'grp.h'
+checkhdr i_ieeefp 'ieeefp.h'
+checkhdr i_inttypes 'inttypes.h'
+checkhdr i_langinfo 'langinfo.h'
+checkhdr i_libutil 'libutil.h'
+checkhdr i_limits 'limits.h'
+checkhdr i_locale 'locale.h'
+checkhdr i_machcthr 'mach/cthreads.h'
+checkhdr i_malloc 'malloc.h'
+checkhdr i_mallocmalloc 'malloc/malloc.h'
+checkhdr i_math 'math.h'
+checkhdr i_memory 'memory.h'
+checkhdr i_mntent 'mntent.h'
+checkhdr i_ndbm 'ndbm.h'
+checkhdr i_netdb 'netdb.h'
+checkhdr i_neterrno 'net/errno.h'
+checkhdr i_netinettcp 'netinet/tcp.h'
+checkhdr i_niin 'netinet/in.h'
+checkhdr i_netinet_ip 'netinet/ip.h'	 # cperl
+checkhdr i_netinet_ip6 'netinet/ip6.h'	 # cperl
+checkhdr i_netinet6_in6 'netinet6/in6.h' # cperl
+checkhdr i_poll 'poll.h'
+checkhdr i_prot 'prot.h'
+checkhdr i_pthread 'pthread.h'
+checkhdr i_pwd 'pwd.h'
+checkhdr i_quadmath 'quadmath.h'
+checkhdr i_rpcsvcdbm 'rpcsvc/dbm.h'
+checkhdr i_sgtty 'sgtty.h'
+checkhdr i_shadow 'shadow.h'
+checkhdr i_socks 'socks.h'
+checkhdr i_stdarg 'stdarg.h'
+checkhdr i_stdbool 'stdbool.h'
+checkhdr i_stddef 'stddef.h'
+checkhdr i_stdint 'stdint.h'
+checkhdr i_stdlib 'stdlib.h'
+checkhdr i_string 'string.h'
+checkhdr i_sunmath 'sunmath.h'
+checkhdr i_sysaccess 'sys/access.h'
+checkhdr i_sysdir 'sys/dir.h'
+checkhdr i_sysfile 'sys/file.h'
+checkhdr i_sysfilio 'sys/filio.h'
+checkhdr i_sysin 'sys/in.h'
+checkhdr i_sysioctl 'sys/ioctl.h'
+checkhdr i_syslog 'syslog.h'
+checkhdr i_sysmman 'sys/mman.h'
+checkhdr i_sysmode 'sys/mode.h'
+checkhdr i_sysmount 'sys/mount.h'
+checkhdr i_sysndir 'sys/ndir.h'
+checkhdr i_sysparam 'sys/param.h'
+checkhdr i_syspoll 'sys/poll.h'
+checkhdr i_sysresrc 'sys/resource.h'
+checkhdr i_syssecrt 'sys/security.h'
+checkhdr i_sysselct 'sys/select.h'
+checkhdr i_syssockio 'sys/sockio.h'
+checkhdr i_sysstat 'sys/stat.h'
+checkhdr i_sysstatfs 'sys/statfs.h'
+checkhdr i_sysstatvfs 'sys/statvfs.h'
+checkhdr i_systime 'sys/time.h'
+setvar i_systimek undef # not a plain header check
+checkhdr i_systimes 'sys/times.h'
+checkhdr i_systypes 'sys/types.h'
+checkhdr i_sysuio 'sys/uio.h'
+checkhdr i_sysun 'sys/un.h'
+checkhdr i_sysutsname 'sys/utsname.h'
+checkhdr i_sysvfs 'sys/vfs.h'
+checkhdr i_syswait 'sys/wait.h'
+checkhdr i_termio 'termio.h'
+checkhdr i_termios 'termios.h'
+checkhdr i_time 'time.h'
+checkhdr i_unistd 'unistd.h'
+checkhdr i_ustat 'ustat.h'
+checkhdr i_utime 'utime.h'
+checkhdr i_values 'values.h'
+checkhdr i_varargs 'varargs.h'
+# i_varhdr is checked below
+checkhdr i_vfork 'vfork.h'
+checkhdr i_xlocale 'xlocale.h'
 
 # simplified approach, compared to what Configure has.
 # assume header is usable as long as it's there
@@ -130,7 +127,6 @@ else
 	result 'nothing found'
 fi
 
-setvar i_systimek undef
 # Set up largefile support, if needed.
 # The limiting factor here is uClibc features.h, with raises error
 # if FILE_OFFSET_BITS=64 is set but the library was built w/o LFS.

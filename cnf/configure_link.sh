@@ -17,10 +17,6 @@ linkvar() {
 	fi
 }
 
-linkvar i_sysresrc i_sysresource
-linkvar i_sysselct i_sysselect
-linkvar i_niin i_netinetin
-
 linkvar d_endhent d_endhostent
 linkvar d_endnent d_endnetent
 linkvar d_endpent d_endprotoent
