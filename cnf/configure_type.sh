@@ -2,25 +2,21 @@
 
 # useinttype namesym type sizesym size
 useitype() {
-	setvar $1 "$2"
-	setvar $3 "$4"
+	define $1 "$2"
+	define $3 "$4"
 }
 
 # checktype symbol type 'includes'
 checktype() {
 	mstart "Checking type $2"
-	ifhintdefined $1 'found' 'missing' && return 0
+	hinted $1 'found' 'missing' && return
 
 	try_start
 	try_includes $3
 	try_add "$2 foo;"
-	if not try_compile; then
-		result 'missing'
-		return 1
-	fi
+	try_compile
 
-	setvar $1 "define"
-	result "found"
+	resdef $1 'found' 'missing'
 }
 
 # XXX: this probably won't work on non-ELF hosts.
@@ -30,39 +26,41 @@ checktype() {
 # checksize symbol type includes
 checksize() {
 	mstart "Checking size of $2"
-	ifhint $1 && return 0
+	hinted $1 && return
 	
 	try_start
 	try_includes $3
 	try_add "$2 foo;"
+
 	if not try_compile; then
+		define $1 'undef'
 		result 'missing'
-		return 1
+		return
 	fi
 
 	if not try_readelf -s > try.out 2>>$cfglog; then
 		result 'unknown'
-		fail "Cannot determine sizeof($2), use -D${1}size="
-		return 1
+		die "Cannot determine sizeof($2), use -D${1}size="
+		return
 	fi
 
 	result=`grep foo try.out | sed -r -e 's/.*: [0-9]+ +//' -e 's/ .*//'`
 	if [ -z "$result" -o "$result" -le 0 ]; then
 		result "unknown"
-		fail "Cannot determine sizeof($2)"
-		return 1
+		die "Cannot determine sizeof($2)"
+		return
 	fi
 
-	setvar $1 "$result"
+	define $1 "$result"
 	result $result\ `bytes $result`
 }
 
 # usetypesize typesym sizesym type 'includes'
 usetypesize() {
 	mstart "Checking $1"
-	if nothinted $1; then
+	if not hinted $1; then
+		define $1 $3
 		result "$3"
-		setvar $1 $3
 		checksize $2 $3 "$4"
 	else
 		checksize $2 "`valueof $1`" "$4"
@@ -70,10 +68,9 @@ usetypesize() {
 }
 
 # Mainline perl Configure implements/-ed a kind of crude stdint.h
-# replacement in case the header is not available. No point in hinting
-# any of these either.
+# replacement in case the header is not available. We won't do that.
 
-test "$i_stdint" = 'define' || fail "Cannot proceed without <stdint.h>"
+test "$i_stdint" = 'define' || die "Cannot proceed without <stdint.h>"
 
 useitype  u8type  uint8_t  u8size 1
 useitype u16type uint16_t u16size 2
@@ -85,10 +82,10 @@ useitype i16type int16_t i16size 2
 useitype i32type int32_t i32size 4
 useitype i64type int64_t i64size 8
 
-setvar d_quad define
-setvar quadtype int64_t
-setvar uquadtype uint64_t
-setvar quadkind QUAD_IS_INT64_t
+define d_quad 'define'
+define quadtype 'int64_t'
+define uquadtype 'uint64_t'
+define quadkind 'QUAD_IS_INT64_t'
 
 checktype d_longdbl 'long double'
 checktype d_longlong 'long long'
@@ -134,5 +131,6 @@ usetypesize lseektype lseeksize 'off_t' 'unistd.h'
 usetypesize uidtype uidsize 'uid_t' 'sys/types.h'
 usetypesize gidtype gidsize 'gid_t' 'sys/types.h'
 usetypesize timetype timesize 'time_t' 'sys/types.h'
-setvar ssizetype 'ssize_t'
-setvar uidsign '1'
+
+define ssizetype 'ssize_t'
+define uidsign '1'
