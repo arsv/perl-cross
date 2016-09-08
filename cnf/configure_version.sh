@@ -22,12 +22,12 @@ else
 	die "No patchlevel.h found, aborting"
 fi
 
-# Define a handy string here to avoid duplication in myconfig.SH and configpm.
-version_patchlevel_string="version $patchlevel subversion $subversion"
+predef version_patchlevel_string "version $patchlevel subversion $subversion"
 if [ "$perl_patchlevel" != '' -a "$perl_patchlevel" != '0' ]; then
 	perl_patchlevel=`echo $perl_patchlevel | sed 's/.* //'`
-	version_patchlevel_string="$version_patchlevel_string patch $perl_patchlevel"
+	append version_patchlevel_string "patch $perl_patchlevel"
 fi
+enddef version_patchlevel_string
 
 define PERL_CONFIG_SH true
 define PERL_REVISION $revision
