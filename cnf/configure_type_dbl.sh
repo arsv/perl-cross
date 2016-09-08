@@ -1,14 +1,13 @@
 # These tests only provide (unsafe) defaults. Proper values must be hinted.
 
 # Assumption: floating-point endianess matches integer endianess
+predef 'doublekind' '-1'
 case "$byteorder" in
 	1234) doublekind=1 ;;
 	4321) doublekind=2 ;;
 	12345678) doublekind=3 ;;
 	87654321) doublekind=4 ;;
-	*) doublekind=-1
 esac
-
 case "$doublekind" in
 1) msg "Assuming IEEE 754 32-bit little endian doubles." ;;
 2) msg "Assuming IEEE 754 32-bit big endian doubles." ;;
@@ -18,12 +17,12 @@ case "$doublekind" in
 6) msg "Assuming IEEE 754 128-bit big endian doubles." ;;
 7) msg "Assuming IEEE 754 64-bit mixed endian doubles (32-bit LEs in BE)." ;;
 8) msg "Assuming IEEE 754 64-bit mixed endian doubles (32-bit BEs in LE)." ;;
-*) msg "Cannot figure out your double. You VAX, or something?" ;;
+*) die "doublekind must be hinted for this architecture" ;;
 esac
+enddef doublekind
 
 # We will not guess longdblkind; those vary, and must be hinted.
-longdblkind=-1
-
+predef longdblkind '-1'
 case "$longdblkind" in
 0) msg "Assuming long doubles are doubles." ;;
 1) msg "Assuming IEEE 754 128-bit little endian long doubles." ;;
@@ -34,10 +33,13 @@ case "$longdblkind" in
 6) msg "Assuming 128-bit fully big-endian double-double long doubles (64-bit BEs in BE)." ;;
 7) msg "Assuming 128-bit mixed double-double long doubles (64-bit LEs in BE)." ;;
 8) msg "Assuming 128-bit mixed double-double long doubles (64-bit BEs in LE)." ;;
-*) msg "Cannot figure out your long double." ;;
+*) msg "No idea which longdblkind you have, disabling it" ;;
 esac
+enddef longdblkind
 
 # Again, no tests for these.
+predef doubleinfbytes 'undef'
+predef doublenanbytes 'undef'
 case "$doublekind" in
 1) # IEEE 754 32-bit LE
    doubleinfbytes='0x00, 0x00, 0xf0, 0x7f'
@@ -71,11 +73,12 @@ case "$doublekind" in
    doubleinfbytes='0x00, 0x00, 0x00, 0x00, 0x7f, 0xf0, 0x00, 0x00'
    doublenanbytes='0x00, 0x00, 0x00, 0x00, 0x7f, 0xf8, 0x00, 0x00'
    ;;
-*) # No idea.
-   doubleinfbytes=$undef
-   doublenanbytes=$undef
-   ;;
 esac
+enddef doubleinfbytes
+enddef doublenanbytes
+
+predef longdblinfbytes 'undef'
+predef longdblnanbytes 'undef'
 case "$longdblkind" in
 1) # IEEE 754 128-bit LE
    longdblinfbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0x7f'
@@ -138,3 +141,5 @@ case "$longdblkind" in
    longdblnanbytes=$undef
    ;;
 esac
+enddef longdblinfbytes
+enddef longdblnanbytes
