@@ -6,82 +6,65 @@
 #    test file goes here
 # END
 checkattr() {
-	mstart "Checking if compiler supports __attribute__($1)"
-	ifhintdefined "d_attribute_$1" "yes" "no" && return 0
+	mstart "Checking if compiler supports __attribute__($2)"
+	hinted $1 "yes" "no" && return
 
 	try_start
 	try_cat
-	if not try_compile_check_warnings; then
-		result 'no'
-		return 1
-	fi
+	try_compile_check_warnings
 
-	setvar "d_attribute_$1" "define"
-	result "yes"
+	resdef $1 'yes' 'no'
 }
 
-# volatile check also here, it's quite similar to __attribute__ checks
-# check_if_compiles tag "message" << END
-#     test file goes here
-# END
-check_if_compiles() {
-	mstart "Checking $2"
-	ifhintdefined "d_$1" "yes" "no" && return 0
 
-	try_start
-	try_cat
-	if not try_compile_check_warnings; then
-		result 'no'
-		return 1
-	fi
-
-	setvar "d_$1" "define"
-	result "yes"
-}
-
-checkattr 'format' <<END
+checkattr d_attribute_format 'format' <<END
 #include <stdio.h>
 void my_special_printf(char* pat,...) __attribute__((__format__(__printf__,1,2)));
 END
 
 # TODO: check for empty format here
 
-checkattr 'malloc' <<END
+checkattr d_attribute_malloc 'malloc' <<END
 #include <stdio.h>
 char *go_get_some_memory( int how_many_bytes ) __attribute__((malloc));
 END
 
-checkattr 'nonnull' <<END
+checkattr d_attribute_nonnull 'nonnull' <<END
 #include <stdio.h>
 void do_something (char *some_pointer,...) __attribute__((nonnull(1)));
 END
 
-checkattr 'noreturn' <<END
+checkattr d_attribute_noreturn 'noreturn' <<END
 #include <stdio.h>
 void fall_over_dead( void ) __attribute__((noreturn));
 END
 
-checkattr 'pure' <<END
+checkattr d_attribute_pure 'pure' <<END
 #include <stdio.h>
 int square( int n ) __attribute__((pure));
 END
 
-checkattr 'unused' <<END
+checkattr d_attribute_unused 'unused' <<END
 #include <stdio.h>
 int do_something( int dummy __attribute__((unused)), int n );
 END
 
-checkattr 'used' <<END
+checkattr d_attribute_used 'used' <<END
 #include <stdio.h>
 int used_somewhere(void) __attribute__((used));
 END
 
-checkattr 'warn_unused_result' <<END
+checkattr d_attribute_warn_unused_result 'warn_unused_result' <<END
 #include <stdio.h>
 int I_will_not_be_ignored(void) __attribute__((warn_unused_result));
 END
 
-check_if_compiles 'volatile' 'to see if your C compiler knows about "volatile"' <<END
+# volatile check also here, it's quite similar to __attribute__ checks
+
+mstart "Checking to see if your C compiler knows about volatile"
+if not hinted d_volatile 'yes' 'no'; then
+	try_start
+	try_cat << END
 int main()
 {
 	typedef struct _goo_struct goo_struct;
@@ -98,3 +81,6 @@ int main()
 	foo = foo;
 }
 END
+	try_compile_check_warnings
+	resdef d_volatile 'yes' 'no'
+fi
