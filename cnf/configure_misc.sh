@@ -59,6 +59,11 @@ define usethreads 'undef'
 define useversionedarchname 'undef'
 define usevfork 'false'
 
+# cperl-specific symbols
+define d_libname_unique 'undef'
+define d_vms_case_sensitive_symbols 'undef'
+define dl_so_eq_ext 'define'
+
 # These are important but we don't test them
 define startsh '#!/bin/sh'
 define spitshell 'cat'
