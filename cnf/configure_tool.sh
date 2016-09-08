@@ -46,11 +46,11 @@ whichprog() {
 whichprog cc CC gcc || whichprog cc CC cc
 whichprog ld LD ld
 whichprog ar AR ar
+whichprog nm NM nm
 whichprog ranlib RANLIB ranlib
 whichprog readelf READELF readelf
 whichprog objdump OBJDUMP objdump
 
-define cpp "$cc -E"
 log
 
 mstart "Trying $cc"
@@ -125,13 +125,16 @@ if not hinted "extern_C"; then
 fi
 
 # File name extensions, must be set before running any compile/link tests
-
 define _o '.o'
 define _a '.a'
 define so 'so'
+define _exe ''
+
+# Used only for modules
+define cccdlflags '-fPIC -Wno-unused-function'
+define ccdlflags '-Wl,-E'
 
 # Linker flags setup
-
 predef lddlflags "-shared"
 predef ccflags ''
 predef ldflags ''
@@ -164,7 +167,7 @@ if [ -n "$ldflags" -a "$x_lddlflags" != "user" ]; then
 	done
 fi
 
-# finish ccflags # done later in _hdrs because of LARGEFILE_SOURCE
+# enddef ccflags # done later in _hdrs because of LARGEFILE_SOURCE
 enddef ldflags
 enddef lddlflags
 enddef cppflags
@@ -267,3 +270,16 @@ case "$cctype-$ccversion" in
 		;;
 esac
 enddef optimize
+
+# These are kind-of part of toolchain, but we do not test them
+
+define cpp "$cc -E"
+define cpprun "$cpp"
+define cppstdin "$cpp"
+
+define cpplast -
+define cppminus -
+define cppsymbols
+
+define nm_opt
+define nm_so_opt
