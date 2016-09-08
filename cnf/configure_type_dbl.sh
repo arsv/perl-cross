@@ -144,4 +144,4 @@ esac
 enddef longdblinfbytes
 enddef longdblnanbytes
 
-default alignbytes 8
+define alignbytes 8
