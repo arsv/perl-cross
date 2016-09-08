@@ -4,11 +4,11 @@
 
 checkhdr() {
 	mstart "Checking whether to include <$2>"
-	if nothinted "$1"; then
+	if not hinted "$1"; then
 		try_start
 		try_add "#include <$2>"
 		try_compile
-		resdef 'yes' 'no' "$1"
+		resdef "$1" 'yes' 'no'
 	fi
 }
 
@@ -64,7 +64,7 @@ checkhdr i_rpcsvcdbm 'rpcsvc/dbm.h'
 checkhdr i_sgtty 'sgtty.h'
 checkhdr i_shadow 'shadow.h'
 checkhdr i_socks 'socks.h'
-checkhdr i_stdarg 'stdarg.h'
+# i_stdarg below
 checkhdr i_stdbool 'stdbool.h'
 checkhdr i_stddef 'stddef.h'
 checkhdr i_stdint 'stdint.h'
@@ -92,7 +92,7 @@ checkhdr i_sysstat 'sys/stat.h'
 checkhdr i_sysstatfs 'sys/statfs.h'
 checkhdr i_sysstatvfs 'sys/statvfs.h'
 checkhdr i_systime 'sys/time.h'
-setvar i_systimek undef # not a plain header check
+define i_systimek 'undef' # not a plain header check
 checkhdr i_systimes 'sys/times.h'
 checkhdr i_systypes 'sys/types.h'
 checkhdr i_sysuio 'sys/uio.h'
@@ -107,31 +107,36 @@ checkhdr i_unistd 'unistd.h'
 checkhdr i_ustat 'ustat.h'
 checkhdr i_utime 'utime.h'
 checkhdr i_values 'values.h'
-checkhdr i_varargs 'varargs.h'
+# i_varargs is checked below
 # i_varhdr is checked below
 checkhdr i_vfork 'vfork.h'
 checkhdr i_xlocale 'xlocale.h'
+
+# These two are mutually exclusive
+test "$i_varargs" != 'define' && checkhdr i_stdarg 'stdarg.h'
+test "$i_stdarg"  != 'define' && checkhdr i_varargs 'varargs.h'
 
 # simplified approach, compared to what Configure has.
 # assume header is usable as long as it's there
 mstart "Looking which header to use for varargs"
 if [ "$i_stdarg" = 'define' ]; then
-	setvar 'i_varargs' 'undef'
-	setvar 'i_varhdr' 'stdarg.h'
+	define 'i_varargs' 'undef'
+	define 'i_varhdr' 'stdarg.h'
 	result '<stdarg.h>'	
 elif [ "$i_varargs" = 'define' ]; then
-	setvar 'i_stdarg' 'undef'
-	setvar 'i_varhdr' 'varargs.h'
+	define 'i_stdarg' 'undef'
+	define 'i_varhdr' 'varargs.h'
 	result '<varargs.h>'
 else
+	define 'i_varhdr' ''
 	result 'nothing found'
 fi
 
 # Set up largefile support, if needed.
 # The limiting factor here is uClibc features.h, with raises error
 # if FILE_OFFSET_BITS=64 is set but the library was built w/o LFS.
-mstart "Checking whether it's ok to enable large file support"
-if nothinted 'uselargefiles'; then
+mstart "Checking whether to enable large file support"
+if not hinted 'uselargefiles'; then
 	# Adding -D_FILE_OFFSET_BITS is mostly harmless, except
 	# when dealing with uClibc that was compiled w/o largefile
 	# support
@@ -143,10 +148,12 @@ if nothinted 'uselargefiles'; then
 			try_start
 			try_includes "stdio.h"
 			try_compile -D_FILE_OFFSET_BITS=64
-			resdef "yes, enabling it" "no, it's disabled" 'uselargefiles'
+			resdef 'uselargefiles' "yes" "no"
 	esac
 fi
 if [ "$uselargefiles" = 'define' ]; then
-	appendvar 'ccflags' " -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+	append ccflags " -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 	log
 fi
+
+enddef ccflags # started in _tool
