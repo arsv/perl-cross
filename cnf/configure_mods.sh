@@ -105,6 +105,9 @@ extonlyif VMS-Stdio "$osname" = "vms"
 extonlyif VMS-Filespec "$osname" = "vms"
 extonlyif Amiga-ARexx "$osname" = "amiga"
 extonlyif Amiga-Exec "$osname" = "amiga"
+extonlyif Win32 "$osname" = 'win32'		# XXX: or is it mingw32?
+extonlyif Win32API-File "$osname" = 'win32'
+extonlyif Win32CORE "$osname" = 'win32'
 
 extonlyif Thread "$usethreads" = 'define'
 
