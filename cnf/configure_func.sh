@@ -5,7 +5,7 @@ checkfunc() {
 	mstart "Checking for $2"
 	if not hinted $1 'found' 'not found'; then
 		try_start
-		funcincludes "$3" "$4"
+		funcincludes "$3" "$4" "$includes"
 		try_add "int main(void) { $2($3); return 0; }"
 		try_link -O0 -fno-builtin
 		resdef $1 'found' 'not found'
@@ -17,9 +17,8 @@ funcincludes() {
 		*NULL*) try_includes "stdlib.h" ;;
 	esac
 
-	test -n "$includes" && try_includes "$includes"
-
-	try_includes "$2"
+	test -n "$3" && try_includes "$3"
+	test -n "$2" && try_includes "$2"
 }
 
 # The naming scheme looks regular but it isn't!
