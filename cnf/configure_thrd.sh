@@ -1,16 +1,23 @@
 # Thread support
-# Called only if $usethreads is set (which is not by default)
 
-mstart 'Looking whether to use interpreter threads'
-if [ "$useithreads" = 'define' ]; then
-	setvar 'useithreads' 'define'
-	result 'yes, using ithreads'
-elif [ "$use5005threads" = 'define' ]; then
-	setvar 'useithreads' 'undef'
-	result 'no, using 5.005 threads'
+mstart 'Looking whether to enable threads'
+if [ "$usethreads" = 'define' ]; then
+	if [ "$use5005threads" = 'define' ]; then
+		define 'useithreads' 'undef'
+		result 'yes, 5.005 threads'
+	elif [ "$useithreads" = 'define' ]; then
+		define 'use5005threads' 'undef'
+		result 'yes, ithreads'
+	else
+		define 'useithreads' 'define'
+		define 'use5005threads' 'undef'
+		result 'yes, ithreads'
+	fi
 else
-	setvar 'useithreads' 'define'
-	result 'yes, using ithreads'
+	define 'useithreads' 'undef'
+	define 'use5005threads' 'undef'
+	result 'no'
+	msg "Disabling thread-related stuff"
 fi
 
 # Both presence *and* prototype for the function are checked here,
@@ -42,184 +49,383 @@ free_type_letters='T S D R'
 # Types for these are specified for each test separately (usually that's
 # a pointer to some struct)
 
-# checkfuncr func_r includes 'P_ROTO1 P_ROTO2 ...' 'T=type_T' 'S=type_S' ...
+# The function is only usable if it links *and* the prototype is know.
+# And if threads are disabled we still have to put all those symbols
+# into config.sh, without testing them.
+#
+# Hinting anything here is not a good idea.
+# Unless it's both d_func_r and func_r_proto.
+
+# funcproto func_r \
+#	includes \
+#	'P_ROTO1 P_ROTO2 ...' \
+#	'T=type_T' 'S=type_S' ...
+
+funcproto() {
+	fun=$1
+	inc=$2
+	shift 2
+
+	fsym="d_${fun}"
+	psym="${fun}_proto"
+
+	log "Prototype and availability test for $fun"
+
+	predef $fsym 'undef'
+	predef $psym '0'
+
+	if [ "$usethreads" != 'define' ]; then
+		false
+	elif not checkfuncr $fsym $fun "$inc"; then
+		false
+	elif not checkproto $psym $fun "$inc" "$@"; then
+		setenv $fsym 'undef'
+	fi
+
+	enddef $fsym
+	enddef $psym
+}
+
 checkfuncr() {
-	w="$1"
-	D="d_$w"
-	i="pthread.h $2"
-	P="$3"
-	shift 3
+	mstart "Checking for $2"
+
+	if hinted $1; then
+		getenv found "$1"
+		test $1 = 'define'
+		return $?
+	fi
+
+	try_start
+	try_includes "$3"
+	try_add "int main() { $2(); return 0; }"
+
+	if try_link; then
+		setenv $1 'define'
+		result 'found'
+	else
+		setenv $1 'undef'
+		result 'missing'
+	fi
+}
+
+# The following "real" prototype checks may return false positives
+# if none of included headers declares prototype for $w. Because of
+# this, we must make sure there was at least one negative result.
+#
+# In case the first one we try succeeds, V_Z is used for a negative
+# test. None of the functions below have that kind of prototype,
+# so it must fail in all cases.
+
+checkproto() {
+	sym=$1
+	fun=$2
+	inc=$3
+	pro=$4
+	shift 4 # the rest are type assignments
 
 	require 'cc'
-	mstart "Checking for $w"
+	msg "Checking which prototype $fun has"
 
-	__=13
-	ifhintdefined "$D" 'present' 'missing' && test $__ != 0 && return $__
+	setfreetypes "$@"
 
-	if [ $__ = '13' ]; then
-		try_start
-		try_add "int main(void) { $w(); return 0; }"
-		try_link
-		resdef 'found' 'not found' "$D" || return $__
-	fi
-
-	msg "Checking which prototype $w has"
-	checkfuncr_assign_types "$@"
-	# The following "real" prototype checks may return false positives
-	# if none of included headers declares prototype for $w. Because of
-	# this, we must make sure there was at least one negative result.
-	cz=''
-	for p in $P; do
-		if checkfuncr_proto "$w" "$i" "$p" "$@"; then
-			setvar "${w}_proto" "$p"
-			cz="${cz}y"
-		elif [ -z "$cz" -o "$cz" = 'y' ]; then
-			cz="${cz}n"
-		fi
-		if [ "$cz" = "yn" -o "$cz" = "ny" ]; then
-			return 0;
-		elif [ "$cz" = 'yy' ]; then
-			msg "    double positive, $w has no declared prototype"
-			break;
-		fi
-	done
-	if [ "$cz" = "y" ]; then
-		# There was only one prototype to test, so we take one more
-		# to see if it will return negative result. V_Z is not among
-		# prototypes these functions can have, so it should always
-		# return negative.
-		if checkfuncr_proto "$w" "$i" "V_Z" "$@"; then
-			msg "    double positive, $w has no declared prototype"
+	setenv $sym ''
+	hadfailure='no'
+	hadsuccess='no'
+	for p in $pro; do
+		if tryproto $fun "$inc" $p; then
+			hadsuccess='yes'
+			break
 		else
-			return 0
+			hadfailure='yes'
 		fi
-	fi
-	setvar "$D" 'undef'
-	msg "    assuming $w is unusable"
-	return 1
-}
-
-# checkfuncr_assign_types 'T=type_T' 'S=type_S' ...
-checkfuncr_assign_types()
-{
-	for cl in $free_type_letters; do
-		eval "type_$cl='undef'"
 	done
-	for cv in "$@"; do
-		echo "$cv" | grep -q '=' || die "Bad free type specified \"$cv\" (missing =)"
-		cl=`echo "$cv" | sed -e 's/=.*//'`
-		ct=`echo "$cv" | sed -e 's/.=//'`
-		test -n "$cl" -a -n "$ct" || die "Bad free type specified \"$cv\" (empty l- or rhs)"
-		eval "type_$cl='$ct'"
-		log "Setting type_$cl = '$ct'"
-	done
-}
 
-# checkfuncr_proto func_r 'include.h' P_ROTO
-checkfuncr_proto() {
-	mstart "\tis it $3"
-	try_start
-	try_includes $2
-	Q=`checkfuncr_proto_str "$1" "$3"`
-	try_add "$Q"
-
-	if try_compile; then
-		result "yes"
-		return 0
-	else
-		result "no"
+	if [ "$hadsuccess" = 'no' ]; then
+		result "none that we know of"
+		return 1
+	elif [ "$hadfailure" = 'yes' ]; then
+		true
+	elif tryproto $fun "$inc" 'V_Z'; then
+		result "cannot tell for sure"
 		return 1
 	fi
+
+	setenv $sym "$p"
+	result "$p"
+	return 0
 }
 
-# checkfuncr_proto func_r P_ROTO -> "type_P func_r(type_R, type_O, type_T, type_O);"
-checkfuncr_proto_str() {
-	cf="$1"
-	cP="$2"
+setfreetypes()
+{
+	for cl in $free_type_letters; do
+		setenv "type_$cl" 'undef'
+	done
 
-	cr=`echo "$cP" | sed -e 's/_.*//'`
-	cR=`valueof "type_$cr"`
-	test -n "$cR" || die "BAD type letter $cr in $cP"
+	for cv in "$@"; do
+		cl=${cv%=*}
+		ct=${cv##*=}
 
-	ca=`echo "$cP" | sed -e 's/^._//' -e 's/\(.\)/\1 /g'`
-	for cp in $ca; do
-		cT=`valueof "type_$cp"`
-		test -n "$cT" || msg -n "(BAD type letter $cp) "
-		test "$cT" = "undef" && msg -n "(UNDEF free type letter $cp) "
-		if [ -z "$cA" ]; then
-			cA="$cT"
+		test -n "$cl" || die "Bad type spec $cv (lhs)"
+		test -n "$ct" || die "Bad type spec $cv (rhs)"
+
+		setenv "type_$cl" "$ct"
+	done
+}
+
+tryproto() {
+	try_start
+	try_includes $2
+
+	fun=$1
+	pro=$3
+
+	# P_ROTO -> P
+	key=${pro%_*}
+	getenv ret "type_$key"
+	test -n "$ret" || die "Bad type letter $key in $fun($pro)"
+
+	# P_ROTO -> R O T O
+	keys=`echo "$pro" | sed -e 's/^._//' -e 's/\(.\)/\1 /g'`
+	args=''
+	for key in $keys; do
+		getenv arg "type_$key"
+		if [ -z "$arg" ]; then
+			die "Bad type letter $argkey in $fun($pro)"
+		elif [ "$argtype" = "undef" ]; then
+			die "Undef free type letter $argkey in $fun($pro)"
+		elif [ -z "$args" ]; then
+			args="$arg"
 		else
-			cA="$cA, $cT"
+			args="$args, $arg"
 		fi
 	done
 
-	echo "$cR $cf($cA);"
+	try_add "$ret $fun($args);"
+	try_compile
 }
 
-checkfuncr asctime_r 'time.h' 'B_SB B_SBI I_SB I_SBI' 'S=const struct tm*'
-checkfuncr crypt_r 'sys/types.h stdio.h crypt.h' 'B_CCS B_CCD' 'S=struct crypt_data*' 'D=CRYPTD*'
-checkfuncr ctermid_r 'sys/types.h stdio.h' 'B_B'
-checkfuncr endpwent_r 'sys/types.h stdio.h pwd.h' 'I_H V_H'
-checkfuncr getgrent_r 'sys/types.h stdio.h grp.h' 'I_SBWR I_SBIR S_SBW S_SBI I_SBI I_SBIH' \
+funcproto asctime_r \
+	'time.h' \
+	'B_SB B_SBI I_SB I_SBI' \
+	'S=const struct tm*'
+
+funcproto crypt_r \
+	'sys/types.h stdio.h crypt.h' \
+	'B_CCS B_CCD' \
+	'S=struct crypt_data*' 'D=CRYPTD*'
+
+funcproto ctermid_r \
+	'sys/types.h stdio.h' \
+	'B_B'
+
+funcproto endpwent_r \
+	'sys/types.h stdio.h pwd.h' \
+	'I_H V_H'
+
+funcproto getgrent_r \
+	'sys/types.h stdio.h grp.h'\
+	'I_SBWR I_SBIR S_SBW S_SBI I_SBI I_SBIH'\
 	'S=struct group*' 'R=struct group**'
-checkfuncr endgrent_r 'sys/types.h stdio.h grp.h' 'I_H V_H'
-checkfuncr getgrgid_r 'sys/types.h stdio.h grp.h' 'I_TSBWR I_TSBIR I_TSBI S_TSBI' \
+
+funcproto endgrent_r \
+	'sys/types.h stdio.h grp.h' \
+	'I_H V_H'
+
+funcproto getgrgid_r \
+	'sys/types.h stdio.h grp.h' \
+	'I_TSBWR I_TSBIR I_TSBI S_TSBI' \
 	'T=gid_t' 'S=struct group*' 'R=struct group**'
-checkfuncr getgrnam_r 'sys/types.h stdio.h grp.h' 'I_CSBWR I_CSBIR S_CBI I_CSBI S_CSBI' \
+
+funcproto getgrnam_r \
+	'sys/types.h stdio.h grp.h' \
+	'I_CSBWR I_CSBIR S_CBI I_CSBI S_CSBI' \
 	'S=struct group*' 'R=struct group**'
-checkfuncr drand48_r 'sys/types.h stdio.h stdlib.h' 'I_ST' 'S=struct drand48_data*' 'T=double*'
-checkfuncr endhostent_r 'sys/types.h stdio.h netdb.h' 'I_D V_D' 'D=struct hostent_data*'
-checkfuncr endnetent_r 'sys/types.h stdio.h netdb.h' 'I_D V_D' 'D=struct netent_data*'
-checkfuncr endprotoent_r 'sys/types.h stdio.h netdb.h' 'I_D V_D' 'D=struct protoent_data*'
-checkfuncr endservent_r 'sys/types.h stdio.h netdb.h' 'I_D V_D' 'D=struct servent_data*'
-checkfuncr gethostbyaddr_r 'netdb.h' \
+
+funcproto drand48_r \
+	'sys/types.h stdio.h stdlib.h' \
+	'I_ST' \
+	'S=struct drand48_data*' 'T=double*'
+
+funcproto endhostent_r \
+	'sys/types.h stdio.h netdb.h' \
+	'I_D V_D' \
+	'D=struct hostent_data*'
+
+funcproto endnetent_r \
+	'sys/types.h stdio.h netdb.h' \
+	'I_D V_D' \
+	'D=struct netent_data*'
+
+funcproto endprotoent_r \
+	'sys/types.h stdio.h netdb.h' \
+	'I_D V_D' \
+	'D=struct protoent_data*'
+
+funcproto endservent_r \
+	'sys/types.h stdio.h netdb.h' \
+	'I_D V_D' \
+	'D=struct servent_data*'
+
+funcproto gethostbyaddr_r \
+	'netdb.h' \
 	'I_CWISBWRE S_CWISBWIE S_CWISBIE S_TWISBIE S_CIISBIE S_CSBIE S_TSBIE I_CWISD I_CIISD I_CII I_TsISBWRE' \
 	'T=const void*' 'S=struct hostent*' 'D=struct hostent_data*' 'R=struct hostent**'
-checkfuncr gethostbyname_r 'netdb.h' 'I_CSBWRE S_CSBIE I_CSD' \
+
+funcproto gethostbyname_r \
+	'netdb.h' \
+	'I_CSBWRE S_CSBIE I_CSD' \
 	'S=struct hostent*' 'R=struct hostent**' 'D=struct hostent_data*'
-checkfuncr gethostent_r 'netdb.h' 'I_SBWRE I_SBIE S_SBIE S_SBI I_SBI I_SD'\
+
+funcproto gethostent_r \
+	'netdb.h' \
+	'I_SBWRE I_SBIE S_SBIE S_SBI I_SBI I_SD'\
 	'S=struct hostent*' 'R=struct hostent**' 'D=struct hostent_data*'
-checkfuncr getlogin_r 'unistd.h' 'I_BW I_BI B_BW B_BI'
-checkfuncr getnetbyaddr_r 'netdb.h' \
+
+funcproto getlogin_r \
+	'unistd.h' \
+	'I_BW I_BI B_BW B_BI'
+
+funcproto getnetbyaddr_r \
+	'netdb.h' \
 	'I_UISBWRE I_LISBI S_TISBI S_LISBI I_TISD I_LISD I_IISD I_uISBWRE'\
 	'T=in_addr_t' 'S=struct netent*' 'D=struct netent_data*' 'R=struct netent**'
-checkfuncr getnetbyname_r 'netdb.h' 'I_CSBWRE I_CSBI S_CSBI I_CSD' \
+
+funcproto getnetbyname_r \
+	'netdb.h' \
+	'I_CSBWRE I_CSBI S_CSBI I_CSD' \
 	'S=struct netent*' 'R=struct netent**' 'D=struct netent_data*'
-checkfuncr getnetent_r 'netdb.h' 'I_SBWRE I_SBIE S_SBIE S_SBI I_SBI I_SD' \
+
+funcproto getnetent_r \
+	'netdb.h' \
+	'I_SBWRE I_SBIE S_SBIE S_SBI I_SBI I_SD' \
 	'S=struct netent*' 'R=struct netent**' 'D=struct netent_data*'
-checkfuncr getprotobyname_r 'netdb.h' 'I_CSBWR S_CSBI I_CSD' \
+
+funcproto getprotobyname_r \
+	'netdb.h' \
+	'I_CSBWR S_CSBI I_CSD' \
 	'S=struct protoent*' 'R=struct protoent**' 'D=struct protoent_data*'
-checkfuncr getprotobynumber_r 'netdb.h' 'I_ISBWR S_ISBI I_ISD' \
+
+funcproto getprotobynumber_r \
+	'netdb.h' \
+	'I_ISBWR S_ISBI I_ISD' \
 	'S=struct protoent*' 'R=struct protoent**' 'D=struct protoent_data*'
-checkfuncr getprotoent_r 'netdb.h' 'I_SBWR I_SBI S_SBI I_SD' \
+
+funcproto getprotoent_r \
+	'netdb.h' \
+	'I_SBWR I_SBI S_SBI I_SD' \
 	'S=struct protoent*' 'R=struct protoent**' 'D=struct protoent_data*'
-checkfuncr getpwent_r 'pwd.h' 'I_SBWR I_SBIR S_SBW S_SBI I_SBI I_SBIH' \
+
+funcproto getpwent_r \
+	'pwd.h' \
+	'I_SBWR I_SBIR S_SBW S_SBI I_SBI I_SBIH' \
 	'S=struct passwd*' 'R=struct passwd**'
-checkfuncr getpwnam_r 'pwd.h' 'I_CSBWR I_CSBIR S_CSBI I_CSBI' \
+
+funcproto getpwnam_r \
+	'pwd.h' \
+	'I_CSBWR I_CSBIR S_CSBI I_CSBI' \
 	'S=struct passwd*' 'R=struct passwd**'
-checkfuncr getpwuid_r 'sys/types.h pwd.h' 'I_TSBWR I_TSBIR I_TSBI S_TSBI' \
+
+funcproto getpwuid_r \
+	'sys/types.h pwd.h' \
+	'I_TSBWR I_TSBIR I_TSBI S_TSBI' \
 	 'T=uid_t' 'S=struct passwd*' 'R=struct passwd**'
-checkfuncr getservbyname_r 'netdb.h' 'I_CCSBWR S_CCSBI I_CCSD' \
+
+funcproto getservbyname_r \
+	'netdb.h' \
+	'I_CCSBWR S_CCSBI I_CCSD' \
 	'S=struct servent*' 'R=struct servent**' 'D=struct servent_data*'
-checkfuncr getservbyport_r 'netdb.h' 'I_ICSBWR S_ICSBI I_ICSD' \
+
+funcproto getservbyport_r \
+	'netdb.h' \
+	'I_ICSBWR S_ICSBI I_ICSD' \
 	'S=struct servent*' 'R=struct servent**' 'D=struct servent_data*'
-checkfuncr getservent_r 'netdb.h' 'I_SBWR I_SBI S_SBI I_SD' \
+
+funcproto getservent_r \
+	'netdb.h' \
+	'I_SBWR I_SBI S_SBI I_SD' \
 	'S=struct servent*' 'R=struct servent**' 'D=struct servent_data*'
-checkfuncr getspnam_r 'shadow.h' 'I_CSBWR S_CSBI' 'S=struct spwd*' 'R=struct spwd**'
-checkfuncr gmtime_r 'time.h' 'S_TS I_TS' 'S=struct tm*' 'T=const time_t*'
-checkfuncr localtime_r 'time.h' 'S_TS I_TS' 'S=struct tm*' 'T=const time_t*'
-checkfuncr random_r 'stdlib.h' 'I_iS I_lS I_St' 'S=struct random_data*'
-checkfuncr readdir64_r 'stdio.h dirent.h' 'I_TSR I_TS' 'T=DIR*' 'S=struct dirent64*' 'R=struct dirent64**'
-checkfuncr readdir_r 'stdio.h dirent.h' 'I_TSR I_TS' 'T=DIR*' 'S=struct dirent*' 'R=struct dirent**'
-checkfuncr setgrent_r 'grp.h' 'I_SBWR I_SBIR S_SBW S_SBI I_SBI I_SBIH' 'S=struct group*' 'R=struct group**'
-checkfuncr sethostent_r 'netdb.h' 'I_ID V_ID' 'D=struct hostent_data*'
-checkfuncr setlocale_r 'locale.h' 'I_ICBI'
-checkfuncr setnetent_r 'netdb.h' 'I_ID V_ID' 'D=struct netent_data*'
-checkfuncr setprotoent_r 'netdb.h' 'I_ID V_ID' 'D=struct protoent_data*'
-checkfuncr setpwent_r 'pwd.h' 'I_H V_H'
-checkfuncr setservent_r 'netdb.h' 'I_ID V_ID' 'D=struct servent_data*'
-checkfuncr srand48_r 'stdlib.h' 'I_LS' 'S=struct drand48_data*'
-checkfuncr srandom_r 'stdlib.h' 'I_TS' 'T=unsigned int' 'S=struct random_data*'
-checkfuncr strerror_r 'string.h' 'I_IBW I_IBI B_IBW'
-checkfuncr tmpnam_r 'stdio.h' 'B_B'
-checkfuncr ttyname_r 'stdio.h unistd.h' 'I_IBW I_IBI B_IBI'
+
+funcproto getspnam_r \
+	'shadow.h' \
+	'I_CSBWR S_CSBI' \
+	'S=struct spwd*' 'R=struct spwd**'
+
+funcproto gmtime_r \
+	'time.h' \
+	'S_TS I_TS' \
+	'S=struct tm*' 'T=const time_t*'
+
+funcproto localtime_r \
+	'time.h' \
+	'S_TS I_TS' \
+	'S=struct tm*' 'T=const time_t*'
+
+funcproto random_r \
+	'stdlib.h' \
+	'I_iS I_lS I_St' \
+	'S=struct random_data*'
+
+funcproto readdir64_r \
+	'stdio.h dirent.h' \
+	'I_TSR I_TS' \
+	'T=DIR*' 'S=struct dirent64*' 'R=struct dirent64**'
+
+funcproto readdir_r \
+	'stdio.h dirent.h' \
+	'I_TSR I_TS' \
+	'T=DIR*' 'S=struct dirent*' 'R=struct dirent**'
+
+funcproto setgrent_r \
+	'grp.h' \
+	'I_SBWR I_SBIR S_SBW S_SBI I_SBI I_SBIH' \
+	'S=struct group*' 'R=struct group**'
+
+funcproto sethostent_r \
+	'netdb.h' \
+	'I_ID V_ID' \
+	'D=struct hostent_data*'
+
+funcproto setlocale_r \
+	'locale.h' \
+	'I_ICBI'
+
+funcproto setnetent_r \
+	'netdb.h' \
+	'I_ID V_ID' \
+	'D=struct netent_data*'
+
+funcproto setprotoent_r \
+	'netdb.h' \
+	'I_ID V_ID' \
+	'D=struct protoent_data*'
+
+funcproto setpwent_r \
+	'pwd.h' \
+	'I_H V_H'
+
+funcproto setservent_r \
+	'netdb.h' \
+	'I_ID V_ID' \
+	'D=struct servent_data*'
+
+funcproto srand48_r \
+	'stdlib.h' \
+	'I_LS' \
+	'S=struct drand48_data*'
+
+funcproto srandom_r \
+	'stdlib.h' \
+	'I_TS' \
+	'T=unsigned int' 'S=struct random_data*'
+
+funcproto strerror_r \
+	'string.h' \
+	'I_IBW I_IBI B_IBW'
+
+funcproto tmpnam_r \
+	'stdio.h' \
+	'B_B'
+
+funcproto ttyname_r \
+	'stdio.h unistd.h' \
+	'I_IBW I_IBI B_IBI'
