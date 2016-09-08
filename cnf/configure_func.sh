@@ -17,8 +17,8 @@ funcincludes() {
 		*NULL*) try_includes "stdlib.h" ;;
 	esac
 
-	test -n "$3" && try_includes "$3"
-	test -n "$2" && try_includes "$2"
+	test -n "$3" && try_includes $3
+	test -n "$2" && try_includes $2
 }
 
 # The naming scheme looks regular but it isn't!
