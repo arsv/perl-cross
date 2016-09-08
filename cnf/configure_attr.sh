@@ -54,6 +54,11 @@ checkattr d_attribute_used 'used' <<END
 int used_somewhere(void) __attribute__((used));
 END
 
+checkattr d_attribute_deprecated 'deprecated' <<END
+#include <stdio.h>
+int deprecated(void) __attribute__((deprecated));
+END
+
 checkattr d_attribute_warn_unused_result 'warn_unused_result' <<END
 #include <stdio.h>
 int I_will_not_be_ignored(void) __attribute__((warn_unused_result));
