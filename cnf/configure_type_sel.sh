@@ -3,29 +3,28 @@
 
 msg "Choosing C types to be used for perl internal types"
 case "$use64bitint:$d_quad:$quadtype" in
-define:define:?*)
-	setvar ivtype "$quadtype"
-	setvar uvtype "$uquadtype"
-	setvar ivsize 8
-	setvar uvsize 8
-	;;
-*)	setvar ivtype "long"
-	setvar uvtype "unsigned long"
-	setvar ivsize $longsize
-	setvar uvsize $longsize
-	;;
+	define:define:?*)
+		define ivtype "$quadtype"
+		define uvtype "$uquadtype"
+		define ivsize '8'
+		define uvsize '8'
+		;;
+	*)	define ivtype "long"
+		define uvtype "unsigned long"
+		define ivsize $longsize
+		define uvsize $longsize
+		;;
 esac
 
 case "$uselongdouble:$d_longdbl" in
-define:define)
-	setvar nvtype "long double"
-	setvar nvsize $longdblsize
-	;;
-*)	setvar nvtype double
-	setvar nvsize $doublesize
-	;;
+	define:define)
+		define nvtype 'long double'
+		define nvsize $longdblsize
+		;;
+	*)	define nvtype 'double'
+		define nvsize $doublesize
+		;;
 esac
-
 msg "	IV will be "$ivtype", $ivsize bytes"
 msg "	UV will be "$uvtype", $uvsize bytes"
 msg "	NV will be "$nvtype", $nvsize bytes"
@@ -46,59 +45,60 @@ msg "	NV will be "$nvtype", $nvsize bytes"
 # Signedness of uvtype doesn't generally matter, except when it's long double vs 64bit int.
 # However, uvtype should always be unsigned, and the code above makes sure it is.
 mstart "Guessing nv_preserves_uv_bits value"
-if nothinted "nv_preserves_uv_bits"; then
+if not hinted "nv_preserves_uv_bits"; then
 	case "$nvsize:$uvsize" in
 		4:*)
-			setvar nv_preserves_uv_bits 16
+			define nv_preserves_uv_bits 16
 			result "$nv_preserves_uv_bits"
 			;;
 		*:4)
-			setvar nv_preserves_uv_bits 32
+			define nv_preserves_uv_bits 32
 			result "$nv_preserves_uv_bits"
 			;;
 		8:8)
-			setvar nv_preserves_uv_bits 53
+			define nv_preserves_uv_bits 53
 			result "$nv_preserves_uv_bits"
 			;;
 		10:8)
-			setvar nv_preserves_uv_bits 64
+			define nv_preserves_uv_bits 64
 			result "$nv_preserves_uv_bits"
 			;;
 		*)
-			setvar nv_preserves_uv_bits 0
+			define nv_preserves_uv_bits 0
 			result "no idea"
 			;;
 	esac
 fi
 
 mstart "Deciding whether nv preserves full uv"
-if nothinted "d_nv_preserves_uv"; then
+if not hinted "d_nv_preserves_uv"; then
 	test $nv_preserves_uv_bits -gt 0 -a $((8*uvsiz)) = $nv_preserves_uv_bits
-	resdef "apparently so" "probably no" d_nv_preserves_uv
+	resdef d_nv_preserves_uv "apparently so" "probably no"
 fi
 
 # nv_overflows_integers_at is a property of nvtype alone, it doesn't depend on uvtype at all.
 # Assuming IEEE 754 floats here once again.
 mstart "Checking integer capacity of nv"
-if nothinted "nv_overflows_integers_at"; then
+if not hinted "nv_overflows_integers_at"; then
 	case "$nvsize" in
-		10)	setvar nv_overflows_integers_at '256.0*256.0*256.0*256.0*256.0*256.0*256.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0'
+		10)	define nv_overflows_integers_at '256.0*256.0*256.0*256.0*256.0*256.0*256.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0'
 			result "long double"
 			;;
-		8)	setvar nv_overflows_integers_at '256.0*256.0*256.0*256.0*256.0*256.0*2.0*2.0*2.0*2.0*2.0'
+		8)	define nv_overflows_integers_at '256.0*256.0*256.0*256.0*256.0*256.0*2.0*2.0*2.0*2.0*2.0'
 			result "double"
 			;;
-		4)	setvar nv_overflows_integers_at '256.0*256.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0'
+		4)	define nv_overflows_integers_at '256.0*256.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0*2.0'
 			result "float"
 			;;
-		*)	result "unknown"
+		*)	define nv_overflows_integers_at '0.0'
+			result "unknown"
 			;;
 	esac
 fi
 
 # Target byte order check. Must be done after choosing $uvtype.
 mstart "Guessing byte order"
-if nothinted 'byteorder'; then
+if not hinted 'byteorder'; then
 	try_start
 	try_includes "sys/types.h"
 	if [ "$uvsize" = 8 ]; then
@@ -107,25 +107,27 @@ if nothinted 'byteorder'; then
 		try_add "$uvtype foo = 0x44332211;"
 	elif [ -n "$uvsize" ]; then
 		result "unknown"
-		fail "Cannot check byte order with uvsize=$uvsize"
+		die "Cannot check byte order with uvsize=$uvsize"
 	else
 		result "unknown"
-		fail "Cannot check byte order without known uvsize"
+		die "Cannot check byte order without known uvsize"
 	fi
 
 	# Most targets use .data but PowerPC has .sdata instead
 	if try_compile && try_objdump -j .data -j .sdata -s; then
-		byteorder=`grep '11' try.out | grep '44' | sed -e 's/  .*//' -e 's/[^1-8]//g' -e 's/\([1-8]\)\1/\1/g'`
+		bo=`grep '11' try.out | grep '44' | sed -e 's/  .*//' -e 's/[^1-8]//g' -e 's/\([1-8]\)\1/\1/g'`
 	else
-		byteorder=''
+		bo=''
 	fi
 
-	if [ -n "$byteorder" ]; then
-		result "$byteorder"
+	if [ -n "$bo" ]; then
+		define byteorder "$bo"
+		result "$bo"
 	else
 		result "unknown"
-		fail "Cannot determine byteorder for this target,"
+		msg "Cannot determine byteorder for this target,"
 		msg "please supply -Dbyteorder= in the command line."
 		msg "Common values: 1234 for 32bit little-endian, 4321 for 32bit big-endian."
+		exit 255
 	fi
 fi
