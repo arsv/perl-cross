@@ -8,13 +8,6 @@ die() {
 	exit 255
 }
 
-# note: setvar()s should preceede result() to produce a nice log
-result() {
-	echo "Result: $*" >> $cfglog
-	echo >> $cfglog
-	echo "$@" >&2
-}
-
 log() {
 	echo "$@" >> $cfglog
 }
@@ -24,76 +17,119 @@ msg() {
 	echo "$@" >&2
 }
 
-run() {
-	echo "> $@" >> $cfglog
-	"$@"
-}
-
-# Let user see the whole bunch of errors instead of stopping on the first
-fail() {
-	echo "ERROR: $*" >& 2
-	exit 255
-}
-
 mstart() {
 	echo "$@" >> $cfglog
 	echo -n "$* ... " >& 2
 }
 
-# setenv name value
-# emulates (incorrect in sh) statement $$1="$2"
+# note: setvar()s should preceede result() to produce a nice log
+result() {
+	echo "Result: $*" >> $cfglog
+	echo >> $cfglog
+	echo "$@" >&2
+}
+
+run() {
+	echo "> $@" >> $cfglog
+	"$@"
+}
+
+not() {
+	if "$@"; then false; else true; fi;
+}
+
 setenv() {
-	_z=`echo "$2" | sed -e "s@'@'\"'\"'@g"`
-	eval $1="'$_z'"
+	eval "$1='$2'"
 }
 
-# setvar name value
-# emulates (incorrect in sh) statement $$1="$2"
-setvar() {
-	_x=`valueof "$1"`
-	if [ "$_x" != "$2" ]; then
-		setenv "$1" "$2"
-		log "Set $1='$2'"
-	fi
+getenv() {
+	eval "$1=\$$2"
 }
 
-# setvar for user-defined variables
-# additional care is taken here to allow setting
-# variables *not* listed in _gencfg
-# $uservars keeps the list of user-set variables
-# $x_(varname) is set to track putvar() calls for this variable
-uservars=''
-setvaru() {
-	if [ -n "$uservars" ]; then
-		uservars="$uservars $1"
-	else
-		uservars="$1"
+
+define() {
+	getenv x "x_$1"
+	getenv a "a_$1"
+	getenv v "$1"
+
+	if [ -n "$x" ]; then
+		log "Skipping $1=$2 ($x: $v)"
+		return
 	fi
+
+	if [ -n "$a" -a -n "$2" ]; then
+		v="$2 $a"
+	elif [ -n "$2" ]; then
+		v="$2"
+	elif [ -n "$a" ]; then
+		v="$a"
+	fi
+
+	setenv "x_$1" "${3:-written}"
+	setenv "$1" "$v"
+
+	v=`echo "$2" | sed -e "s@'@'\"'\"'@g"`
+	echo "$1='$v'" >> $config
+}
+
+predef() {
+	getenv x "x_$1"
+	test -n "$x" && return
 	setenv "$1" "$2"
-	if [ -n "$3" ]; then
-		setenv "x_$1" "$3"
+	setenv "x_$1" "predef"
+}
+
+enddef() {
+	getenv x "x_$1"
+	getenv v "$1"
+
+	if [ -z "$x" -o "$x" = 'predef' ]; then
+		setenv "$1" ''
+		setenv "x_$1" ''
+		define "$1" "$v"
 	else
-		setenv "x_$1" 'user'
+		log "Skipping $1 ($x: $v)"
 	fi
-	log "Set user $1='$2'"
 }
 
-
-# putvar name value
-# writes given variable to config, and checks it as
-# "written" if necessary (i.e. for user variables)
-putvar() {
-	_x=`valueof "x_$1"`
-	test -n "$_x" && setenv "x_$1" 'written'
-	_z=`echo "$2" | sed -e "s@'@'\"'\"'@g"`
-	echo "$1='$_z'" >> $config
-	setvar "$1" "$2"
+append() {
+	getenv x "x_$1"
+	getenv v "$1"
+	if [ "$x" != 'predef' ]; then
+		log "Skipping $1 <= $2 ($x: $v)"
+	elif [ -n "$v" -a -n "$2" ]; then
+		setenv "$1" "$v $2"
+	elif [ -z "$v" -a -n "$2" ]; then
+		setenv "$1" "$2"
+	fi
 }
 
-setifndef() {
-	v=`valueof "$1"`
-	if [ -z "$v" ]; then
-		setvar "$1" "$2"
+prepend() {
+	getenv x "x_$1"
+	getenv v "$1"
+	if [ "$x" != 'predef' ]; then
+		log "Skipping $1 >= $2 ($x: $v)"
+	elif [ -n "$v" -a -n "$2" ]; then
+		setenv "$1" "$2 $v"
+	elif [ -z "$v" -a -n "$2" ]; then
+		setenv "$1" "$2"
+	fi
+}
+
+hinted() {
+	setenv v "$1"
+	setenv x "x_$1"
+
+	test -n "$x" && return 1
+
+	log "Using $1=$v ($x)"
+
+	if [ -n "$3" -a "$v" = 'define' ]; then
+		result "($x) $3"
+	elif [ -n "$4" -a "$v" != 'define' ]; then
+		result "($x) $4"
+	else
+		result "($x) $h"
 	fi
 }
 
@@ -110,30 +146,12 @@ archlabel() {
 	fi
 }
 
-setvardefault() {
-	v=`valueof "$1"`
-	if [ -z "$v" ]; then
-		setvar "$1" "$2"
-	else
-		setvar "$1" "$v"
-	fi
-}
-
-not() { if "$@"; then false; else true; fi; }
-
-require() {
-	v=`valueof "$1"`
-	if [ -z "$v" ]; then
-		die "Required $1 is not set"
-	fi
-}
-
 try_start() {
 	echo -n > try.c
 }
 
 try_includes() {
-	for i in "$@"; do 
+	for i in "$@"; do
 		echo "#include <${i##*:}>" >> try.c
 	done
 }
@@ -211,99 +229,27 @@ try_objdump() {
 	run $objdump $* try.o > try.out
 }
 
-bytes() { test "$1" = 1 && echo "byte" || echo "bytes"; }
-
-valueof() { eval echo "\"\$$1\""; }
-
-ifhint() {
-	h=`valueof "$1"`
-	x=`valueof "x_$1"`
-	test -z "$x" && x='preset'
-	if test -n "$h"; then
-		log "Value for $1: $h ($x)"
-		result "($x) $h"
-		return 0
-	else
-		return 1
-	fi
+bytes() {
+	test "$1" = 1 && echo "byte" || echo "bytes"
 }
 
-ifhintsilent() {
-	h=`valueof "$1"`
-	x=`valueof "x_$1"`
-	test -z "$x" && x='preset'
-	if test -n "$h"; then
-		log "Value for $1: $h ($x)"
-		return 0
-	else
-		return 1
-	fi
-}
-
-ifhintdefined() {
-	h=`valueof "$1"`
-	x=`valueof "x_$1"`
-	test -z "$x" && x='preset'
-	if test -n "$h"; then
-		if [ "$h" = 'define' ]; then
-			log "Value for $1: $2 (yes, define) ($x)"
-			result "($x) $2"
-			__=0
-		else
-			log "Value for $1: $2 (no, undef) ($x)"
-			result "($x) $3"
-			__=1
-		fi	
-		return 0
-	else
-		return 1
-	fi
-}
-
-# for use in if clauses
-nothinted() { ifhint "$@" && return 1 || return 0; }
-nohintdefined() { ifhintdefined "$@" && return 1 || return 0; }
-
-# resdef result-yes result-no symbol symbol2
 resdef() {
 	if [ $? = 0 ]; then
-		setvar "$3" "define"
-		test -n "$4" && setvar "$4" 'define'
-		result "$1"
+		define "$1" "define"
+		result "$2"
 		return 0
 	else
-		setvar "$3" 'undef'
-		test -n "$4" && setvar "$4" 'undef'
-		result "$2"
+		define "$1" 'undef'
+		result "$3"
 		return 1
-	fi	
+	fi
 }
 
 modsymname() {
 	echo "$1" | sed -r -e 's!^(ext|cpan|dist|lib)/!!' -e 's![:/-]!_!g' | tr A-Z a-z
 }
 
-# appendsvar vardst value-to-append
-appendvar() {
-	v=`valueof "$1"`
-	if [ -n "$v" -a -n "$2" ]; then
-		setvar "$1" "$v $2"
-	elif [ -z "$v" -a -n "$2" ]; then
-		setvar "$1" "$2"
-	fi
-}
-
-# prepend vardst value-to-append
-prependvar() {
-	v=`valueof "$1"`
-	if [ -n "$v" -a -n "$2" ]; then
-		setvar "$1" "$2 $v"
-	elif [ -z "$v" -a -n "$2" ]; then
-		setvar "$1" "$2"
-	fi
-}
-
-appendvarsilent() {
-	_=`valueof "$1"`
-	test -n "$_" && eval $1="'$_ $2'" || eval $1="'$2'"
+require() {
+	getenv v "$1"
+	test -z "$v" && die "Requires $1 is not set"
 }

@@ -9,7 +9,6 @@ unset keeplog
 echo -n > "$cfglog"
 
 . $base/configure__f.sh
-. $base/configure_clev.sh
 . $base/configure_args.sh
 
 if [ "$mode" = 'help' ]; then
@@ -38,17 +37,15 @@ if [ -z "$buildarch" -a "$mode" != "target" ]; then
 	if [ -n "$buildarch" ]; then
 		result "$buildarch"
 	else
-		fail "cannot determine build platform"
+		die "cannot determine build platform"
 	fi
 fi
 # past this point $build/$buildarch are non-empty unless we're in target mode
 
 if [ -z "$mode" ]; then
 	if [ -z "$target" -o "$target" = "$build" ]; then
-		msg "Assuming native build"
 		mode='native'
 	else
-		msg "Assuming cross-compilation for '$target'"
 		mode='cross'
 	fi
 fi
@@ -65,7 +62,7 @@ if [ -n "$target" -a -z "$targetarch" ]; then
 	if [ -n "$targetarch" ]; then
 		result "$targetarch"
 	else
-		fail "cannot determine target platform"
+		die "cannot determine target platform"
 	fi
 elif [ -z "$target" ]; then
 	if [ "$mode" = 'cross' -o "$mode" = 'target' ]; then
@@ -96,36 +93,35 @@ elif [ "$mode" = "target" ]; then
 	pf2="$target-"
 	config='config.sh'
 elif [ "$mode" = "native" ]; then 
-	msg "Configuring for native build"
+	msg "Configuring for a native build"
 	config='config.sh'
 fi
 
-if [ "$mode" = "target" ]; then
-	setvar 'usecrosscompile' 'define'
-fi
 
 if [ "$mode" = 'native' -o "$mode" = 'buildmini' -o "$mode" = "target" ]; then
-	. $base/configure_version.sh
-	. $base/configure_tool.sh
-	. $base/configure_hint.sh
-	. $base/configure_hdrs.sh
-	. $base/configure_type.sh
-	. $base/configure_type_ext.sh
-	. $base/configure_type_sel.sh
-	. $base/configure_type_dbl.sh
-	. $base/configure_sigs.sh
-	. $base/configure_libs.sh
-	. $base/configure_func.sh
-	. $base/configure_func_ext.sh
-	. $base/configure_func_sel.sh
-	. $base/configure_attr.sh
-	if [ "$usethreads" = 'define' ]; then
-		. $base/configure_thrd.sh
-	fi
-	if [ "$mode" != "buildmini" ]; then
-		. $base/configure_mods.sh
-	fi
-	. $base/configure_genc.sh
+	echo "#!/bin/sh" > $config
+	echo "" >> $config
+
+	test "$mode" = "target" && define 'usecrosscompile' 'define'
+
+	#. $base/configure_version.sh
+	#. $base/configure_tool.sh
+	#. $base/configure_hint.sh
+	#. $base/configure_hdrs.sh
+	#. $base/configure_type.sh
+	#. $base/configure_type_ext.sh
+	#. $base/configure_type_sel.sh
+	#. $base/configure_type_dbl.sh
+	#. $base/configure_sigs.sh
+	#. $base/configure_libs.sh
+	#. $base/configure_func.sh
+	#. $base/configure_func_ext.sh
+	#. $base/configure_func_sel.sh
+	#. $base/configure_attr.sh
+	#. $base/configure_path.sh
+	#. $base/configure_thrd.sh
+	#. $base/configure_mods.sh
+	#. $base/configure_misc.sh
 fi
 
 test -f ./config_h.SH || die "Not in perl base directory, aborting"
