@@ -1,16 +1,16 @@
 # Arguments parsing.
 
-defargs() {
+defuser() {
 	define "$1" "$2" 'args'
 }
 
 defineyesno() {
 	if [ "$2" = "yes" ]; then
-		defargs "$1" "$3"
+		defuser "$1" "$3"
 	elif [ "$2" = "no" ]; then
-		defargs "$1" "$4"
+		defuser "$1" "$4"
 	elif [ -z "$2" ]; then
-		defargs "$1" "$3"
+		defuser "$1" "$3"
 	else
 		die "Bad value for $1, only 'yes' and 'no' are allowed"
 	fi
@@ -22,16 +22,16 @@ defno()  { defineyesno "$1" "$2" 'undef' 'define'; }
 # setordefine key hasarg arg default-a default-b
 setordefine() {
 	if [ -n "$2" ]; then
-		defargs "$1" "$3"
+		defuser "$1" "$3"
 	else case "$1" in
 		# There are several variables that take true/false
 		# instead of define/undef. And some code that does not accept
 		# "define" instead of "true". Ugh.
 		useopcode|useposix|useshrplib|usevfork)
-			defargs "$1" "$5" 'args'
+			defuser "$1" "$5"
 			;;
 		*)
-			defargs "$1" "$4" 'args'
+			defuser "$1" "$4"
 			;;
 	esac fi
 }
@@ -151,27 +151,27 @@ while [ $i -le $# -o -n "$n" ]; do
 
 	# process the options
 	case "$a" in
-		mode) defargs $a "$v" ;;
-		help) defargs "mode" "help" ;;
-		regen|regenerate) defargs "mode" "regen" ;;
-		keeplog) defargs "$a" 1 ;;
-		prefix|html[13]dir|libsdir)	defargs $a "$v" ;;
-		man[13]dir|otherlibsdir)	defargs $a "$v" ;;
-		siteprefix|sitehtml[13]dir)	defargs $a "$v" ;;
-		siteman[13]dir|vendorman[13]dir)defargs $a "$v" ;;
-		vendorprefix|vendorhtml[13]dir)	defargs $a "$v" ;;
-		target|targetarch)		defargs $a "$v" ;;
-		build|buildarch)		defargs $a "$v" ;;
-		cc|cpp|ar|ranlib|objdump)	defargs $a "$v" ;;
-		sysroot)			defargs $a "$v" ;;
+		mode) defuser $a "$v" ;;
+		help) defuser "mode" "help" ;;
+		regen|regenerate) defuser "mode" "regen" ;;
+		keeplog) defuser "$a" 1 ;;
+		prefix|html[13]dir|libsdir)	defuser $a "$v" ;;
+		man[13]dir|otherlibsdir)	defuser $a "$v" ;;
+		siteprefix|sitehtml[13]dir)	defuser $a "$v" ;;
+		siteman[13]dir|vendorman[13]dir)defuser $a "$v" ;;
+		vendorprefix|vendorhtml[13]dir)	defuser $a "$v" ;;
+		target|targetarch)		defuser $a "$v" ;;
+		build|buildarch)		defuser $a "$v" ;;
+		cc|cpp|ar|ranlib|objdump)	defuser $a "$v" ;;
+		sysroot)			defuser $a "$v" ;;
 		ttp|tools-prefix|target-tools-prefix)
 			setenv 'toolsprefix' "$v"
 			;;
 		no-dynaloader|without-dynaloader)
-			defargs 'usedl' 'undef'
+			defuser 'usedl' 'undef'
 			;;
 		with-dynaloader)
-			defargs 'usedl' 'define'
+			defuser 'usedl' 'define'
 			;;
 		hint|hints)
 			if [ -n "$userhints" ]; then
@@ -183,7 +183,7 @@ while [ $i -le $# -o -n "$n" ]; do
 		libs)
 			if [ -n "$v" ]; then
 				v=`echo ",$v" | sed -r -e 's/,([^,]+)/-l\1 /g'`
-				defargs 'libs' "$v"
+				defuser 'libs' "$v"
 			fi
 			;;
 		host-*)
@@ -192,32 +192,32 @@ while [ $i -le $# -o -n "$n" ]; do
 			;;
 		with-*)
 			what=`echo "$a" | sed -r -e 's/^[^-]+-//' -e 's/-/_/g'`
-			defargs "$what" "$v"
+			defuser "$what" "$v"
 			;;
 		disable-mod|disable-ext|disable-module|disable-modules)
 			for m in `echo "$v" | sed -e 's/,/ /g'`; do
 				s=`modsymname "$m"`
-				defargs "disable_$s" "1"
+				defuser "disable_$s" "1"
 			done
 			;;
 		static-mod|static-ext|static-modules|static)
 			for m in `echo "$v" | sed -e 's/,/ /g'`; do
 				s=`modsymname "$m"`
-				defargs "static_$s" "1"
+				defuser "static_$s" "1"
 			done
 			;;
 		only-mod|only-ext|only-modules|only)
 			for m in `echo "$v" | sed -e 's/,/ /g'`; do
 				s=`modsymname "$m"`
-				defargs "only_$s" "1"
-				defargs "onlyext" "$s $onlyext"
+				defuser "only_$s" "1"
+				defuser "onlyext" "$s $onlyext"
 			done
 			;;
-		disable-disabled-mods) defargs 'disabledmods' 'undef' ;;
-		all-static) defargs 'allstatic' 1 ;;
-		use) defargs "use$k" 'define' ;;
-		dont-use) defargs "use$k" 'undef' ;;
-		set) defargs "$k" "$v" ;;
+		disable-disabled-mods) defuser 'disabledmods' 'undef' ;;
+		all-static) defuser 'allstatic' 1 ;;
+		use) defuser "use$k" 'define' ;;
+		dont-use) defuser "use$k" 'undef' ;;
+		set) defuser "$k" "$v" ;;
 		has) defyes "d_$k" "$v" ;;
 		no) defno "d_$k" "$v" ;;
 		include) defyes "i_$k" "$v" ;;
