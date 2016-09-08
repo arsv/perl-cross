@@ -29,6 +29,14 @@ msg "	IV will be "$ivtype", $ivsize bytes"
 msg "	UV will be "$uvtype", $uvsize bytes"
 msg "	NV will be "$nvtype", $nvsize bytes"
 
+case "$nvsize" in
+	4) define nvmantbits '23' ;;
+	8) define nvmantbits '52' ;;
+	10) define nvmantbits '64' ;;
+	16) define nvmantbits '112' ;;
+	*) define nvmantbits '0' ;;
+esac
+
 # The following code may be wrong, but there's no way to
 # tell for sure without running on-target tests.
 # And "undef" as a safe default fails op/range.t on some targets.

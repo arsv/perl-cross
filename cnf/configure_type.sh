@@ -72,6 +72,8 @@ usetypesize() {
 
 test "$i_stdint" = 'define' || die "Cannot proceed without <stdint.h>"
 
+define d_int64_t 'define'
+
 useitype  u8type  uint8_t  u8size 1
 useitype u16type uint16_t u16size 2
 useitype u32type uint32_t u32size 4
@@ -120,6 +122,8 @@ checktype d_ip_mreq_source 'struct ip_mreq_source' \
 	'sys/types.h sys/socket.h netinet/in.h'
 checktype d_ipv6_mreq 'struct ipv6_mreq' \
 	'sys/types.h sys/socket.h netinet/in.h'
+checktype d_ipv6_mreq_source 'struct ipv6_mreq_source' \
+	'sys/types.h sys/socket.h netinet/in.h'
 
 # For these mainline perl does some guessing like int64_t instead
 # of possibly missing off_t, but we won't do that.
@@ -134,3 +138,4 @@ usetypesize timetype timesize 'time_t' 'sys/types.h'
 
 define ssizetype 'ssize_t'
 define uidsign '1'
+define gidsign '1'

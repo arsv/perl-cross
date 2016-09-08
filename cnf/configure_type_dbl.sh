@@ -143,3 +143,5 @@ case "$longdblkind" in
 esac
 enddef longdblinfbytes
 enddef longdblnanbytes
+
+default alignbytes 8
