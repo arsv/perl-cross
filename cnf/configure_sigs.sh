@@ -40,6 +40,12 @@ done
 [ -z "$siginit" ] || siginit="$siginit, 0"
 [ -z "$signumi" ] || signumi="$signumi, 0"
 
+define "sig_name" "$signals"
+define "sig_name_init" "$siginit"
+define "sig_num" "$signums"
+define "sig_num_init" "$signumi"
+define "sig_size" "$sigsize"
+
 # try to get NSIG value
 mstart "Checking NSIG value"
 try_start
@@ -49,17 +55,13 @@ try_dump
 if try_preproc; then
 	num=`grep 'configure check sig_count' try.out | sed -e 's/.*=//' -e 's/[^0-9]//g'`
 	if [ -n "$num" ]; then
-		setvar sig_count "$num"
+		define sig_count "$num"
 		result "$num"
 	else
-		result unknown
+		define sig_count "0"
+		result "unknown"
 	fi
 else
-	result unknown
+	define sig_count "0"
+	result "unknown"
 fi
-
-setvar "sig_name" "$signals"
-setvar "sig_name_init" "$siginit"
-setvar "sig_num" "$signums"
-setvar "sig_num_init" "$signumi"
-setvar "sig_size" "$sigsize"
