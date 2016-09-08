@@ -1,23 +1,22 @@
 # Perl version has to be extracted from patchlevel.h
 
 # setverpart name NAME
-setverpart() {
-	_v=`grep '#define' patchlevel.h | grep "$2" | head -1 | sed -r -e "s/#define $2\s+//" -e "s/\s.*//"`
-	setvar $1 "$_v"
+verpart() {
+	q=`grep '#define' patchlevel.h | grep "$2" | head -1 | sed -r -e "s/#define $2\s+//" -e "s/\s.*//"`
+	define $1 "$q"
 }
 
 mstart "Checking perl version"
-setifndef package 'perl5'
 if [ -r patchlevel.h ]; then
-	setverpart revision PERL_REVISION
-	setverpart patchlevel PERL_VERSION
-	setverpart subversion PERL_SUBVERSION
-	setverpart api_revision PERL_API_REVISION
-	setverpart api_version PERL_API_VERSION
-	setverpart api_subversion PERL_API_SUBVERSION
+	verpart revision PERL_REVISION
+	verpart patchlevel PERL_VERSION
+	verpart subversion PERL_SUBVERSION
+	verpart api_revision PERL_API_REVISION
+	verpart api_version PERL_API_VERSION
+	verpart api_subversion PERL_API_SUBVERSION
 
-	v=`egrep ',"(MAINT|SMOKE)[0-9][0-9]*"' patchlevel.h|tail -1|sed 's/[^0-9]//g'`
-	setvar perl_patchlevel "$v"
+	q=`egrep ',"(MAINT|SMOKE)[0-9][0-9]*"' patchlevel.h|tail -1|sed 's/[^0-9]//g'`
+	define perl_patchlevel "$q"
 else
 	result "unknown"
 	die "No patchlevel.h found, aborting"
@@ -30,33 +29,32 @@ if [ "$perl_patchlevel" != '' -a "$perl_patchlevel" != '0' ]; then
 	version_patchlevel_string="$version_patchlevel_string patch $perl_patchlevel"
 fi
 
-setvar PERL_CONFIG_SH true
-setvar PERL_REVISION $revision
-setvar PERL_VERSION $patchlevel
-setvar PERL_SUBVERSION $subversion
-setvar PERL_PATCHLEVEL $perl_patchlevel
-setvar PERL_API_REVISION $api_revision
-setvar PERL_API_VERSION $api_version
-setvar PERL_API_SUBVERSION $api_subversion
-setvar api_versionstring "$api_revision.$api_version.$api_subversion"
+define PERL_CONFIG_SH true
+define PERL_REVISION $revision
+define PERL_VERSION $patchlevel
+define PERL_SUBVERSION $subversion
+define PERL_PATCHLEVEL $perl_patchlevel
+define PERL_API_REVISION $api_revision
+define PERL_API_VERSION $api_version
+define PERL_API_SUBVERSION $api_subversion
+define api_versionstring "$api_revision.$api_version.$api_subversion"
 
 # Detect cperl to apply cperl-specific settings, here and in other files as well
 # Note $base points to cnf/ not the top-level source dir.
 
 if [ -f $base/../pod/perlcperl.pod ]; then
-	setvaru usecperl define '' # force this into config.sh
-	setvar package 'cperl'
-	setvar perlname 'cperl'
-	setvar spackage 'cPerl'
+	define usecperl define
+	define package 'cperl'
+	define perlname 'cperl'
+	define spackage 'cPerl'
 else
-	setvar package 'perl5'
-	setvar perlname 'perl'
-	setvar spackage 'Perl5'
+	define package 'perl5'
+	define perlname 'perl'
+	define spackage 'Perl5'
 fi
 
-version="$PERL_REVISION.$PERL_VERSION.$PERL_SUBVERSION"
+define version "$PERL_REVISION.$PERL_VERSION.$PERL_SUBVERSION"
 packver="$package-$version"
-
 result "$packver"
 
 # Check for patches. Missing patchset indicates unsupported version,
