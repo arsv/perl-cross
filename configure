@@ -34,8 +34,8 @@ if [ -n "$root" -a "$root" != "." -a ! -f "MANIFEST" ]; then
 		ln -sf "$relroot/$i" "$i" || earlydie "Symlinking failed."
 	done
 
-	# cnf is a special case because we cnf/diffs to be a proper directory
-	# to store locks there
+	# cnf is a special case because we need cnf/diffs to be
+	# a proper directory to store locks there
 	mkdir cnf
 	for i in "$root/cnf/"*; do
 		bn=${i##*/}
