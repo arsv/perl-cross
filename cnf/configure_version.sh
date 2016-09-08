@@ -29,21 +29,21 @@ if [ "$perl_patchlevel" != '' -a "$perl_patchlevel" != '0' ]; then
 fi
 enddef version_patchlevel_string
 
-define PERL_CONFIG_SH true
-define PERL_REVISION $revision
-define PERL_VERSION $patchlevel
-define PERL_SUBVERSION $subversion
-define PERL_PATCHLEVEL $perl_patchlevel
-define PERL_API_REVISION $api_revision
-define PERL_API_VERSION $api_version
-define PERL_API_SUBVERSION $api_subversion
+define PERL_CONFIG_SH 'true'
+define PERL_REVISION "$revision"
+define PERL_VERSION "$patchlevel"
+define PERL_SUBVERSION "$subversion"
+define PERL_PATCHLEVEL "$perl_patchlevel"
+define PERL_API_REVISION "$api_revision"
+define PERL_API_VERSION "$api_version"
+define PERL_API_SUBVERSION "$api_subversion"
 define api_versionstring "$api_revision.$api_version.$api_subversion"
 
 # Detect cperl to apply cperl-specific settings, here and in other files as well
 # Note $base points to cnf/ not the top-level source dir.
 
 if [ -f $base/../pod/perlcperl.pod ]; then
-	define usecperl define
+	define usecperl 'define'
 	define package 'cperl'
 	define perlname 'cperl'
 	define spackage 'cPerl'
