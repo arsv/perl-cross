@@ -32,17 +32,6 @@ setordefine() {
 	esac fi
 }
 
-# pushvar stem key value
-pushnvarkvx() {
-	eval 'n_'$1'=$((n_'$1'+0))'
-	eval n_=\${n_$1}
-	eval $1_k_$n_="'$2'"
-	eval $1_v_$n_="'$3'"
-	eval $1_x_$n_="'$4'"
-	eval 'n_'$1'=$((n_'$1'+1))'
-	unset -v n_
-}
-
 # Like source but avoid $PATH searches for simple file names.
 # Also guards loop variables from being clobbered by the loaded file.
 sourcenopath() {
