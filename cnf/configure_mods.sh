@@ -1,5 +1,7 @@
 # In-tree perl modules discovery.
 
+test "$mode" = 'buildmini' && return
+
 # Since 5.10.1 the module dirs are flat, so there's no need
 # for recursive search etc.
 extdir() {
@@ -24,20 +26,20 @@ extadd() {
 		msg "    skipping $2"
 		return
 	fi
-	appendvarsilent 'known_extensions' "$2"
-	o=`valueof "only_$s"`
+	known_extensions="$known_extensions$2 "
+	getenv o "only_$s"
 	if [ -n "$onlyext" -a -z "$o" ]; then
 		msg "    skipping $2"
 		extadddisabled "$1" "$2"
 		return
 	fi
-	d=`valueof "disable_$s"`
+	getenv d "disable_$s"
 	if [ -n "$d" -a "$d" != "0" ]; then
 		msg "    disabled $2"
 		extadddisabled "$1" "$2"
 		return
 	fi
-	t=`valueof "static_$s"`
+	getenv t "static_$s"
 	if [ "$1" = "xs" -a -n "$t" -a "$t" != "0" ]; then
 		msg "    static $2"
 		static_ext="$static_ext$2 "
@@ -75,17 +77,15 @@ extonlyif() {
 
 }
 
-settrimspaces() {
-	_k="$1"
-	_v="$2"
-	_v=`echo "$_v" | sed -r -e 's/\s+/ /g' -e 's/^\s+//' -e 's/\s+$//'`
-	setvar $1 "$_v"
+definetrimspaces() {
+	v=`echo "$2" | sed -r -e 's/\s+/ /g' -e 's/^\s+//' -e 's/\s+$//'`
+	define $1 "$2"
 }
 
 msg "Looking which extensions should be disabled"
 
-test -n "$useposix" || setvar 'useposix' 'define'
-test -n "$useopcode" || setvar 'useopcode' 'define'
+define 'useposix' 'define'
+define 'useopcode' 'define'
 
 extonlyif DB_File "$i_db" = 'define'
 extonlyif GDBM_File "$i_gdbm" = 'define'
@@ -108,6 +108,11 @@ extonlyif Amiga-Exec "$osname" = "amiga"
 
 extonlyif Thread "$usethreads" = 'define'
 
+known_extensions=
+dynamic_ext=
+static_ext=
+nonxs_ext=
+
 for d in ext cpan dist; do
 	msg "Looking for extensions recursively under $d/"
 	extdir $d
@@ -118,9 +123,9 @@ msg "Static modules: $static_ext"
 msg "Non-XS modules: $nonxs_ext"
 msg "Dynamic modules: $dynamic_ext"
 
-settrimspaces 'static_ext' "$static_ext"
-settrimspaces 'nonxs_ext' "$nonxs_ext"
-settrimspaces 'dynamic_ext' "$dynamic_ext"
+definetrimspaces 'static_ext' "$static_ext"
+definetrimspaces 'nonxs_ext' "$nonxs_ext"
+definetrimspaces 'dynamic_ext' "$dynamic_ext"
 
 if [ -z "$disabledmods" ]; then
 	# see configure_args on how to undef it
@@ -136,4 +141,4 @@ fi
 # perl-cross keeps full directory names in ${...}_ext and $extensions,
 # and does the conversion in configpm. This keeps things simple when writing
 # Makefiles and so on, and at the same time doesn't break tests later.
-settrimspaces 'extensions' "$static_ext $dynamic_ext $nonxs_ext"
+definetrimspaces 'extensions' "$static_ext $dynamic_ext $nonxs_ext"
