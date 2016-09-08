@@ -1,22 +1,18 @@
 # Deciding which libraries to use
 
 mstart "Deciding whether to use DynaLoader"
-if [ -z "$usedl" ]; then
-	if [ "$i_dlfcn" = 'define' -o "$i_nlist" = 'define' ]; then
-		setvar 'usedl' 'define'
-	else
-		setvar 'usedl' 'undef'
-	fi
+if not hinted "$usedl"; then
+	test "$i_dlfcn" = 'define' -o "$i_nlist" = 'define'
+	resdef 'usedl' 'yes' 'no'
 fi
-test "$usedl" = 'define' && result 'yes' || result "no"
 
 if [ "$usedl" = 'undef' -a -z "$allstatic" ]; then
 	msg "DynaLoader is disabled, making all modules static"
-	setvar 'allstatic' 1
+	define 'allstatic' 1
 fi
 
 mstart "Checking which libraries are available"
-if nothinted 'libs'; then
+if not hinted 'libs'; then
 	require 'cc'
 	try_start
 	try_add "int main(void) { return 0; }"
@@ -29,19 +25,20 @@ if nothinted 'libs'; then
 		fi
 	done
 
-	setvar 'libs' "$_libs"
+	define 'libs' "$_libs"
 	result "$_libs"
 fi
 
-# We need to know whether we're trying to build threads support to make decision about -lpthreads
+# We need to know whether we're trying to build threads support to make
+# decision about -lpthreads (XXX: is this logic correct?)
 if [ "$usethreads" = 'define' -o "$useithreads" = 'define' -o "$use5005threads" = 'define' ]; then
-	test "$usethreads" = 'define' || setvar 'usethreads' 'define'
+	test "$usethreads" = 'define' || define 'usethreads' 'define'
 else
-	test "$usethreads" = 'define' || setvar 'usethreads' 'undef'
+	test "$usethreads" = 'define' || define 'usethreads' 'undef'
 fi
 
 mstart "Checking which libs to use for perl"
-if nothinted 'perllibs'; then
+if not hinted 'perllibs'; then
 	# $libs lists available libs; $perllibs lists libs that the perl executable
 	# should be linked with.
 	# The whole idea is wrong, wrong, wrong, but it's tied to MakeMaker.
@@ -49,37 +46,41 @@ if nothinted 'perllibs'; then
 	# (Configure uses all except for those it knows are not needed)
 	# This allows adding anything to $libswanted without introducing unnecessary perl dependencies.
 	# When perl itself needs something unusual, $perllibs value should be hinted.
-	_libs=''
+	predef perllibs ''
 	for i in $libs; do
 		case "$i" in 
 			-lm|-lcrypt)
-				appendvar '_libs' "$i" ;;
+				append perllibs "$i" ;;
 			-ldl)
-				test "$usedl" != 'undef' && appendvar '_libs' "$i" ;;
+				test "$usedl" != 'undef' && \
+					append perllibs "$i"
+				;;
 			-lpthread)
-				test "$usethreads" != 'undef' && appendvar '_libs' "$i" ;;
+				test "$usethreads" != 'undef' && \
+					append perllibs "$i"
+				;;
 			# For a static build, -lgdbm and friends are assumed to be in ext.libs
 		esac
 	done
-	setvar perllibs "$_libs"
-	result "$_libs"
+	enddef perllibs
+	result "$perllibs"
 fi
 
-if [ "$soname" = "define" -o "$usesoname" = "define" ]; then
-	setvar 'soname' "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION"
+if [ "$usesoname" = "define" ]; then
+	define 'soname' "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION"
 fi
 
 mstart "Deciding how to name libperl"
-if nothinted libperl; then
+if not hinted libperl; then
 	if [ -n "$soname" ]; then
-		setvar libperl "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION.$PERL_API_SUBVERSION"
-		setvar "useshrplib" 'true'
+		define libperl "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION.$PERL_API_SUBVERSION"
+		define "useshrplib" 'true'
 		result "$libperl (SONAME $soname, dynamic)"
 	elif [ "$useshrplib" = 'true' ]; then
-		setvar libperl "libperl.so"
+		define libperl "libperl.so"
 		result "$libperl (dynamic)"
 	else
-		setvar libperl "libperl.a"
+		define libperl "libperl.a"
 		result "$libperl (static)"
 	fi
 fi
