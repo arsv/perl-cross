@@ -3,7 +3,7 @@
 # checkfield name struct field 'includes'
 checkfield() {
 	mstart "Checking whether $2 has $3"
-	ifhintdefined "$1" 'yes' 'no' && return 0
+	hinted "$1" && return # XXX reshint
 	
 	try_start
 	try_includes $4
@@ -13,15 +13,9 @@ checkfield() {
 	try_add "	$2 value;"
 	try_add "	foo(value.$3);"
 	try_add "}"
-	if try_compile; then
-		setvar "$1" "define"
-		result "yes"
-		return 0
-	else
-		setvar "$1" "undef"
-		result 'no'
-		return 1
-	fi
+	try_compile
+
+	resdef $1 'yes' 'no'
 }
 
 checkfield d_statfs_f_flags 'struct statfs' f_flags sys/vfs.h
@@ -41,13 +35,13 @@ checkfield d_grpasswd 'struct group' gr_passwd grp.h
 checkfield d_sockaddr_sa_len 'struct sockaddr' sa_len 'sys/types.h sys/socket.h'
 checkfield d_sin6_scope_id 'struct sockaddr_in6' sin6_scope_id 'sys/types.h sys/socket.h netinet/in.h'
 
-checkfield d_siginfo_si_errno 'struct siginfo' si_errno 'signal.h'
-checkfield d_siginfo_si_pid 'struct siginfo' si_pid 'signal.h'
-checkfield d_siginfo_si_uid 'struct siginfo' si_uid 'signal.h'
-checkfield d_siginfo_si_addr 'struct siginfo' si_addr 'signal.h'
-checkfield d_siginfo_si_band 'struct siginfo' si_band 'signal.h'
-checkfield d_siginfo_si_value 'struct siginfo' si_value 'signal.h'
-checkfield d_siginfo_si_fd 'struct siginfo' si_fd 'signal.h'
-checkfield d_siginfo_si_addr 'struct siginfo' si_addr 'signal.h'
-checkfield d_siginfo_si_status 'struct siginfo' si_status 'signal.h'
-checkfield d_siginfo_si_band 'struct siginfo' si_band 'signal.h'
+checkfield d_siginfo_si_errno 'siginfo_t' si_errno 'signal.h'
+checkfield d_siginfo_si_pid 'siginfo_t' si_pid 'signal.h'
+checkfield d_siginfo_si_uid 'siginfo_t' si_uid 'signal.h'
+checkfield d_siginfo_si_addr 'siginfo_t' si_addr 'signal.h'
+checkfield d_siginfo_si_band 'siginfo_t' si_band 'signal.h'
+checkfield d_siginfo_si_value 'siginfo_t' si_value 'signal.h'
+checkfield d_siginfo_si_fd 'siginfo_t' si_fd 'signal.h'
+checkfield d_siginfo_si_addr 'siginfo_t' si_addr 'signal.h'
+checkfield d_siginfo_si_status 'siginfo_t' si_status 'signal.h'
+checkfield d_siginfo_si_band 'siginfo_t' si_band 'signal.h'
