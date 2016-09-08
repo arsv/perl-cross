@@ -1,92 +1,60 @@
 # Toolchain detection
 
-# Import common environment variables into config.sh
-# setfromvar what SHELLVAR HOSTSHELLVAR
-setfromvar() {
-	v=`valueof "$1"`
-	if [ "$mode" = "buildmini" ]; then
-		w=`valueof "$3"`
+tryprog() {
+	log "trying $1=$2"
+	if command -v "$2" 1>/dev/null 2>/dev/null; then
+		define "$1" "$2"
+		result "$2"
+		return 0
 	else
-		w=`valueof "$2"`
-	fi
-	if [ -z "$v" -a -n "$w" ]; then
-		log "Using $V$2 for $1"
-		setvar "$1" "$w"
+		return 1
 	fi
 }
 
-setfromvar cc CC HOSTCC
-setfromvar ccflags CFLAGS HOSTCFLAGS
-setfromvar cppflags CPPFLAGS HOSTCPPFLAGS
-setfromvar ld LD HOSTLD
-setfromvar ldflags LDFLAGS HOSTLDFLAGS
-setfromvar ar AR HOSTAR
-setfromvar ranlib RANLIB HOSTRANLIB
-setfromvar objdump OBJDUMP HOSTOBJDUMP
-
-# whichprog msg symbol fail prog1 prog2 ...
+# whichprog symbol VAR prog1 prog2
 whichprog() {
-	_what="$1"; shift
-	_symbol="$1"; shift
-	_fail="$1"; shift
-	_force=`valueof "$_symbol"`
-	_src=`valueof "x_$_symbol"`
-	mstart "Checking for $_what"
+	mstart "Checking for $1"
+	hinted "$1" && return
 
-	if [ -n "$_force" ]; then
-		if command -v "$_force" 1>/dev/null 2>/dev/null; then
-			setvar "$_symbol" "$_force"
-			result "$_force ($_src)"
-			return 0
+	if [ "$mode" = "buildmini" ]; then
+		getenv ev "HOST$2"
+	else
+		getenv ev "$2"
+	fi
+
+	if [ -n "$ev" ]; then
+		if tryprog $1 "$ev"; then
+			return
 		else
-			result "'$_force' not found ($_src)"
-			if [ -n "$_fail" -a "$_fail" != "0" ]; then
-				fail "no $_what found"
-			fi
-			return 1
+			die "Supplied $vv is not usable"
 		fi
 	fi
 
-	for p in "$@"; do
-		if [ -n "$p" ]; then
-			if command -v "$p" 1>/dev/null 2>/dev/null; then
-				setvar "$_symbol" "$p"
-				result "$p"
-				return 0
-			fi
-		fi
-	done
+	if [ "$mode" = 'native' -o "$mode" = 'buildmini' ]; then
+		tryprog $1 "$3" && return
+	fi
+
+	test -n "$toolsprefix" && tryprog $1 "$toolsprefix-$3" && return
+	test -n "$target"      && tryprog $1 "$target-$3"      && return
+	test -n "$targetarch"  && tryprog $1 "$targetarch-$3"  && return
 
 	result "none found"
-	if [ -n "$_fail" -a "$_fail" != "0" ]; then
-		fail "no $_what found"
-	fi
-
+	define "$1" 'false' # ouch
 	return 1
 }
 
-if [ -n "$toolsprefix" ]; then
-	ttp="$toolsprefix"
-	whichprog "C compiler" cc 1      ${ttp}gcc ${ttp}cc
-	whichprog "linker"     ld 1      ${ttp}gcc
-	whichprog "ar"         ar 1      ${ttp}ar
-	whichprog "ranlib"     ranlib 0  ${ttp}ranlib
-	whichprog "readelf"    readelf 1 ${ttp}readelf
-	whichprog "objdump"    objdump 1 ${ttp}objdump
-else
-	whichprog "C compiler" cc 1      ${pf1}gcc ${pf1}cc ${pf2}gcc
-	whichprog "linker"     ld 1      ${pf1}gcc ${pf1}cc ${pf2}gcc ${pf1}ld ${pf2}ld
-	whichprog "ar"         ar 1      ${pf1}ar ${pf2}ar
-	whichprog "ranlib"     ranlib 0  ${pf1}ranlib ${pf2}ranlib
-	whichprog "readelf"    readelf 1 ${pf1}readelf ${pf2}readelf readelf
-	whichprog "objdump"    objdump 1 ${pf1}objdump ${pf2}objdump
-fi
+whichprog cc CC gcc || whichprog cc CC cc
+whichprog ld LD ld
+whichprog ar AR ar
+whichprog ranlib RANLIB ranlib
+whichprog readelf READELF readelf
+whichprog objdump OBJDUMP objdump
 
-setvar 'cpp' "$cc -E"
+define cpp "$cc -E"
 log
 
-mstart "Trying to guess what kind of compiler \$cc is"
-if nothinted 'cctype'; then
+mstart "Trying $cc"
+if not hinted 'cctype'; then
 	if run $cc --version >try.out 2>&1; then
 		_cl=`head -1 try.out`
 	elif run $cc -V >try.out 2>&1; then
@@ -101,15 +69,15 @@ if nothinted 'cctype'; then
 	else case "$_cl" in
 		*\(GCC\)*)
 			_cv=`echo "$_cl" | sed -e 's/.*(GCC) //' -e 's/ .*//g'`
-			setvar 'cctype' 'gcc'
-			setvar 'ccversion' "$_cv"
-			setvar 'gccversion' "$_cv"
+			define 'cctype' 'gcc'
+			define 'ccversion' "$_cv"
+			define 'gccversion' "$_cv"
 			result "gcc $_cv"
 			;;
 		clang*)
 			_cv=`echo "$_cl" | sed -e 's/.*version //' -e 's/ .*//'`
-			setvar 'cctype' 'clang'
-			setvar 'ccversion' "$_cv"
+			define 'cctype' 'clang'
+			define 'ccversion' "$_cv"
 			result "clang $_cv"
 			;;
 		*)
@@ -118,16 +86,8 @@ if nothinted 'cctype'; then
 	esac; fi
 fi
 
-# gcc 4.9 by default does some optimizations that break perl.
-# see perl ticket 121505.
-case "$cctype-$ccversion" in
-	gcc-4.9*|gcc-5.*|gcc-6.*)
-		appendvar 'ccflags' '-fwrapv -fno-strict-aliasing'
-		;;
-esac
-
 mstart "Checking whether $cc is a C++ compiler"
-if nothinted 'd_cplusplus'; then
+if not hinted 'd_cplusplus'; then
 	try_start
 	try_cat <<END
 #if defined(__cplusplus)
@@ -136,29 +96,29 @@ YES
 END
 	try_dump
 	if not run $cc $ccflags -E try.c > try.out 2>>$cfglog; then
-		setvar 'd_cplusplus' 'undef'
+		define 'd_cplusplus' 'undef'
 		result "probably no"
 	else
 		_r=`grep -v '^#' try.out | grep . | head -1 | grep '^YES'`
 		if [ -n "$_r" ]; then
-			setvar 'd_cplusplus' 'define'
+			define 'd_cplusplus' 'define'
 			result "yes"
 		else
-			setvar 'd_cplusplus' 'undef'
+			define 'd_cplusplus' 'undef'
 			result 'no'
 		fi
 	fi
 fi
 
 mstart "Deciding how to declare external symbols"
-if nothinted "extern_C"; then
+if not hinted "extern_C"; then
 	case "$d_cplusplus" in
 		define)
-			setvar "extern_C" 'extern "C"'
+			define "extern_C" 'extern "C"'
 			result "$extern_C"
 			;;
 		*)
-			setvar "extern_C" 'extern'
+			define "extern_C" 'extern'
 			result "$extern_C"
 			;;
 	esac
@@ -166,23 +126,27 @@ fi
 
 # File name extensions, must be set before running any compile/link tests
 
-setifndef _o '.o'
-setifndef _a '.a'
-setifndef so 'so'
+define _o '.o'
+define _a '.a'
+define so 'so'
 
 # Linker flags setup
 
-setifndef 'lddlflags' "-shared"
+predef lddlflags "-shared"
+predef ccflags ''
+predef ldflags ''
+predef cppflags ''
+
 if [ "$mode" = 'target' -o "$mode" = 'native' ]; then
 	if [ -n "$sysroot" ]; then
 		msg "Adding --sysroot to {cc,ld}flags"
-		prependvar 'ccflags' "--sysroot=$sysroot"
-		prependvar 'ldflags' "--sysroot=$sysroot"
+		prepend ccflags "--sysroot=$sysroot"
+		prepend ldflags "--sysroot=$sysroot"
 		# While cccdlflags are used together with ccflags,
 		# ld is always called with lddlflags *instead*of* ldflags
-		prependvar 'lddlflags' "--sysroot=$sysroot"
+		prepend lddlflags "--sysroot=$sysroot"
 		# Same for cpp
-		prependvar 'cppflags' "--sysroot=$sysroot"
+		prepend cppflags "--sysroot=$sysroot"
 	fi
 fi
 
@@ -194,14 +158,19 @@ if [ -n "$ldflags" -a "$x_lddlflags" != "user" ]; then
 		case "$f" in
 			-L*|-R*|-Wl,-R*)
 				msg "    added $f"
-				appendvar 'lddlflags' "$f"
+				append lddlflags "$f"
 				;;
 		esac
 	done
 fi
 
+# finish ccflags # done later in _hdrs because of LARGEFILE_SOURCE
+enddef ldflags
+enddef lddlflags
+enddef cppflags
+
 mstart "Checking whether ld supports scripts"
-if nothinted 'ld_can_script'; then
+if not hinted 'ld_can_script'; then
 	cat > try.c <<EOM
 void foo() {}
 void bar() {}
@@ -218,20 +187,15 @@ EOM
 	log "try.h"
 	try_dump_h
 	rm -f a.out 2>/dev/null
-	# Default values are set in _genc, but here we need one much earlier
-	if [ ! -z "$lddlflags" ]; then
-		_lddlflags="$lddlflags"
-	else
-		_lddlflags=' -shared'
-	fi
-	if run $cc $cccdlflags $ccdlflags $ccflags $ldflags $_lddlflags -o a.out try.c \
+
+	if run $cc $cccdlflags $ccdlflags $ccflags $lddlflags -o a.out try.c \
 		-Wl,--version-script=try.h >/dev/null 2>&1 \
-		&&  test -s a.out
+		&& test -s a.out
 	then
-		setvar ld_can_script 'define'
+		define ld_can_script 'define'
 		result "yes"
 	else
-		setvar ld_can_script 'undef'
+		define ld_can_script 'undef'
 		result "no"
 	fi
 fi
@@ -242,7 +206,7 @@ fi
 # values that make difference later.
 
 mstart "Trying to guess target OS"
-if nothinted 'osname'; then
+if not hinted 'osname'; then
 	run $cc -v > try.out 2>&1
 	try_dump_out
 
@@ -251,15 +215,15 @@ if nothinted 'osname'; then
 
 	case "$_ct" in
 		*-android|*-androideabi)
-			setvar osname "android"
+			define osname "android"
 			result "Android"
 			;;
 		*-linux*)
-			setvar osname "linux"
+			define osname "linux"
 			result "Linux"
 			;;
 		*-bsd*)
-			setvar osname "bsd"
+			define osname "bsd"
 			result "BSD"
 			;;
 		*)
@@ -277,20 +241,11 @@ case "$DEBUGGING:$EBUGGING" in
 esac
 
 mstart "Checking whether to enable -g"
+predef optimize ''
 case "$DEBUGGING" in
-	-g|both|define)
-   		case "$optimize" in
-			*-g*)
-				result "already enabled" ;;
-			*)
-				appendvar optimize "-g"
-				result "yes" ;;
-   		esac ;;
-	none|undef)
-		case "$optimize" in
-			*-g*) setvar optimize "`echo $optimize | sed -e 's/-g ?//'`" ;;
-   		esac
-		result "no" ;;
+	both|define)
+		append optimize "-g"
+		result "yes" ;;
 	*)
 		result "no" ;;
 esac
@@ -298,13 +253,17 @@ esac
 mstart "Checking whether to use -DDEBUGGING"
 case "$DEBUGGING" in
 	both|define)
-		case "$ccflags" in 
-			*-DDEBUGGING*)
-				result "already there" ;;
-			*)
-				appendvar optimize '-DDEBUGGING'
-				result "yes" ;;
-		esac ;;
+		append optimize '-DDEBUGGING'
+		result "yes" ;;
 	*)
 		result "no" ;;
 esac
+
+# gcc 4.9 by default does some optimizations that break perl.
+# see perl ticket 121505.
+case "$cctype-$ccversion" in
+	gcc-4.9*|gcc-5.*|gcc-6.*)
+		append 'optimize' '-fwrapv -fno-strict-aliasing'
+		;;
+esac
+enddef optimize
