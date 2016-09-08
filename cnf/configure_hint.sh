@@ -24,15 +24,14 @@ tryhints() {
 }
 
 hint() {
-	_v=`valueof "$1"`
-	test -z "$_v" && setvaru "$1" "$2" 'hinted'
+	define "$1" "$2" 'hinted'
 }
 
 msg "Checking which hints to use"
 
 # For i686-pc-linux-gnu, try linux and i686-linux
 arch=`echo "$targetarch" | cut -d - -f 1`
-setvardefault archname "$arch-$osname"
+archname="$arch-$osname"
 
 tryhints "$osname"
 tryhints "$archname"
@@ -43,18 +42,12 @@ done
 
 # Check whether we'll need to append anything to archname
 # configure_version must be included somewhere before this point
-# Note: this breaks "set only if not set by this point" rule,
-# but allows using -Darchname *and* -Duseversionedarchname at the same time
 if [ "$useversionedarchname" = 'define' ]; then
 	msg "Using versioned archname ($archname-$api_versionstring)"
-	setvar 'archname' "$archame-$api_versionstring"
+	define archname "$archame-$api_versionstring"
+else
+	define archname "$archname"
 fi
 
 # Add separator to log file
 log
-
-# Process -A arguments, if any
-for k in $appendlist; do
-	v=`valueof "a_$k"`
-	appendvar "$k" "$v"
-done
