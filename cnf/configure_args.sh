@@ -51,8 +51,7 @@ config_arg0="$0"
 config_argc=$#
 config_args="$*"
 
-loadfile=''
-appendlist=''
+alist=''
 
 # Do *not* use shifts here! The args may be used later
 # to call configure --mode=target, and saving them
@@ -234,12 +233,18 @@ while [ $i -le $# -o -n "$n" ]; do
 			;;
 		O) msg "WARNING: -O ignored" ;;
 		f) sourcenopath "$v" "i=$i" "n=$n" ;;
-		A) appendvarsilent "a_$k" "$v"
-		   appendvarsilent 'appendlist' "$k" ;;
+		A) append "a_$k" "$v"
+		   append 'alist' "$k" ;;
 		S|V|K) die "-$a is not supported" ;;
 		d|r) msg "WARNING: -$a makes no sense for this version of configure and was ignored" ;;
 		e|E) msg "WARNING: -$a ignored; you'll have to proceed with 'make' anyway" ;;
 		*) die "Unknown argument $a" ;;
 	esac
 done
+
+for k in $alist; do
+	getenv v "x_$k"
+	test -n "$v" && die "Cannot append to an explicitly set variable $k"
+done
+
 unset -v i a k v x n
