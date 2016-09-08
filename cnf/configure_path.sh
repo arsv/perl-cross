@@ -14,26 +14,40 @@ define man3ext "3"
 define bin "$prefix/bin"
 define lib "$prefix/lib"
 define scriptdir "$prefix/bin"
-define otherlibdirs ' '
 define libsdirs ' '
 define privlib "$prefix/lib/$package/$version"
 define archlib "$prefix/lib/$package/$version/$archname"
 define perlpath "$prefix/bin/$perlname"
+define d_archlib 'define'
 
 define sitebin	"$prefix/bin"
 define sitelib_stem "$prefix/lib/$package/site_perl"
 define sitelib "$sitelib_stem/$version"
 define siteprefix "$prefix"
 define sitescript "$prefix/bin"
-define sitearch "$sitelib_stem/$version/$archname"
-define sitearchexp "$sitearch"
 
 define sitebinexp "$sitebin"
 define sitelibexp "$sitelib"
 define siteprefixexp "$siteprefix"
 define sitescriptexp "$sitescript"
 
+define sitearch "$sitelib_stem/$version/$archname"
+define sitearchexp "$sitearch"
+define d_sitearch 'define'
+
+define inc_version_list ''
+define inc_version_list_init ''
+define d_inc_version_list 'undef'
+
+define otherlibdirs ''
+define d_perl_otherlibdirs 'undef'
+
 define usevendorprefix undef
+
+define d_vendorarch $usevendorprefix
+define d_vendorbin $usevendorprefix
+define d_vendorlib $usevendorprefix
+define d_vendorscript $usevendorprefix
 
 if [ "$usevendorprefix" == 'define' ]; then
 	define vendorprefix "$prefix"
