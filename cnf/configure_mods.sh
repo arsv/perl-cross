@@ -127,18 +127,23 @@ definetrimspaces 'static_ext' "$static_ext"
 definetrimspaces 'nonxs_ext' "$nonxs_ext"
 definetrimspaces 'dynamic_ext' "$dynamic_ext"
 
-if [ -z "$disabledmods" ]; then
-	# see configure_args on how to undef it
-	# see configure_genc for its only effect within configure
-	disabledmods='define'
+# Unless the user explictily asks us not to do it,
+# allow building disabled mods with "make cpan/Some-Module"
+# This only affects perl-cross Makefile via Makefile.config
+
+if [ "$disabledmods" != 'define' ]; then
+	define disabledmods 'define'
+	definetrimspaces disabled_dynamic_ext "$disabled_dynamic_ext"
+	definetrimspaces disabled_nonxs_ext "$disabled_nonxs_ext"
 fi
 
-# Some of the tests use $Config{'extensions'} to decide whether to do their thing or not.
-# The original Configure has neither directory nor module names there.
-# Instead, it uses weird old mid-road format, "File/Glob", for what should have been
-# either File::Glob or ext/File-Glob.
+# Some of the tests use $Config{'extensions'} to decide whether to do their
+# thing or not. The original Configure has neither directory nor module names
+# there. Instead, it uses weird old mid-road format, "File/Glob", for what
+# should have been either File::Glob or ext/File-Glob.
 #
 # perl-cross keeps full directory names in ${...}_ext and $extensions,
 # and does the conversion in configpm. This keeps things simple when writing
 # Makefiles and so on, and at the same time doesn't break tests later.
+
 definetrimspaces 'extensions' "$static_ext $dynamic_ext $nonxs_ext"
