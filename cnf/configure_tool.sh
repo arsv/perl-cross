@@ -11,11 +11,7 @@ tryprog() {
 	fi
 }
 
-# whichprog symbol VAR prog1 prog2
-whichprog() {
-	mstart "Checking for $1"
-	hinted "$1" && return
-
+tryfromenv() {
 	if [ "$mode" = "buildmini" ]; then
 		getenv ev "HOST$2"
 	else
@@ -23,17 +19,29 @@ whichprog() {
 	fi
 
 	if [ -n "$ev" ]; then
-		if tryprog $1 "$ev"; then
-			return
-		else
-			die "Supplied $vv is not usable"
-		fi
+		tryprog $1 "$ev" && return
+		die "Supplied $ev is not usable"
 	fi
 
+	unset ev
+}
+
+# whichprog symbol VAR prog1 prog2
+whichprog() {
+	mstart "Checking for $1"
+	hinted "$1" && return
+
+	# Maybe we've got $CC or $HOSTCC?
+	tryfromenv "$1" "$2"
+
+	# For anything that sounds like a native compilation,
+	# try no-prefix tools *first*. This is to avoid using
+	# long names is case the host happens to have them.
 	if [ "$mode" = 'native' -o "$mode" = 'buildmini' ]; then
 		tryprog $1 "$3" && return
 	fi
 
+	# Finally, try $target-gcc
 	test -n "$toolsprefix" && tryprog $1 "$toolsprefix-$3" && return
 	test -n "$target"      && tryprog $1 "$target-$3"      && return
 	test -n "$targetarch"  && tryprog $1 "$targetarch-$3"  && return
