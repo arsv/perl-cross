@@ -1,3 +1,5 @@
+# For reference only, not really usable atm
+
 charsize=1
 doublesize=8
 fpossize=16
@@ -27,5 +29,5 @@ offtsize=4
 sizetsize=4
 ssizetsize=4
 fpostsize=8
-cccdlflags=
-d_attribute_malloc=undef
+cccdlflags=''
+d_attribute_malloc='undef'
