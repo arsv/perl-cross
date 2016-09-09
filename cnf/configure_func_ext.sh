@@ -6,13 +6,13 @@
 checkvar() {
 	require 'cc'
 	mstart "Checking for $2"
-	if not hinted "$1" 'found' 'not found'; then
+	if not hinted "$1" 'found' 'missing'; then
 		try_start
 		try_includes $3
 		try_add "void foo() { };"
 		try_add "int main() { foo($2); return 0; }"
 		try_link
-		resdef $1 'found' 'not found'
+		resdef $1 'found' 'missing'
 	fi
 }
 

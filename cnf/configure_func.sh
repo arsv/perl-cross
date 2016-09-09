@@ -3,12 +3,12 @@
 checkfunc() {
 	require 'cc'
 	mstart "Checking for $2"
-	if not hinted $1 'found' 'not found'; then
+	if not hinted $1 'found' 'missing'; then
 		try_start
 		funcincludes "$3" "$4" "$includes"
 		try_add "int main(void) { $2($3); return 0; }"
 		try_link -O0 -fno-builtin
-		resdef $1 'found' 'not found'
+		resdef $1 'found' 'missing'
 	fi
 }
 
