@@ -153,7 +153,7 @@ if not hinted 'uselargefiles'; then
 	esac
 fi
 if [ "$uselargefiles" = 'define' ]; then
-	append ccflags " -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+	append ccflags "-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 	log
 fi
 
