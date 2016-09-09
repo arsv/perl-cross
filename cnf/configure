@@ -2,10 +2,10 @@
 
 base=${0%/*}; test -z "$base" && base=.
 
-cfglog_base="config.log"
-cfglog="$cfglog_base.$$"
-unset keeplog
+cfglog="config.log.$$"
 echo -n > "$cfglog"
+newcfglog() { mv "$cfglog" "$1"; cfglog="$1"; }
+appendlog() { cat "$cfglog" >> "$1"; rm -f "$cfglog"; cfglog="$1"; }
 
 config="config.sh.$$"
 echo "#!/bin/sh" > $config
@@ -19,13 +19,13 @@ delconfig() { rm "$config"; }
 if [ "$mode" = 'help' ]; then
 	. $base/configure_help.sh
 	exit 0
-elif [ -z "$keeplog" -a "$mode" != 'regen' ]; then
-	cat "$cfglog" > "$cfglog_base"
-else
-	cat "$cfglog" >> "$cfglog_base"
 fi
-rm -f "$cfglog"
-cfglog="$cfglog_base"
+
+if [ -z "$keeplog" -a "$mode" != 'regen' ]; then
+	newcfglog 'config.log'
+else
+	appendlog 'config.log'
+fi
 
 # Possible modes are: (none), native, cross, buildmini, target
 # Default mode, (none), means -z $mode -a -z $target
@@ -76,6 +76,7 @@ elif [ -z "$target" ]; then
 fi
 
 if [ "$mode" = "cross" ]; then
+	delconfig
 	msg "Respawning configure for build and target platforms"
 	msg
 	run $0 $hco --keeplog --mode=buildmini --build="$build" --buildarch="$buildarch"\
@@ -85,18 +86,17 @@ if [ "$mode" = "cross" ]; then
 		|| die "configure --mode=target failed"
 	msg
 	msg "Ok, back to the top-level configure"
-	delconfig
 elif [ "$mode" = "buildmini" ]; then
+	setconfig "xconfig.sh"
 	targetlabel=`archlabel "$build" "$targetarch"`
 	msg "Configuring build-time miniperl for $targetlabel"
-	setconfig "xconfig.sh"
 elif [ "$mode" = "target" ]; then
+	setconfig "config.sh"
 	targetlabel=`archlabel "$target" "$targetarch"`
 	msg "Configuring primary perl executable for $targetlabel"
-	setconfig "config.sh"
 elif [ "$mode" = "native" ]; then 
-	msg "Configuring for a native build"
 	setconfig "config.sh"
+	msg "Configuring for a native build"
 fi
 
 
