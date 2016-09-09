@@ -234,7 +234,6 @@ define gnulibc_version '' # not tested for
 define mips_type ''
 define multiarch 'undef'
 define perl_static_inline 'static'
-define startperl "$sharpbang$perlpath"
 define phostname hostname
 define stdchar char
 define stdio_base
@@ -244,7 +243,9 @@ define stdio_filbuf
 define stdio_ptr
 define stdio_stream_array
 define d_lc_monetary_2008 'undef'
+
 define sharpbang '#!'
+define startperl "$sharpbang$perlpath"
 
 # Non-toolchain commands; not used by perl-cross
 define ansi2knr
