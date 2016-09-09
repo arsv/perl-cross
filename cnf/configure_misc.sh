@@ -45,9 +45,9 @@ define usemultiplicity 'undef'
 define usemymalloc 'n'
 define usenm 'false'
 define usensgetexecutablepath 'undef'
-define useopcode 'false'
+# define useopcode 'false' # set in configure_mods
 define useperlio 'define'
-define useposix 'true'
+# define useposix 'true' # set in configure_mods
 define usequadmath 'undef'
 define usereentrant 'undef'
 define userelocatableinc 'undef'

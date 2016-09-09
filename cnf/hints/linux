@@ -9,8 +9,6 @@
 # very likely to end up as i586-pc-linux-gnu or something along those lines,
 # even if uClibc is used.
 
-useposix=true
-
 # Linux syscalls
 d_voidsig=define
 d_nanosleep=define

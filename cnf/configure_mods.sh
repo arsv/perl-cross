@@ -84,8 +84,9 @@ definetrimspaces() {
 
 msg "Looking which extensions should be disabled"
 
-define 'useposix' 'define'
-define 'useopcode' 'define'
+# These are on unless hinted otherwise
+define 'useposix' 'true'
+define 'useopcode' 'true'
 
 extonlyif DB_File "$i_db" = 'define'
 extonlyif GDBM_File "$i_gdbm" = 'define'
