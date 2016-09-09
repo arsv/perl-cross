@@ -164,7 +164,7 @@ define d_msg_peek 'undef'
 define d_msg_proxy 'undef'
 
 define d_procselfexe 'undef'
-define procselfexe '"/proc/self/exe"'
+define procselfexe '""'
 
 # These should be in modules?
 define netdb_hlen_type 'socklen_t'

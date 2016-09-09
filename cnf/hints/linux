@@ -26,3 +26,6 @@ d_semctl_semun=define
 
 # libraries to test
 libswanted='m crypt pthread nm ndbm gdbm dbm db dl gdbm_compat'
+
+define d_procselfexe 'define'
+define procselfexe '"/proc/self/exe"'
