@@ -65,6 +65,20 @@ else
 	result 'irrelevant'
 fi
 
+mstart "Checking FD_SET macros"
+if not hinted d_fd_macros 'found' 'missing'; then
+	try_start
+	try_includes sys/time.h sys/types.h unistd.h
+	try_cat <<END
+#if defined(FD_SET) && defined(FD_CLR) && defined(FD_ISSET) && defined(FD_ZERO)
+#else
+#error missing
+#endif
+END
+	try_compile
+	resdef d_fd_macros 'found' 'missing'
+fi
+
 mstart "Checking if we're using GNU libc"
 if not hinted d_gnulibc 'yes' 'no'; then
 	try_start

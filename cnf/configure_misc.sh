@@ -150,9 +150,6 @@ define signal_t 'void'
 define d_portable 'define'
 define d_voidtty 'define'
 
-define d_fd_macros 'define'
-define d_fds_bits 'undef'
-
 define d_msg 'undef'
 define d_msg_ctrunc 'undef'
 define d_msg_dontroute 'undef'

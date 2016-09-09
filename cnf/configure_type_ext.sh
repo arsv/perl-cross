@@ -34,6 +34,7 @@ checkfield d_dirnamlen 'struct dirent' d_namelen 'sys/types.h'
 checkfield d_grpasswd 'struct group' gr_passwd grp.h
 checkfield d_sockaddr_sa_len 'struct sockaddr' sa_len 'sys/types.h sys/socket.h'
 checkfield d_sin6_scope_id 'struct sockaddr_in6' sin6_scope_id 'sys/types.h sys/socket.h netinet/in.h'
+checkfield d_fds_bits 'fd_set' fds_bits 'sys/time.h sys/types.h unistd.h'
 
 checkfield d_siginfo_si_errno 'siginfo_t' si_errno 'signal.h'
 checkfield d_siginfo_si_pid 'siginfo_t' si_pid 'signal.h'
