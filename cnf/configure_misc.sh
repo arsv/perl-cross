@@ -93,8 +93,6 @@ define need_va_copy 'define'
 define o_nonblock 'O_NONBLOCK'
 define old_pthread_create_joinable 'PTHREAD_CREATE_JOINABLE'
 define prototype 'define'
-define randbits 48
-define randseedtype 'long'
 define rd_nodata -1
 define sched_yield 'sched_yield()'
 define socksizetype 'socklen_t'

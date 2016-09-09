@@ -43,18 +43,26 @@ log "d_drand=$d_drand48 d_random=$d_random d_rand=$d_rand"
 if [ "$d_drand48" = 'define' ]; then
 	define randfunc 'drand48'
 	define seedfunc 'srand48'
+	define randbits 48
+	define randseedtype 'long'
 	result 'good, found drand48()'
 elif [ "$d_random" = 'define' ]; then
 	define randfunc 'random'
 	define seedfunc 'srandom'
+	define randbits 31
+	define randseedtype 'int'
 	result 'ok, found random()'
 elif [ "$d_rand" = 'define' ]; then
 	define randfunc 'rand'
 	define seedfunc 'srand'
+	define randbits 15
+	define randseedtype 'int'
 	result 'yick, looks like I have to use rand()'
 else
 	define randfunc ''
 	define seedfunc ''
+	define randbits 0
+	define randseedtype 'int'
 	result 'none found'
 fi
 
