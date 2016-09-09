@@ -22,7 +22,7 @@ if [ "$usecrosscompile" = 'define' ]; then
 	
 	. ./xconfig.sh
 	hostcc="$cc"
-	hostccflags="$ccflags"
+	hostccflags="$ccflags $optimize"
 	hostldflags="$ldflags"
 	hostar="$ar"
 	hostranlib="$ranlib"
