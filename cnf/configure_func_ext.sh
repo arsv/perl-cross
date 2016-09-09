@@ -28,6 +28,7 @@ checkintdefined() {
 }
 
 checkvar d_syserrlst sys_errlist 'stdio.h'
+checkvar d_sysernlst sys_errnolist 'stdio.h'
 checkvar d_tzname tzname 'time.h'
 
 checkintdefined d_dbl_dig DBL_DIG 'limits.h float.h'

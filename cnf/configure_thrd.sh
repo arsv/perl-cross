@@ -210,6 +210,11 @@ funcproto asctime_r \
 	'B_SB B_SBI I_SB I_SBI' \
 	'S=const struct tm*'
 
+funcproto ctime_r \
+	'time.h' \
+	'B_SB B_SBI I_SB I_SBI' \
+	'S=const time_t*'
+
 funcproto crypt_r \
 	'sys/types.h stdio.h crypt.h' \
 	'B_CCS B_CCD' \
