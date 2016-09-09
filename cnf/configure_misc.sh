@@ -97,7 +97,6 @@ define randbits 48
 define randseedtype 'long'
 define rd_nodata -1
 define sched_yield 'sched_yield()'
-define seedfunc 'srand48'
 define socksizetype 'socklen_t'
 define vaproto 'define'
 define groupstype 'gid_t'

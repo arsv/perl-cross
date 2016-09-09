@@ -42,15 +42,19 @@ mstart "Looking for a random number function"
 log "d_drand=$d_drand48 d_random=$d_random d_rand=$d_rand"
 if [ "$d_drand48" = 'define' ]; then
 	define randfunc 'drand48'
+	define seedfunc 'srand48'
 	result 'good, found drand48()'
 elif [ "$d_random" = 'define' ]; then
 	define randfunc 'random'
+	define seedfunc 'srandom'
 	result 'ok, found random()'
 elif [ "$d_rand" = 'define' ]; then
 	define randfunc 'rand'
+	define seedfunc 'srand'
 	result 'yick, looks like I have to use rand()'
 else
 	define randfunc ''
+	define seedfunc ''
 	result 'none found'
 fi
 
