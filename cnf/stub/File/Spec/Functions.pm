@@ -52,15 +52,7 @@ my %udeps = (
 foreach my $meth (@EXPORT, @EXPORT_OK) {
     my $sub = File::Spec->can($meth);
     no strict 'refs';
-    if (exists($udeps{$meth}) && $sub == File::Spec::Unix->can($meth) &&
-	    !(grep {
-		File::Spec->can($_) != File::Spec::Unix->can($_)
-	    } @{$udeps{$meth}}) &&
-	    defined(&{"File::Spec::Unix::_fn_$meth"})) {
-	*{$meth} = \&{"File::Spec::Unix::_fn_$meth"};
-    } else {
-	*{$meth} = sub {&$sub('File::Spec', @_)};
-    }
+    *{$meth} = sub {&$sub('File::Spec', @_)};
 }
 
 
