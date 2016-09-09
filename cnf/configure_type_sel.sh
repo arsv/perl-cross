@@ -29,14 +29,6 @@ msg "	IV will be "$ivtype", $ivsize bytes"
 msg "	UV will be "$uvtype", $uvsize bytes"
 msg "	NV will be "$nvtype", $nvsize bytes"
 
-case "$nvsize" in
-	4) define nvmantbits '23' ;;
-	8) define nvmantbits '52' ;;
-	10) define nvmantbits '64' ;;
-	16) define nvmantbits '112' ;;
-	*) define nvmantbits '0' ;;
-esac
-
 # The following code may be wrong, but there's no way to
 # tell for sure without running on-target tests.
 # And "undef" as a safe default fails op/range.t on some targets.
@@ -139,3 +131,21 @@ if not hinted 'byteorder'; then
 		exit 255
 	fi
 fi
+
+# Mantissa bits. Should be actual bits, i.e. not counting the implicit bit.
+function setmantbits {
+	mstart "Checking mantissa bits in $3"
+	case "$2" in
+		4) define $1 '23' ;;
+		8) define $1 '52' ;;
+		10) define $1 '64' ;;
+		16) define $1 '112' ;;
+		*) define $1 '0' ;;
+	esac
+	getenv v $1
+	result "$v"
+	unset v
+}
+
+setmantbits nvmantbits "$nvsize" "$nvtype"
+setmantbits doublemantbits "$doublesize" 'double'
