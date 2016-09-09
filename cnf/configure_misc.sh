@@ -55,7 +55,6 @@ define usesfio 'false'
 define useshrplib 'false'
 define usesitecustomize 'undef'
 define usesocks 'undef'
-define usethreads 'undef'
 define useversionedarchname 'undef'
 define usevfork 'false'
 

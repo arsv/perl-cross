@@ -1,6 +1,7 @@
 # Thread support
 
 mstart 'Looking whether to enable threads'
+# $usethreads gets decided in configure_libs
 if [ "$usethreads" = 'define' ]; then
 	if [ "$use5005threads" = 'define' ]; then
 		define 'useithreads' 'undef'

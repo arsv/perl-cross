@@ -29,13 +29,12 @@ if not hinted 'libs'; then
 	result "$_libs"
 fi
 
-# We need to know whether we're trying to build threads support to make
-# decision about -lpthreads (XXX: is this logic correct?)
-if [ "$usethreads" = 'define' -o "$useithreads" = 'define' -o "$use5005threads" = 'define' ]; then
-	test "$usethreads" = 'define' || define 'usethreads' 'define'
-else
-	test "$usethreads" = 'define' || define 'usethreads' 'undef'
-fi
+# We need to know whether we're trying to use threads early
+# to decide whether to test for -lpthread
+case "$usethreads:$useithreads:$use5005threads" in
+	*define*) define 'usethreads' 'define' ;;
+	*)        define 'usethreads' 'undef'  ;;
+esac
 
 mstart "Checking which libs to use for perl"
 if not hinted 'perllibs'; then
