@@ -152,7 +152,6 @@ define d_libm_lib_version 'undef'
 define d_localtime_r_needs_tzset 'undef'
 define signal_t 'void'
 define d_portable 'define'
-define d_scm_rights 'undef' # XXX got to test it
 define d_voidtty 'define'
 
 define d_fd_macros 'define'

@@ -33,6 +33,7 @@ checkvar d_tzname tzname 'time.h'
 
 checkintdefined d_dbl_dig DBL_DIG 'limits.h float.h'
 checkintdefined d_ldbl_dig LDBL_DIG 'limits.h float.h'
+checkintdefined d_scm_rights SCM_RIGHTS 'sys/socket.h sys/un.h'
 
 mstart "Checking whether closedir is void"
 if [ "$d_closedir" = 'define' ]; then
