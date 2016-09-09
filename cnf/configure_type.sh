@@ -63,7 +63,8 @@ usetypesize() {
 		result "$3"
 		checksize $2 $3 "$4"
 	else
-		checksize $2 "`valueof $1`" "$4"
+		getenv t "$1"
+		checksize $2 "$t" "$4"
 	fi
 }
 
