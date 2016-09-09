@@ -47,9 +47,9 @@ sourcenopath() {
 	eval "$@"
 }
 
-config_arg0="$0"
-config_argc=$#
-config_args="$*"
+define config_arg0 "$0"
+define config_argc $#
+define config_args "$*"
 
 alist=''
 

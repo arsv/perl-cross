@@ -8,9 +8,6 @@ define cf_time ''
 # No need to leak these either
 define perladmin 'nobody@nowhere.land'
 define osvers 'current'
-define config_arg0 ''
-define config_argc 0
-define config_args ''                                                        
 define myarchname ''
 define mydomain ''
 define myhostname ''
