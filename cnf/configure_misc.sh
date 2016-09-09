@@ -108,7 +108,7 @@ define selectminbits '32'
 define selecttype 'fd_set *'
 define shmattype 'void *'
 define st_ino_sign 1
-define st_ino_size 4 # XXX 8 most modern Linux systems
+define st_ino_size 4
 define d_open3 'define'
 define d_safebcpy 'define'
 define d_safemcpy 'undef'

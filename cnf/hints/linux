@@ -29,3 +29,6 @@ libswanted='m crypt pthread nm ndbm gdbm dbm db dl gdbm_compat'
 
 define d_procselfexe 'define'
 define procselfexe '"/proc/self/exe"'
+
+define st_ino_sign 1
+define st_ino_size 8
