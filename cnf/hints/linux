@@ -32,3 +32,5 @@ define procselfexe '"/proc/self/exe"'
 
 define st_ino_sign 1
 define st_ino_size 8
+
+d_fcntl_can_lock=define

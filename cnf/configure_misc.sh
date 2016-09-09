@@ -135,7 +135,7 @@ define d_mymalloc 'undef'
 define d_strctcpy 'define'
 define d_pseudofork 'undef'
 define d_dlsymun 'undef'
-define d_fcntl_can_lock 'undef' # XXX it can?
+define d_fcntl_can_lock 'undef'
 define d_sprintf_returns_strlen 'define'
 define d_u32align 'undef'
 define d_dir_dd_fd 'undef'
