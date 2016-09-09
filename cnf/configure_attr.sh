@@ -90,6 +90,16 @@ END
 	resdef d_volatile 'yes' 'no'
 fi
 
+mstart "Checking C99 variadic macros"
+if not hinted d_c99_variadic_macros 'supported' 'missing'; then
+	try_start
+	try_add '#include <stdio.h>'
+	try_add '#define foo(fmt, ...) printf(fmt, __VA_ARGS__)'
+	try_add 'int main(void) { foo("%i\n", 1234); return 0; }'
+	try_compile
+	resdef d_c99_variadic_macros 'supported' 'missing'
+fi
+
 # Compiler builtins. Should be gcc/clang only, but it's not like we support
 # any other compilers atm.
 define d_builtin_arith_overflow 'define'
