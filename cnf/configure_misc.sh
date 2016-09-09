@@ -26,18 +26,18 @@ define dlsrc 'dl_dlopen.xs'
 
 # These are sometimes used in perl-cross, and sometimes also affect modules
 # Some *must* be "false" instead of "undef"! See configure_args.sh
-define use5005threads 'undef'
 define use64bitall 'undef'
 define use64bitint 'undef'
 define usecbacktrace 'undef'
 define usecrosscompile 'undef'
 define usedevel 'undef'
-define usedl 'define'
+# define usedl 'define'            # set in configure_libs
 define usedtrace 'undef'
 define usefaststdio 'undef'
-define useithreads 'undef'
+# define use5005threads 'undef'    # set in configure_thrd
+# define useithreads 'undef'       # set in configure_thrd
 define usekernprocpathname 'undef'
-define uselargefiles 'define'
+# define uselargefiles 'define'    # set in configure_hdrs
 define uselongdouble 'undef'
 define usemallocwrap 'define'
 define usemorebits 'undef'
@@ -45,9 +45,9 @@ define usemultiplicity 'undef'
 define usemymalloc 'n'
 define usenm 'false'
 define usensgetexecutablepath 'undef'
-# define useopcode 'false' # set in configure_mods
+# define useopcode 'false'         # set in configure_mods
 define useperlio 'define'
-# define useposix 'true' # set in configure_mods
+# define useposix 'true'           # set in configure_mods
 define usequadmath 'undef'
 define usereentrant 'undef'
 define userelocatableinc 'undef'
@@ -112,7 +112,6 @@ define d_stdio_ptr_lval 'undef'
 define d_stdio_ptr_lval_nochange_cnt 'undef'
 define d_stdio_ptr_lval_sets_cnt 'undef'
 define d_stdiobase 'undef'
-define d_vprintf 'define'
 define d_charvspr 'undef'
 define d_eofnblk 'define'
 define d_printf_format_null 'define'
@@ -150,19 +149,16 @@ define d_getnetprotos 'define'
 define d_getprotoprotos 'define'
 
 define d_dbminitproto 'define'
-define d_dbminitproto 'define'
 define d_drand48proto 'define'
 define d_flockproto 'define'
 define d_lseekproto 'define'
 define d_modflproto 'define'
 define d_sbrkproto 'define'
-define d_shmatprototype 'define'
 define d_sockatmarkproto 'define'
 define d_sresgproto 'define'
 define d_sresuproto 'define'
 define d_syscallproto 'define'
 define d_telldirproto 'define'
-define d_usleepproto 'define'
 define d_usleepproto 'define'
 
 define d_procselfexe 'undef'
@@ -181,9 +177,7 @@ define db_version_patch ''
 define d_ndbm 'undef'
 define d_ndbm_h_uses_prototypes 'define'
 define d_gdbm_ndbm_h_uses_prototypes 'define'
-define d_gdbm_ndbm_h_uses_prototypes 'undef'
 define d_gdbmndbm_h_uses_prototypes 'define'
-define d_gdbmndbm_h_uses_prototypes 'undef'
 
 # Non-testable printf formats; must be hinted
 define d_PRIEUldbl 'undef'
@@ -257,7 +251,6 @@ define stdio_filbuf
 define stdio_ptr
 define stdio_stream_array
 define d_lc_monetary_2008 'undef'
-define so 'so'
 define sharpbang '#!'
 
 # Non-toolchain commands; not used by perl-cross

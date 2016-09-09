@@ -143,6 +143,7 @@ if not hinted 'uselargefiles'; then
 	case "$ccflags" in
 		*-D_FILE_OFFSET_BITS=*)
 			result "already there"
+			resdef 'uselargefiles' "yes" "no"
 			;;
 		*)
 			try_start
