@@ -2,11 +2,16 @@
 
 base=${0%/*}; test -z "$base" && base=.
 
-config='config.bad'
 cfglog_base="config.log"
 cfglog="$cfglog_base.$$"
 unset keeplog
 echo -n > "$cfglog"
+
+config="config.sh.$$"
+echo "#!/bin/sh" > $config
+echo "" >> $config
+setconfig() { mv "$config" "$1"; config="$1"; }
+delconfig() { rm "$config"; }
 
 . $base/configure__f.sh
 . $base/configure_args.sh
@@ -80,28 +85,26 @@ if [ "$mode" = "cross" ]; then
 		|| die "configure --mode=target failed"
 	msg
 	msg "Ok, back to the top-level configure"
+	delconfig
 elif [ "$mode" = "buildmini" ]; then
 	targetlabel=`archlabel "$build" "$targetarch"`
 	msg "Configuring build-time miniperl for $targetlabel"
 	if [ "x$build" != "x" ]; then pf1="$build-"; else pf1=""; fi
 	pf2="$build-"
-	config='xconfig.sh'
+	setconfig "xconfig.sh"
 elif [ "$mode" = "target" ]; then
 	targetlabel=`archlabel "$target" "$targetarch"`
 	msg "Configuring primary perl executable for $targetlabel"
 	if [ "x$target" != "x" ]; then pf1="$target-"; else pf1="$targetarch-"; fi
 	pf2="$target-"
-	config='config.sh'
+	setconfig "config.sh"
 elif [ "$mode" = "native" ]; then 
 	msg "Configuring for a native build"
-	config='config.sh'
+	setconfig "config.sh"
 fi
 
 
 if [ "$mode" = 'native' -o "$mode" = 'buildmini' -o "$mode" = "target" ]; then
-	echo "#!/bin/sh" > $config
-	echo "" >> $config
-
 	test "$mode" = "target" && define 'usecrosscompile' 'define'
 
 	. $base/configure_version.sh
