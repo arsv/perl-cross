@@ -18,15 +18,16 @@ if not hinted 'libs'; then
 	try_add "int main(void) { return 0; }"
 	try_dump
 
-	_libs=""
+	libs=""
 	for l in $libswanted; do
 		if try_link_libs -l$l; then
-			_libs="$_libs -l$l"
+			libs="$libs -l$l"
 		fi
 	done
+	libs=${libs# }
 
-	define 'libs' "$_libs"
-	result "$_libs"
+	define 'libs' "$libs"
+	result "$libs"
 fi
 
 # We need to know whether we're trying to use threads early
