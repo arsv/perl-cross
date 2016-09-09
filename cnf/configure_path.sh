@@ -1,6 +1,7 @@
 # Path may only be set once we know version *and* archname.
 # So this must be called after _version and _tool.
 
+log
 msg "Deciding installation paths"
 
 define prefix "/usr"
@@ -124,3 +125,5 @@ define binexp "$bin"
 define libpth "/lib /usr/lib /usr/local/lib"
 define glibpth "$libpth"
 define plibpth
+
+log

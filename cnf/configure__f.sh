@@ -70,6 +70,8 @@ define() {
 
 	v=`echo "$v" | sed -e "s@'@'\"'\"'@g"`
 	echo "$1='$v'" >> $config
+
+	log "Setting $1=$v"
 }
 
 predef() {

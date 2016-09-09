@@ -76,7 +76,7 @@ funcproto() {
 	predef $psym '0'
 
 	if [ "$usethreads" != 'define' ]; then
-		false
+		log "Threads support disabled"
 	elif not checkfuncr $fsym $fun "$inc"; then
 		false
 	elif not checkproto $psym $fun "$inc" "$@"; then
@@ -85,6 +85,8 @@ funcproto() {
 
 	enddef $fsym
 	enddef $psym
+
+	log
 }
 
 checkfuncr() {
