@@ -89,14 +89,10 @@ if [ "$mode" = "cross" ]; then
 elif [ "$mode" = "buildmini" ]; then
 	targetlabel=`archlabel "$build" "$targetarch"`
 	msg "Configuring build-time miniperl for $targetlabel"
-	if [ "x$build" != "x" ]; then pf1="$build-"; else pf1=""; fi
-	pf2="$build-"
 	setconfig "xconfig.sh"
 elif [ "$mode" = "target" ]; then
 	targetlabel=`archlabel "$target" "$targetarch"`
 	msg "Configuring primary perl executable for $targetlabel"
-	if [ "x$target" != "x" ]; then pf1="$target-"; else pf1="$targetarch-"; fi
-	pf2="$target-"
 	setconfig "config.sh"
 elif [ "$mode" = "native" ]; then 
 	msg "Configuring for a native build"
