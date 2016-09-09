@@ -79,7 +79,7 @@ extonlyif() {
 
 definetrimspaces() {
 	v=`echo "$2" | sed -r -e 's/\s+/ /g' -e 's/^\s+//' -e 's/\s+$//'`
-	define $1 "$2"
+	define $1 "$v"
 }
 
 msg "Looking which extensions should be disabled"
