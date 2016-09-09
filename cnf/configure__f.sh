@@ -68,7 +68,7 @@ define() {
 	setenv "x_$1" "${3:-written}"
 	setenv "$1" "$v"
 
-	v=`echo "$2" | sed -e "s@'@'\"'\"'@g"`
+	v=`echo "$v" | sed -e "s@'@'\"'\"'@g"`
 	echo "$1='$v'" >> $config
 }
 

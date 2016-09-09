@@ -233,8 +233,7 @@ while [ $i -le $# -o -n "$n" ]; do
 			;;
 		O) msg "WARNING: -O ignored" ;;
 		f) sourcenopath "$v" "i=$i" "n=$n" ;;
-		A) append "a_$k" "$v"
-		   append 'alist' "$k" ;;
+		A) setenv "a_$k" "$v"; alist="$alist $k" ;;
 		S|V|K) die "-$a is not supported" ;;
 		d|r) msg "WARNING: -$a makes no sense for this version of configure and was ignored" ;;
 		e|E) msg "WARNING: -$a ignored; you'll have to proceed with 'make' anyway" ;;
