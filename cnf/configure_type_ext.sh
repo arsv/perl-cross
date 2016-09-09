@@ -3,7 +3,7 @@
 # checkfield name struct field 'includes'
 checkfield() {
 	mstart "Checking whether $2 has $3"
-	hinted "$1" && return # XXX reshint
+	hinted "$1" 'yes' 'no' && return
 	
 	try_start
 	try_includes $4
