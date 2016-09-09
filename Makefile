@@ -346,18 +346,16 @@ modules.list: $(CONFIGPM) $(MODLISTS) cflags
 	./modconfig_all
 
 # ---[ pods ]-------------------------------------------------------------------
-perltoc_pod_prereqs_cperl = pod/perl$(perlversion)cdelta.pod
-perltoc_pod_prereqs = extra.pods \
+pod/perltoc.pod: extra.pods \
 	pod/perlapi.pod \
 	pod/perlintern.pod \
 	pod/perlmodlib.pod \
 	pod/perluniprops.pod \
-	pod/perl$(perlversion)delta.pod \
-	$(perltoc_pod_prereqs_$(package))
+	pod/$(perldeltapod)
 
 pods: pod/perltoc.pod
 
-pod/perltoc.pod: $(perltoc_pod_prereqs) pod/buildtoc | miniperl$X
+pod/perltoc.pod: pod/buildtoc | miniperl$X
 	./miniperl_top -f pod/buildtoc -q
 
 pod/perlapi.pod: pod/perlintern.pod
@@ -368,11 +366,15 @@ pod/perlintern.pod: autodoc.pl embed.fnc | miniperl$X
 pod/perlmodlib.pod: pod/perlmodlib.PL MANIFEST | miniperl$X
 	./miniperl_top pod/perlmodlib.PL -q
 
-pod/perl$(perlversion)delta.pod: pod/perldelta.pod
-	ln -sf perldelta.pod pod/perl$(perlversion)delta.pod
+pod/$(perldeltapod): pod/perldelta.pod
+	ln -sf $(notdir $<) $@
 
-pod/perl$(perlversion)cdelta.pod: pod/perlcdelta.pod
-	ln -sf perlcdelta.pod pod/perl$(perlversion)cdelta.pod
+ifdef perlcdeltapod
+pod/$(perlcdeltapod): pod/perlcdelta.pod
+	ln -sf $(notdir $<) $@
+
+pod/perltoc.pod: pod/$(perlcdeltapod)
+endif
 
 extra.pods: | miniperl$X
 	-@test ! -f extra.pods || rm -f `cat extra.pods`

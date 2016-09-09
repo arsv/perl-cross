@@ -48,7 +48,6 @@ ifprefixed() {
 	fi
 }
 
-perlversion="$PERL_REVISION$PERL_VERSION$PERL_SUBVERSION"
 if [ "$usedl" = 'undef' ]; then
 	dynaloader=''
 else
@@ -108,7 +107,6 @@ HOSTCFLAGS = \$(CFLAGS)
 HOSTCFMINI = \$(HOSTCFLAGS) -DPERL_EXTERNAL_GLOB
 HOSTLDFLAGS = \$(LDFLAGS)
 HOSTLIBS = \$(LIBS)
-perlversion = $perlversion
 
 # suffixes for static library, object and executable files
 # lowercase for target platform or native build, uppercase
@@ -148,5 +146,19 @@ if [ "$disabledmods" = 'define' ]; then
 	cat >> Makefile.config << END
 disabled_dynamic_ext=$disabled_dynamic_ext
 disabled_nonxs_ext=$disabled_nonxs_ext
+END
+fi
+
+vertag=$PERL_REVISION$PERL_VERSION$PERL_SUBVERSION
+echo >> Makefile.config
+if [ "$package" = 'cperl' ]; then
+	# The version they diverged from mainline perl? Yikes
+	cat >> Makefile.config << END
+perlcdeltapod=perl${vertag}cdelta.pod
+perldeltapod=perl5240delta.pod
+END
+else
+	cat >> Makefile.config << END
+perldeltapod=perl${vertag}delta.pod
 END
 fi
