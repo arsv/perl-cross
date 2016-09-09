@@ -4,6 +4,7 @@
 define cf_by ''
 define cf_email ''
 define cf_time ''
+
 # No need to leak these either
 define perladmin 'nobody@nowhere.land'
 define osvers 'current'
@@ -14,6 +15,17 @@ define myarchname ''
 define mydomain ''
 define myhostname ''
 define myuname ''
+
+define Author
+define Date '$Date'
+define Header
+define Id '$Id'
+define Locker
+define Log '$Log'
+define RCSfile '$RCSfile'
+define Revision '$Revision'
+define Source
+define State
 
 # "use MakeMaker direct LD Library Test"
 # see cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/Liblist/Kid.pm

@@ -124,14 +124,3 @@ define binexp "$bin"
 define libpth "/lib /usr/lib /usr/local/lib"
 define glibpth "$libpth"
 define plibpth
-
-define Author
-define Date '$Date'
-define Header
-define Id '$Id'
-define Locker
-define Log '$Log'
-define RCSfile '$RCSfile'
-define Revision '$Revision'
-define Source
-define State
