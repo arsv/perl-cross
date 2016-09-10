@@ -4,23 +4,13 @@
 testing for particular value is impossible or such test should be
 avoided for whatever reasons.</p>
 
-<p>Hints for perl-cross are stored under <tt>cnf/hints</tt>. They are
-loaded automatically, depending on host, target and compiler settings,
-in the following order:</p>
-<div>
-	[mode-]arch-machine-os-type<br>
-	[mode-]arch-machine<br>
-	[mode-]arch<br>
-	[mode-]os-type<br>
-	[mode-]os<br>
-	default
-</div>
-<p>with <span>arch-machine-os-type</span> being standard target description
-triplet (or quadruplet) like <tt>i686-pc-linux-gnu</tt>. <span>mode</span> can
-be either <tt>host</tt> or <tt>target</tt>. All matching files are loaded,
-and the most specific value is used.</p>
+<p>Hints for perl-cross are stored under <tt>cnf/hints</tt>.
+Unless told otherwise with <tt>--hints</tt>, configure will load
+hints for <tt>$archname</tt> and <tt>$osname</tt>. A build that ends
+up creating <tt>$prefix/lib/perl5/5.24.0/x86_64-linux</tt> likely
+starts by loading <tt>cnf/hints/x86_64_linux</tt> and <tt>cnf/hints/linux</tt>.
 
-<p>Despite their looks, hints are not just regular shell scripts.
+<p>Hints in perl-cross are not just regular shell scripts.
 They are filtered with <tt>sed</tt> and generally should not contain
 anything but</p>
 <pre>
@@ -48,14 +38,12 @@ cross builds.</p>
 
 <p>Mainline hints use <span>(os).sh</span> naming scheme and must determine
 other aspects of target configuration internally using conditionals.
-In contrast, perl-cross uses much more elaborate (and less portable) naming
-scheme with no logic within the hints.</p>
+In contrast, perl-cross uses passive hint files with nothing but variable
+assignments in them.</p>
 
 <p>perl-cross does not support callbacks and per-file cflags from the mainline
 hints. Callbacks are not really necessary in non-interactive mode because all
 user-set values are known from the very start, and cctype hints partially
-solve the problem of compiler related settings.
-Per-file cflags are not implemented yet.</p>
-
+solve the problem of compiler related settings.</p>
 
 <? include "_foot.php" ?>
