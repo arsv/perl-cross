@@ -22,3 +22,6 @@ st_ino_sign=1
 st_ino_size=8
 
 d_fcntl_can_lock='define'
+
+# Android has non-usable definition for this
+d_ip_mreq_source='undef'
