@@ -30,7 +30,6 @@ hasproto d_syscallproto 'syscall' 'unistd.h sys/syscall.h'
 hasproto d_telldirproto 'telldir' 'dirent.h'
 hasproto d_usleepproto 'usleep' 'unistd.h'
 
-# Presumably is of these has proto declared, so do the rest.
 hasproto d_gethostprotos 'gethostbyaddr' 'netdb.h sys/socket.h'
 hasproto d_getservprotos 'getservbyport' 'netdb.h sys/socket.h'
 hasproto d_getnetprotos 'getnetbyaddr' 'netdb.h'

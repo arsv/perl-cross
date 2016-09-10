@@ -1,7 +1,5 @@
 # General-purpose functions used by most of other modules
 
-# Note: one-letter variables are "local"
-
 die() {
 	echo "ERROR: $*" >> $cfglog
 	echo "ERROR: $*" >&2
@@ -17,16 +15,8 @@ msg() {
 	echo "$@" >&2
 }
 
-mstart() {
-	echo "$@" >> $cfglog
-	echo -n "$* ... " >& 2
-}
-
-# note: setvar()s should preceede result() to produce a nice log
-result() {
-	echo "Result: $*" >> $cfglog
-	echo >> $cfglog
-	echo "$@" >&2
+not() {
+	if "$@"; then false; else true; fi;
 }
 
 run() {
@@ -34,9 +24,28 @@ run() {
 	"$@"
 }
 
-not() {
-	if "$@"; then false; else true; fi;
+# Each test starts with mstart and ends with a (possibly branched) result
+#
+#    mstart "Checking foo"
+#    if check; then
+#        result "yes"
+#    else
+#        result "no"
+#
+# To make nice logs, any define()s should precede result()s.
+
+mstart() {
+	echo "$@" >> $cfglog
+	echo -n "$* ... " >& 2
 }
+
+result() {
+	echo "Result: $*" >> $cfglog
+	echo >> $cfglog
+	echo "$@" >&2
+}
+
+# Indirect variable access ($a= and $$a), invalid in generic POSIX shells
 
 setenv() {
 	eval "$1='$2'"
@@ -46,6 +55,17 @@ getenv() {
 	eval "$1=\$$2"
 }
 
+# Config variables are written to config.sh exactly once.
+# The first define for a given key locks it by setting x_$key.
+# Any subsequent defines for the same key are ignored.
+# Hints and command-line arguments call define early,
+# preventing regular code from setting the hinted values.
+#
+#     define key val [source]
+#
+# Appends (-A, stored in a_$key) are applied here as well.
+# All written values are also duplicated in current environment
+# to allow $key references later.
 
 define() {
 	getenv x "x_$1"
@@ -73,6 +93,10 @@ define() {
 
 	log "Setting $1=$v"
 }
+
+# There are few variables that cannot be set immediately.
+# Instead, they have predef 'initial-value', some conditional
+# appends, and enddef that writes the value to config.sh.
 
 predef() {
 	getenv x "x_$1"
@@ -118,6 +142,17 @@ prepend() {
 	fi
 }
 
+# There is no point in running tests for values that have been hinted
+# as define will skip them anyway.
+#
+#     mstart "Checking foo"
+#     if not hinted d_foo; then
+#         check d_foo 'foo' ...
+#     fi
+#
+# Like with resdef below, some define/undef variables need yes/no
+# or found/missing results shown. That's why $3 and $4 are there.
+
 hinted() {
 	getenv v "$1"
 	getenv x "x_$1"
@@ -131,9 +166,12 @@ hinted() {
 	elif [ -n "$4" -a "$v" != 'define' ]; then
 		result "($x) $4"
 	else
-		result "($x) $h"
+		result "($x) $v"
 	fi
 }
+
+# Thread-safe func tests define two symbols per test, and need a way
+# to check hints silently to avoid calling result() too early.
 
 gethint() {
 	getenv x "x_$1"
@@ -141,18 +179,9 @@ gethint() {
 	getenv $2 "$1"
 }
 
-# archlabel target targetarch -> label
-archlabel() {
-	if [ -n "$1" -a -n "$2" ]; then
-		echo "$1 ($2)"
-	elif [ -n "$2" ]; then
-		echo "$2"
-	elif [ -n "$1" ]; then
-		echo "$1"
-	else
-		echo "unknown"
-	fi
-}
+# All compile/link tests operate on try.c. Typical sequence is try_start,
+# try_add, try_add, ..., try_compile. The test code gets dumped to config.log,
+# along with the command used to compile it.
 
 try_start() {
 	echo -n > try.c
@@ -237,9 +266,17 @@ try_objdump() {
 	run $objdump $* try.o > try.out
 }
 
-bytes() {
-	test "$1" = 1 && echo "byte" || echo "bytes"
+# Sanity check, make sure variables like $o and $cc are defined
+# before doing stuff like rm try$o or $cc -o try$o
+
+require() {
+	getenv v "$1"
+	test -z "$v" && die "Requires $1 is not set"
 }
+
+# Set symbols depending on the result of preceeding command.
+# The values set are always define/undef but the results shown
+# are sometimes yes/no or found/missing etc.
 
 resdef() {
 	if [ $? = 0 ]; then
@@ -253,11 +290,26 @@ resdef() {
 	fi
 }
 
-modsymname() {
-	echo "$1" | sed -r -e 's!^(ext|cpan|dist|lib)/!!' -e 's![:/-]!_!g' | tr A-Z a-z
+bytes() {
+	test "$1" = 1 && echo "byte" || echo "bytes"
 }
 
-require() {
-	getenv v "$1"
-	test -z "$v" && die "Requires $1 is not set"
+# archlabel target targetarch -> label
+archlabel() {
+	if [ -n "$1" -a -n "$2" ]; then
+		echo "$1 ($2)"
+	elif [ -n "$2" ]; then
+		echo "$2"
+	elif [ -n "$1" ]; then
+		echo "$1"
+	else
+		echo "unknown"
+	fi
+}
+
+# Disabling e.g. ext/XS-Typemap is done by setting $disable_xs_typemap,
+# which is then checked in configure_mods.
+
+modsymname() {
+	echo "$1" | sed -r -e 's!^(ext|cpan|dist|lib)/!!' -e 's![:/-]!_!g' | tr A-Z a-z
 }
