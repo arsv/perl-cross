@@ -133,7 +133,7 @@ if not hinted 'byteorder'; then
 fi
 
 # Mantissa bits. Should be actual bits, i.e. not counting the implicit bit.
-function setmantbits {
+setmantbits() {
 	mstart "Checking mantissa bits in $3"
 	case "$2" in
 		4) define $1 '23' ;;

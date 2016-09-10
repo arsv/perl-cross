@@ -50,7 +50,7 @@ define d_vendorbin $usevendorprefix
 define d_vendorlib $usevendorprefix
 define d_vendorscript $usevendorprefix
 
-if [ "$usevendorprefix" == 'define' ]; then
+if [ "$usevendorprefix" = 'define' ]; then
 	define vendorprefix "$prefix"
 	define vendorbin "$vendorprefix/bin"
 	define vendorlib_stem "$vendorprefix/lib/$package/vendor_perl"
