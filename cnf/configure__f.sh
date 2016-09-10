@@ -119,10 +119,10 @@ prepend() {
 }
 
 hinted() {
-	setenv v "$1"
-	setenv x "x_$1"
+	getenv v "$1"
+	getenv x "x_$1"
 
-	test -n "$x" && return 1
+	test -z "$x" && return 1
 
 	log "Using $1=$v ($x)"
 
@@ -133,6 +133,12 @@ hinted() {
 	else
 		result "($x) $h"
 	fi
+}
+
+gethint() {
+	getenv x "x_$1"
+	test -z "$x" && return 1
+	getenv $2 "$1"
 }
 
 # archlabel target targetarch -> label

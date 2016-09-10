@@ -70,44 +70,38 @@ funcproto() {
 	fsym="d_${fun}"
 	psym="${fun}_proto"
 
-	log "Prototype and availability test for $fun"
-
-	predef $fsym 'undef'
-	predef $psym '0'
-
 	if [ "$usethreads" != 'define' ]; then
-		log "Threads support disabled"
-	elif not checkfuncr $fsym $fun "$inc"; then
-		false
-	elif not checkproto $psym $fun "$inc" "$@"; then
-		setenv $fsym 'undef'
+		define $fsym 'undef'
+		define $psym '0'
+		return
 	fi
 
-	enddef $fsym
-	enddef $psym
+	mstart "Checking for $fun"
 
-	log
+	if not checkfuncr $fsym $fun "$inc"; then
+		define $fsym 'undef'
+		define $psym '0'
+		result "missing"
+	elif not checkproto $psym $fun "$inc" "$@"; then
+		define $fsym 'undef'
+		define $psym '0'
+		result "unusable"
+	else
+		getenv proto "$psym"
+		define $fsym 'define'
+		define $psym "$proto"
+		result "found, $proto"
+	fi
 }
 
 checkfuncr() {
-	mstart "Checking for $2"
-
-	if hinted $1; then
-		getenv found "$1"
-		test $1 = 'define'
-		return $?
-	fi
-
-	try_start
-	try_includes "$3"
-	try_add "int main() { $2(); return 0; }"
-
-	if try_link; then
-		setenv $1 'define'
-		result 'found'
+	if gethint $1 found; then
+		test $found = 'define'
 	else
-		setenv $1 'undef'
-		result 'missing'
+		try_start
+		try_add "extern void $2(void);"
+		try_add "int main() { $2(); return 0; }"
+		try_link
 	fi
 }
 
@@ -127,9 +121,12 @@ checkproto() {
 	shift 4 # the rest are type assignments
 
 	require 'cc'
-	msg "Checking which prototype $fun has"
-
 	setfreetypes "$@"
+
+	if gethint $sym proto; then
+		test -n "$proto"
+		return $?
+	fi
 
 	setenv $sym ''
 	hadfailure='no'
@@ -144,22 +141,18 @@ checkproto() {
 	done
 
 	if [ "$hadsuccess" = 'no' ]; then
-		result "none that we know of"
 		return 1
 	elif [ "$hadfailure" = 'yes' ]; then
 		true
 	elif tryproto $fun "$inc" 'V_Z'; then
-		result "cannot tell for sure"
 		return 1
 	fi
 
 	setenv $sym "$p"
-	result "$p"
 	return 0
 }
 
-setfreetypes()
-{
+setfreetypes() {
 	for cl in $free_type_letters; do
 		setenv "type_$cl" 'undef'
 	done
