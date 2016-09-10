@@ -1,14 +1,15 @@
 <? include "_head.php" ?>
 
-<p>Current version of perl-cross is 1.0.3. It is intended to be used with perl-5.24.0.
+<p>Current version of perl-cross is 1.1.<br>
+Supported perl versions: perl-5.24.0, perl-5.25.4, cperl-5.24.0, cperl-5.25.0.<br>
 Download it here:</p>
 <div class="dllink">
-	<a href="https://github.com/arsv/perl-cross/releases/download/1.0.3/perl-5.24.0-cross-1.0.3.tar.gz"
-	 >https://github.com/arsv/perl-cross/releases/download/1.0.3/perl-5.24.0-cross-1.0.3.tar.gz</a>
+	<a href="https://github.com/arsv/perl-cross/releases/download/1.1/perl-cross-1.1.tar.gz"
+	 >https://github.com/arsv/perl-cross/releases/download/1.1/perl-cross-1.1.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
-Use the exact perl version perl-cross was intended for, i.e. perl-5.24.0 for perl-5.24.0-cross-1.0.3.</p>
+Use one of supported perl versions; the are version-specific patches inside.</p>
 
 <p>For older releases, check <a href="https://github.com/arsv/perl-cross/tree/releases">GitHub releases
 branch</a>.</p>
@@ -16,6 +17,22 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
+	<li>1.1 (2016-09-10)<ul>
+		<li>Major code cleanup</li>
+		<li>Package name changed to <tt>perl-cross-N.M.tar.gz</tt></li>
+		<li>Support for multiple perl versions</li>
+		<li>Experimental cperl support</li>
+		<li>General list of config.sh variables (configure_genc.sh) removed;<br>
+			values are now written to config.sh immediately</li>
+		<li>bash is no longer necessary to run configure;<br>
+			dash or busybox sh should be enough</li>
+		<li>Extended -A support removed (prepend and such)</li>
+		<li>Build host info (cf_by, cf_email etc) is no longer passed to config.sh</li>
+		<li>Various test fixes, and some new tests</li>
+		<li>Hints re-arranged, support for compiler hints removed</li>
+		<li>Newer gcc get -fwrapv -fno-strict-aliasing in ccflags</li>
+	</ul></li>
+
 	<li>1.0.3 (2016-06-30)<ul>
 		<li>perl-5.24.0</li>
 		<li>Android detection and proper osname</li>
