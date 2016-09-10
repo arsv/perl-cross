@@ -13,7 +13,7 @@ If you can use Configure from the vanilla distribution, you probably
 <b>perl-cross</b> is for the cases when Configure just can't make it.</div>
 
 <p>The configure script from perl-cross is essentially a 100 kB long session
-of severe bash(1) abuse. Unlike the products of GNU autoconf, it sacrifices
+of severe sh(1) abuse. Unlike the products of GNU autoconf, it sacrifices
 portability for readability; it will likely only run on a relatively sane GNU
 system with GNU binutils (which is kind of expected for a <i>cross-build</i>
 but still feels like a limitation).
