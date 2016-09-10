@@ -20,10 +20,6 @@ d_clock='define'
 # From the original linux.sh
 usemallocwrap='define'
 
-# *NOT* checked! that's how original Configure set them.
-d_semctl_semid_ds='define'
-d_semctl_semun='define'
-
 # libraries to test
 libswanted='m crypt pthread nm ndbm gdbm dbm db dl gdbm_compat'
 

@@ -146,6 +146,8 @@ define d_localtime_r_needs_tzset 'undef'
 define signal_t 'void'
 define d_portable 'define'
 define d_voidtty 'define'
+define d_semctl_semid_ds 'define'
+define d_semctl_semun 'define'
 
 define d_msg 'undef'
 define d_msg_ctrunc 'undef'
