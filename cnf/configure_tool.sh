@@ -52,12 +52,20 @@ whichprog() {
 }
 
 whichprog cc CC gcc || whichprog cc CC cc
-whichprog ld LD ld
+#whichprog ld LD ld # while correct, this breaks MM library test
 whichprog ar AR ar
 whichprog nm NM nm
 whichprog ranlib RANLIB ranlib
 whichprog readelf READELF readelf
 whichprog objdump OBJDUMP objdump
+
+# XXX: this looks wrong, but the code usemmldlt depends on $ld being able
+# to compile try.c. What kind of moron could have written that. Oh wait.
+#
+# But, there was probably a reason to assume that, probably becase mainline
+# Configure does the same. So, ugh, leaving it as is for now.
+# Speak of backward bug compatibility.
+define ld "$cc"
 
 log
 
