@@ -42,7 +42,7 @@ whichprog() {
 	fi
 
 	# Finally, try $target-gcc
-	test -n "$toolsprefix" && tryprog $1 "$toolsprefix-$3" && return
+	test -n "$toolsprefix" && tryprog $1 "$toolsprefix$3"  && return
 	test -n "$target"      && tryprog $1 "$target-$3"      && return
 	test -n "$targetarch"  && tryprog $1 "$targetarch-$3"  && return
 
