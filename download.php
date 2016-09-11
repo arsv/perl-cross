@@ -17,7 +17,7 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
-	<li>1.1 (2016-09-10)<ul>
+	<li>1.1 (2016-09-11)<ul>
 		<li>Major code cleanup</li>
 		<li>Package name changed to <tt>perl-cross-N.M.tar.gz</tt></li>
 		<li>Support for multiple perl versions</li>
