@@ -47,17 +47,16 @@ whichprog() {
 	test -n "$targetarch"  && tryprog $1 "$targetarch-$3"  && return
 
 	result "none found"
-	define "$1" 'false' # ouch
 	return 1
 }
 
-whichprog cc CC gcc || whichprog cc CC cc
+whichprog cc CC gcc || whichprog cc CC cc || die "No C compiler found"
 #whichprog ld LD ld # while correct, this breaks MM library test
-whichprog ar AR ar
+whichprog ar AR ar || die "Cannot find ar"
 whichprog nm NM nm
 whichprog ranlib RANLIB ranlib
-whichprog readelf READELF readelf
-whichprog objdump OBJDUMP objdump
+whichprog readelf READELF readelf || die "Cannot find readelf"
+whichprog objdump OBJDUMP objdump || die "Cannot find objdump"
 
 # XXX: this looks wrong, but the code usemmldlt depends on $ld being able
 # to compile try.c. What kind of moron could have written that. Oh wait.
