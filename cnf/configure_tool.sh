@@ -83,8 +83,8 @@ if not hinted 'cctype'; then
 	if [ -z "$_cl" ]; then
 		result 'unknown'
 	else case "$_cl" in
-		*\(*GCC*\)*)
-			_cv=`echo "$_cl" | sed -e 's/.*GCC[^)]*) //' -e 's/ .*//g'`
+		*gcc*)
+			_cv=`echo "$_cl" | sed -e 's/.*) //' -e 's/ .*//g'`
 			define 'cctype' 'gcc'
 			define 'ccversion' "$_cv"
 			define 'gccversion' "$_cv"
@@ -94,9 +94,13 @@ if not hinted 'cctype'; then
 			_cv=`echo "$_cl" | sed -e 's/.*version //' -e 's/ .*//'`
 			define 'cctype' 'clang'
 			define 'ccversion' "$_cv"
+			define 'gccversion' '0.0'
 			result "clang $_cv"
 			;;
 		*)
+			define 'cctype' 'cc'
+			define 'ccversion' ''
+			define 'gccversion' '0.0'
 			result 'unknown'
 			;;
 	esac; fi
