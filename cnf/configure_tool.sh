@@ -85,6 +85,7 @@ if not hinted 'cctype'; then
 	else case "$_cl" in
 		*gcc*)
 			_cv=`echo "$_cl" | sed -e 's/.*) //' -e 's/ .*//g'`
+			test -n "$_cv" || _cv='0.0'
 			define 'cctype' 'gcc'
 			define 'ccversion' "$_cv"
 			define 'gccversion' "$_cv"
