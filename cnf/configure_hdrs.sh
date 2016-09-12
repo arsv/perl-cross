@@ -142,8 +142,8 @@ if not hinted 'uselargefiles'; then
 	# support
 	case "$ccflags" in
 		*-D_FILE_OFFSET_BITS=*)
+			define uselargefiles 'define'
 			result "already there"
-			resdef 'uselargefiles' "yes" "no"
 			;;
 		*)
 			try_start
