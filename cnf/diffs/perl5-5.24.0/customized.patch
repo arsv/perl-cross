@@ -1,0 +1,27 @@
+Not really necessary to build perl, but porting/customized.t will check
+the sums. Doing this defeats the purpose of customized.dat, but it's not
+like there's much choice.
+
+Separated from Kid.pm and MM_Unix.pm patches to avoid dependence
+on patch ordering.
+
+--- a/t/porting/customized.dat
++++ b/t/porting/customized.dat
+@@ -3,7 +3,7 @@
+ ExtUtils::Constant cpan/ExtUtils-Constant/t/Constant.t a0369c919e216fb02767a637666bb4577ad79b02
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm 8d772fbc6a57637ab24d12a02794073ee71b489c
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist.pm 9be9ac3fee6fd6df702469904e02c8b4c6f2502e
+-ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm bb2443c2314c50f09f7eab4aacc03ade8b9907dd
++ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm 8b04197b7a32fa4171c5cae1910d7c2d08998133
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm 830acdc810e2974d7fd4ec408ea1bfa825c75b69
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/Config.pm 5c41b40e33464c6635258061dff4ece018b46bd9
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/FAQ.pod 062e5d14a803fbbec8d61803086a3d7997e8a473
+@@ -23,7 +23,7 @@
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_NW5.pm 8185a7db6c4d7e0fdc5001aeaa8c2b612a884a5e
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_OS2.pm 2fe66ca8a894d6a2ae340b8bf6f8d69c5e1f7fbe
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_QNX.pm e8a4dbba69a1d551bd581ea6a3f2415bacbc0ae5
+-ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm d666ac424618c3e11b8549755c9646d942bd2d57
++ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm 4a0a9dcf92aef503b7ef4f3b669ee518b9088aec
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_UWIN.pm f6581a0e75e45bfc26f343f173d3366c43fb1221
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_VMS.pm 1997912b5018970cdeb3dae8fd7e0c24f6e5d567
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_VOS.pm 210a4eda8b081d9986477e3a9762fce6ebea8474
