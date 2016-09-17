@@ -130,6 +130,7 @@ msg "Dynamic modules: $dynamic_ext"
 definetrimspaces 'static_ext' "$static_ext"
 definetrimspaces 'nonxs_ext' "$nonxs_ext"
 definetrimspaces 'dynamic_ext' "$dynamic_ext"
+definetrimspaces 'known_extensions' "$known_extensions"
 
 # Unless the user explictily asks us not to do it,
 # allow building disabled mods with "make cpan/Some-Module"
