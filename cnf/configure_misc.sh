@@ -33,6 +33,14 @@ define usemmldlt 'define'
 define dlext 'so'
 define dlsrc 'dl_dlopen.xs'
 
+# Required by lib/Config.t, and configpm may use these.
+# Empty values pass tests but essentially disable the code
+# in configpm, which is probably for good.
+define ccflags_uselargefiles ''
+define ldflags_uselargefiles ''
+define libs_uselargefiles ''
+define libswanted_uselargefiles ''
+
 # These are sometimes used in perl-cross, and sometimes also affect modules
 # Some *must* be "false" instead of "undef"! See configure_args.sh
 define use64bitall 'undef'
