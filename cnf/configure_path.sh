@@ -1,6 +1,9 @@
 # Path may only be set once we know version *and* archname.
 # So this must be called after _version and _tool.
 
+# $(something)exp were meant to be "expanded" values, but we don't
+# expand anything and just set them to $(something).
+
 log
 msg "Deciding installation paths"
 
@@ -43,32 +46,6 @@ define d_inc_version_list 'undef'
 define otherlibdirs ''
 define d_perl_otherlibdirs 'undef'
 
-define usevendorprefix undef
-
-define d_vendorarch $usevendorprefix
-define d_vendorbin $usevendorprefix
-define d_vendorlib $usevendorprefix
-define d_vendorscript $usevendorprefix
-
-if [ "$usevendorprefix" = 'define' ]; then
-	define vendorprefix "$prefix"
-	define vendorbin "$vendorprefix/bin"
-	define vendorlib_stem "$vendorprefix/lib/$package/vendor_perl"
-	define vendorlib "$vendorlib_stem/$version"
-	define vendorarch "$vendorlib_stem/$version/$archname"
-	define vendorscript "$vendorprefix/bin"
-fi
-
-define vendorbinexp "$vendorbin"
-define vendorlibexp "$vendorlib"
-define vendorarchexp "$vendorarch"
-define vendorprefixexp "$vendorprefix"
-define vendorscriptexp "$vendorscript"
-
-define vendorman1dir "$man1dir"
-define vendorman3dir "$man3dir"
-define vendorhtml1dir "$html1dir"
-define vendorhtml3dir "$html3dir"
 define siteman1dir "$man1dir"
 define siteman3dir "$man3dir"
 define sitehtml1dir "$html1dir"
@@ -92,14 +69,6 @@ define installsitelib  "$installpath$sitelib "
 define installsiteman1dir "$installpath$siteman1dir"
 define installsiteman3dir "$installpath$siteman3dir"
 define installsitescript "$installpath$sitescript"
-define installvendorarch "$installpath$vendorarch"
-define installvendorbin "$installpath$vendorbin"
-define installvendorhtml1dir "$installpath$vendorhtml1dir"
-define installvendorhtml3dir "$installpath$vendorhtml3dir"
-define installvendorlib "$installpath$vendorlib"
-define installvendorman1dir "$installpath$vendorman1dir"
-define installvendorman3dir "$installpath$vendorman3dir"
-define installvendorscript "$installpath$vendorscript"
 define installstyle lib/perl5
 define installusrbinperl define
 
@@ -107,10 +76,6 @@ define prefixexp "$prefix"
 define installprefixexp "$installprefix"
 define html1direxp "$html1dir"
 define html3direxp "$html3dir"
-define vendorman1direxp "$vendorman1dir"
-define vendorman3direxp "$vendorman3dir"
-define vendorhtml1direxp "$vendorhtml1dir"
-define vendorhtml3direxp "$vendorhtml3dir"
 define siteman1direxp "$siteman1dir"
 define siteman3direxp "$siteman3dir"
 define sitehtml1direxp "$sitehtml1dir"
@@ -125,5 +90,74 @@ define binexp "$bin"
 define libpth "/lib /usr/lib /usr/local/lib"
 define glibpth "$libpth"
 define plibpth
+
+# Vendor prefix logic from Configure.
+# -Dusevendorprefix => set $vendorprefix to default value: not supported
+# -Dvendorprefix=/path => define $usevendorprefix, set $vendor*
+# no -Dvendorprefix => undef $usevendorprefix, set $vendor* = ''
+
+mstart "Deciding whether to use \$vendorprefix"
+define vendorprefix ''
+test -n "$vendorprefix"
+resdef usevendorprefix 'yes' 'no'
+
+if [ "$usevendorprefix" = 'define' -a -z "$vendorprefix" ]; then
+	die "must specify -Dvendorprefix with -Dusevendorprefix"
+elif [ "$usevendorprefix" != 'define' -a -n "$vendorprefix" ]; then
+	die "non-empty vendorprefix without -Dusevendorprefix"
+fi
+
+vendorpath() {
+	if [ -n "$vendorprefix" ]; then
+		define "$1" "$2"
+	else
+		define "$1" ''
+	fi
+}
+
+vendortest() {
+	if [ -n "$2" ]; then
+		define "$1" 'define'
+	else
+		define "$1" 'undef'
+	fi
+}
+
+vendorpath vendorbin "$vendorprefix/bin"
+vendorpath vendorlib_stem "$vendorprefix/lib/$package/vendor_perl"
+vendorpath vendorlib "$vendorlib_stem/$version"
+vendorpath vendorarch "$vendorlib_stem/$version/$archname"
+vendorpath vendorscript "$vendorprefix/bin"
+
+# These are used to control #ifdefs around vendorpath-specific code
+vendortest d_vendorarch "$vendorarch"
+vendortest d_vendorbin "$vendorbin"
+vendortest d_vendorlib "$vendorlib"
+vendortest d_vendorscript "$vendorscript"
+
+vendorpath vendorbinexp "$vendorbin"
+vendorpath vendorlibexp "$vendorlib"
+vendorpath vendorarchexp "$vendorarch"
+vendorpath vendorprefixexp "$vendorprefix"
+vendorpath vendorscriptexp "$vendorscript"
+
+vendorpath vendorman1dir "$man1dir"
+vendorpath vendorman3dir "$man3dir"
+vendorpath vendorhtml1dir "$html1dir"
+vendorpath vendorhtml3dir "$html3dir"
+
+vendorpath vendorman1direxp "$vendorman1dir"
+vendorpath vendorman3direxp "$vendorman3dir"
+vendorpath vendorhtml1direxp "$vendorhtml1dir"
+vendorpath vendorhtml3direxp "$vendorhtml3dir"
+
+vendorpath installvendorarch "$installpath$vendorarch"
+vendorpath installvendorbin "$installpath$vendorbin"
+vendorpath installvendorhtml1dir "$installpath$vendorhtml1dir"
+vendorpath installvendorhtml3dir "$installpath$vendorhtml3dir"
+vendorpath installvendorlib "$installpath$vendorlib"
+vendorpath installvendorman1dir "$installpath$vendorman1dir"
+vendorpath installvendorman3dir "$installpath$vendorman3dir"
+vendorpath installvendorscript "$installpath$vendorscript"
 
 log
