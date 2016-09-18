@@ -12,10 +12,6 @@ checkhdr() {
 	fi
 }
 
-checkhdr i_stdio 'stdio.h'
-test "$i_stdio" = 'define' ||\
-	die "Can't include <stdio.h>, check compiler configuration"
-
 checkhdr i_arpainet 'arpa/inet.h'
 checkhdr i_assert 'assert.h'
 checkhdr i_bfd 'bfd.h'

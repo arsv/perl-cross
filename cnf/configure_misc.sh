@@ -79,6 +79,15 @@ define usevfork 'false'
 define d_libname_unique 'undef'
 define d_vms_case_sensitive_symbols 'undef'
 define dl_so_eq_ext 'define'
+# not used but tested for in ext/Config/t/XSConfig.t!
+define hash_func ''
+define c ''
+define d_bsd 'undef'
+define d_eunice 'undef'
+define d_xenix 'undef'
+define d_ftime 'undef'
+define d_oldsock 'undef'
+define extras ''
 
 # These are important but we don't test them
 define startsh '#!/bin/sh'

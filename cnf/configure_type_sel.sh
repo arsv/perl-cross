@@ -149,3 +149,4 @@ setmantbits() {
 
 setmantbits nvmantbits "$nvsize" "$nvtype"
 setmantbits doublemantbits "$doublesize" 'double'
+setmantbits longdblmantbits "$longdblsize" 'long double'
