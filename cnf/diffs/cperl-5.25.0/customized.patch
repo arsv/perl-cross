@@ -1,0 +1,17 @@
+Not really necessary to build perl, but porting/customized.t will check
+the sums. Doing this defeats the purpose of customized.dat, but it's not
+like there's much choice.
+
+Separated from other patches to avoid dependence on patch ordering.
+
+--- a/t/porting/customized.dat
++++ b/t/porting/customized.dat
+@@ -34,7 +34,7 @@
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm d88649ead5abb549df286334a035af924cc2befa
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Mkbootstrap.pm d79b98465a632dc3bde76a0210d01014d2257dc6
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm 62b0abc38e8c8734fade49c5e63477fe9fc0ea05
+-ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm 9b0e03ff7966e8dfc3daeaf67e7b83c427ab1ba9
++ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm 47208f01aced7f872ce0f027850d49c87d568cde
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/basic.t 6cdc7701b50e586bc9c4cfb1616de8eb0b1baf34
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/lib/MakeMaker/Test/NoXS.pm 371cdff1b2375017907cfbc9c8f4a31f5ad10582
+ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/Liblist.t 9a3baf8a2c2281037f803b909d26e77a1bb099af
