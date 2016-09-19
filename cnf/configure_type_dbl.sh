@@ -3,10 +3,8 @@
 # Assumption: floating-point endianess matches integer endianess
 predef 'doublekind' '-1'
 case "$byteorder" in
-	1234) doublekind=1 ;;
-	4321) doublekind=2 ;;
-	12345678) doublekind=3 ;;
-	87654321) doublekind=4 ;;
+	1234*) doublekind=3 ;;
+	*4321) doublekind=4 ;;
 esac
 case "$doublekind" in
 1) msg "Assuming IEEE 754 32-bit little endian doubles." ;;
