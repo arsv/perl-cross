@@ -20,7 +20,11 @@ esac
 enddef doublekind
 
 # We will not guess longdblkind; those vary, and must be hinted.
-predef longdblkind '-1'
+if [ "$d_longdbl" = 'define' ]; then
+	predef longdblkind '0'
+else
+	predef longdblkind '-1'
+fi
 case "$longdblkind" in
 0) msg "Assuming long doubles are doubles." ;;
 1) msg "Assuming IEEE 754 128-bit little endian long doubles." ;;
@@ -75,9 +79,14 @@ esac
 enddef doubleinfbytes
 enddef doublenanbytes
 
-predef longdblinfbytes 'undef'
-predef longdblnanbytes 'undef'
+# The default longdblkind=0 means long double *is*double*!
+predef longdblinfbytes "undef"
+predef longdblnanbytes "undef"
 case "$longdblkind" in
+0) # long doubles are doubles
+   longdblinfbytes="$doubleinfbytes"
+   longdblnanbytes="$doublenanbytes"
+   ;;
 1) # IEEE 754 128-bit LE
    longdblinfbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0x7f'
    longdblnanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0xff, 0x7f'
@@ -97,8 +106,8 @@ case "$longdblkind" in
        longdblnanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
        ;;
    *)  # No idea.
-       longdblinfbytes=$undef
-       longdblnanbytes=$undef
+       longdblinfbytes='undef'
+       longdblnanbytes='undef'
    ;;
    esac
    ;;
@@ -113,8 +122,8 @@ case "$longdblkind" in
        longdblnanbytes='0x7f, 0xff, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
        ;;
    *)  # No idea.
-       longdblinfbytes=$undef
-       longdblnanbytes=$undef
+       longdblinfbytes='undef'
+       longdblnanbytes='undef'
    ;;
    esac
    ;;
@@ -135,8 +144,8 @@ case "$longdblkind" in
    longdblnanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
    ;;
 *) # No idea.
-   longdblinfbytes=$undef
-   longdblnanbytes=$undef
+   longdblinfbytes='undef'
+   longdblnanbytes='undef'
    ;;
 esac
 enddef longdblinfbytes
