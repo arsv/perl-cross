@@ -6,11 +6,12 @@ repo_url: https://github.com/arsv/perl-cross
 pages:
 - Intro: index.md
 - Download: download.md
-- Usage: usage.md
-- Design: design.md
-- Modules: modules.md
-- Hints: hints.md
-- Testing: testing.md
+- Documentation:
+        - Usage: usage.md
+        - Design: design.md
+        - Modules: modules.md
+        - Hints: hints.md
+        - Testing: testing.md
 
 markdown_extensions:
 - admonition
