@@ -151,9 +151,9 @@ while [ $i -le $# -o -n "$n" ]; do
 
 	# process the options
 	case "$a" in
-		mode) defuser $a "$v" ;;
-		help) defuser "mode" "help" ;;
-		regen|regenerate) defuser "mode" "regen" ;;
+		mode) mode="$v" ;;
+		help) mode="help" ;;
+		regen|regenerate) mode="regen" ;;
 		keeplog) defuser "$a" 1 ;;
 		prefix|html[13]dir|libsdir)	defuser $a "$v" ;;
 		man[13]dir|otherlibsdir)	defuser $a "$v" ;;
@@ -222,7 +222,7 @@ while [ $i -le $# -o -n "$n" ]; do
 		no) defno "d_$k" "$v" ;;
 		include) defyes "i_$k" "$v" ;;
 		dont-include) defno "i_$k" "$v" ;;
-		mode|host|target|build) ;;
+		host|target|build) ;;
 		# original Configure options
 		D)
 			setordefine "$k" "$x" "$v" 'define' 'true'
