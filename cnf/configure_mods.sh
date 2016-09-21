@@ -88,6 +88,7 @@ msg "Looking which extensions should be disabled"
 define 'useposix' 'true'
 define 'useopcode' 'true'
 
+extonlyif Devel-NYTProf "$i_zlib" = 'define'
 extonlyif DB_File "$i_db" = 'define'
 extonlyif GDBM_File "$i_gdbm" = 'define'
 extonlyif NDBM_File "$i_ndbm" = 'define'

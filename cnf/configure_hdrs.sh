@@ -107,6 +107,7 @@ checkhdr i_values 'values.h'
 # i_varhdr is checked below
 checkhdr i_vfork 'vfork.h'
 checkhdr i_xlocale 'xlocale.h'
+checkhdr i_zlib 'zlib.h' # cperl, only to disable modules
 
 # These two are mutually exclusive
 test "$i_varargs" != 'define' && checkhdr i_stdarg 'stdarg.h'
