@@ -155,13 +155,21 @@ define _exe ''
 define cccdlflags '-fPIC -Wno-unused-function'
 define ccdlflags '-Wl,-E'
 
-# Linker flags setup
-predef lddlflags "-shared"
-predef ccflags ''
-predef ldflags ''
-predef cppflags ''
+# Misc flags setup
+predef lddlflags "-shared"	# modules
+predef ccflags ''		# perl and modules
+predef ldflags ''		# perl only?
+predef cppflags ''		# unused?
+
+# setfromvar what SHELLVAR
+setfromenv() {
+	getenv v "$2"
+	test -n "$v" && append "$1" "$v"
+}
 
 if [ "$mode" = 'target' -o "$mode" = 'native' ]; then
+	setfromenv ccflags CFLAGS
+	setfromenv ldflags LDFLAGS
 	if [ -n "$sysroot" ]; then
 		msg "Adding --sysroot to {cc,ld}flags"
 		prepend ccflags "--sysroot=$sysroot"
@@ -172,6 +180,9 @@ if [ "$mode" = 'target' -o "$mode" = 'native' ]; then
 		# Same for cpp
 		prepend cppflags "--sysroot=$sysroot"
 	fi
+elif [ "$mode" = 'buildmini' ]; then
+	setfromenv ccflags HOSTCFLAGS
+	setfromenv ldflags HOSTLDFLAGS
 fi
 
 # Use $ldflags as default value for $lddlflags, together with whatever
