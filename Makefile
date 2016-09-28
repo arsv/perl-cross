@@ -392,12 +392,12 @@ test:
 	cd t/ && ln -sf ../perl . && LD_LIBRARY_PATH=$(PWD) ./perl harness
 
 # ---[ install ]----------------------------------------------------------------
-.PHONY: install install.perl install.pod
+.PHONY: install install.perl install.sym install.pod
 
 META.yml: Porting/makemeta Porting/Maintainers.pl Porting/Maintainers.pm miniperl$X
 	./miniperl_top $<
 
-install: install.perl install.man
+install: install.perl install.sym install.man
 
 install.perl: installperl | miniperl$X
 	./miniperl_top installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
@@ -405,6 +405,13 @@ install.perl: installperl | miniperl$X
 
 install.man: installman pod/perltoc.pod | miniperl$X
 	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
+
+ifneq ($(perlname),perl)
+install.sym:
+	ln -sf $(perlname)$(version) $(DESTDIR)$(installbin)/perl
+else
+install.sym:
+endif
 
 # ---[ testpack ]---------------------------------------------------------------
 .PHONY: testpack

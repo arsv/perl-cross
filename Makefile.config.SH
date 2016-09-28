@@ -123,11 +123,12 @@ fi
 cat >> Makefile.config <<END
 package = $package
 perlname = $perlname
-perlversion = $perlversion
+version = $version
 dynaloader = $dynaloader
 useshrplib = $useshrplib
 soname = $soname
 patchset = $package-$version
+installbin = $installbin
 
 LIBPERL = $libperl
 
