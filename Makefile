@@ -402,13 +402,14 @@ install: install.perl install.sym install.man
 install.perl: installperl | miniperl$X
 	./miniperl_top installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
 	-@test ! -s extras.lst || $(MAKE) extras.install
+	-rm -f $(DESTDIR)$(installbin)/$(perlname)$(version)
 
 install.man: installman pod/perltoc.pod | miniperl$X
 	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
 
 ifneq ($(perlname),perl)
 install.sym:
-	ln -sf $(perlname)$(version) $(DESTDIR)$(installbin)/perl
+	ln -sf $(perlname) $(DESTDIR)$(installbin)/perl
 else
 install.sym:
 endif
