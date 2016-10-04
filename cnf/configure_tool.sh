@@ -86,22 +86,22 @@ if not hinted 'cctype'; then
 		*gcc*)
 			_cv=`echo "$_cl" | sed -e 's/.*) //' -e 's/ .*//g'`
 			test -n "$_cv" || _cv='0.0'
-			define 'cctype' 'gcc'
-			define 'ccversion' "$_cv"
-			define 'gccversion' "$_cv"
+			define cctype 'gcc'
+			define ccversion "$_cv"
+			define gccversion "$_cv"
 			result "gcc $_cv"
 			;;
 		clang*)
 			_cv=`echo "$_cl" | sed -e 's/.*version //' -e 's/ .*//'`
-			define 'cctype' 'clang'
-			define 'ccversion' "$_cv"
-			define 'gccversion' '0.0'
+			define cctype 'clang'
+			define ccversion "$_cv"
+			define gccversion '0.0'
 			result "clang $_cv"
 			;;
 		*)
-			define 'cctype' 'cc'
-			define 'ccversion' ''
-			define 'gccversion' '0.0'
+			define cctype 'cc'
+			define ccversion ''
+			define gccversion '0.0'
 			result 'unknown'
 			;;
 	esac; fi
@@ -117,15 +117,15 @@ YES
 END
 	try_dump
 	if not run $cc $ccflags -E try.c > try.out 2>>$cfglog; then
-		define 'd_cplusplus' 'undef'
+		define d_cplusplus 'undef'
 		result "probably no"
 	else
 		_r=`grep -v '^#' try.out | grep . | head -1 | grep '^YES'`
 		if [ -n "$_r" ]; then
-			define 'd_cplusplus' 'define'
+			define d_cplusplus 'define'
 			result "yes"
 		else
-			define 'd_cplusplus' 'undef'
+			define d_cplusplus 'undef'
 			result 'no'
 		fi
 	fi

@@ -101,7 +101,7 @@ fi
 
 
 if [ "$mode" = 'native' -o "$mode" = 'buildmini' -o "$mode" = "target" ]; then
-	test "$mode" = "target" && define 'usecrosscompile' 'define'
+	test "$mode" = "target" && define usecrosscompile 'define'
 	define targetarch "$targetarch"
 
 	. $base/configure_version.sh

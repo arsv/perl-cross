@@ -61,7 +61,7 @@ if [ "$d_prctl" = 'define' ]; then
 		resdef d_prctl_set_name 'yes' 'no' 
 	fi
 else
-	define 'd_prctl_set_name' 'undef'
+	define d_prctl_set_name 'undef'
 	result 'irrelevant'
 fi
 

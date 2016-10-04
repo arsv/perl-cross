@@ -85,8 +85,8 @@ definetrimspaces() {
 msg "Looking which extensions should be disabled"
 
 # These are on unless hinted otherwise
-define 'useposix' 'true'
-define 'useopcode' 'true'
+define useposix 'true'
+define useopcode 'true'
 
 extonlyif Devel-NYTProf "$i_zlib" = 'define'
 extonlyif DB_File "$i_db" = 'define'
@@ -128,10 +128,10 @@ msg "Static modules: $static_ext"
 msg "Non-XS modules: $nonxs_ext"
 msg "Dynamic modules: $dynamic_ext"
 
-definetrimspaces 'static_ext' "$static_ext"
-definetrimspaces 'nonxs_ext' "$nonxs_ext"
-definetrimspaces 'dynamic_ext' "$dynamic_ext"
-definetrimspaces 'known_extensions' "$known_extensions"
+definetrimspaces static_ext "$static_ext"
+definetrimspaces nonxs_ext "$nonxs_ext"
+definetrimspaces dynamic_ext "$dynamic_ext"
+definetrimspaces known_extensions "$known_extensions"
 
 # Unless the user explictily asks us not to do it,
 # allow building disabled mods with "make cpan/Some-Module"
@@ -152,4 +152,4 @@ fi
 # and does the conversion in configpm. This keeps things simple when writing
 # Makefiles and so on, and at the same time doesn't break tests later.
 
-definetrimspaces 'extensions' "$static_ext $dynamic_ext $nonxs_ext"
+definetrimspaces extensions "$static_ext $dynamic_ext $nonxs_ext"

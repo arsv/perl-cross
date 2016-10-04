@@ -4,19 +4,19 @@ mstart 'Looking whether to enable threads'
 # $usethreads gets decided in configure_libs
 if [ "$usethreads" = 'define' ]; then
 	if [ "$use5005threads" = 'define' ]; then
-		define 'useithreads' 'undef'
+		define useithreads 'undef'
 		result 'yes, 5.005 threads'
 	elif [ "$useithreads" = 'define' ]; then
-		define 'use5005threads' 'undef'
+		define use5005threads 'undef'
 		result 'yes, ithreads'
 	else
-		define 'useithreads' 'define'
-		define 'use5005threads' 'undef'
+		define useithreads 'define'
+		define use5005threads 'undef'
 		result 'yes, ithreads'
 	fi
 else
-	define 'useithreads' 'undef'
-	define 'use5005threads' 'undef'
+	define useithreads 'undef'
+	define use5005threads 'undef'
 	result 'no'
 	msg "Disabling thread-related stuff"
 fi

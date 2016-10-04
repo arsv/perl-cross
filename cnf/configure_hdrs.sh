@@ -117,15 +117,15 @@ test "$i_stdarg"  != 'define' && checkhdr i_varargs 'varargs.h'
 # assume header is usable as long as it's there
 mstart "Looking which header to use for varargs"
 if [ "$i_stdarg" = 'define' ]; then
-	define 'i_varargs' 'undef'
-	define 'i_varhdr' 'stdarg.h'
+	define i_varargs 'undef'
+	define i_varhdr 'stdarg.h'
 	result '<stdarg.h>'	
 elif [ "$i_varargs" = 'define' ]; then
-	define 'i_stdarg' 'undef'
-	define 'i_varhdr' 'varargs.h'
+	define i_stdarg 'undef'
+	define i_varhdr 'varargs.h'
 	result '<varargs.h>'
 else
-	define 'i_varhdr' ''
+	define i_varhdr ''
 	result 'nothing found'
 fi
 

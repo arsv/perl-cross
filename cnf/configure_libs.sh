@@ -8,7 +8,7 @@ fi
 
 if [ "$usedl" = 'undef' -a -z "$allstatic" ]; then
 	msg "DynaLoader is disabled, making all modules static"
-	define 'allstatic' 1
+	define allstatic 1
 fi
 
 mstart "Checking which libraries are available"
@@ -26,15 +26,15 @@ if not hinted 'libs'; then
 	done
 	libs=${libs# }
 
-	define 'libs' "$libs"
+	define libs "$libs"
 	result "$libs"
 fi
 
 # We need to know whether we're trying to use threads early
 # to decide whether to test for -lpthread
 case "$usethreads:$useithreads:$use5005threads" in
-	*define*) define 'usethreads' 'define' ;;
-	*)        define 'usethreads' 'undef'  ;;
+	*define*) define usethreads 'define' ;;
+	*)        define usethreads 'undef'  ;;
 esac
 
 mstart "Checking which libs to use for perl"
@@ -67,7 +67,7 @@ if not hinted 'perllibs'; then
 fi
 
 if [ "$usesoname" = "define" ]; then
-	define 'soname' "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION"
+	define soname "libperl.so.$PERL_API_REVISION.$PERL_API_VERSION"
 fi
 
 mstart "Deciding how to name libperl"

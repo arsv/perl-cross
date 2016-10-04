@@ -40,11 +40,11 @@ done
 [ -z "$siginit" ] || siginit="$siginit, 0"
 [ -z "$signumi" ] || signumi="$signumi, 0"
 
-define "sig_name" "$signals"
-define "sig_name_init" "$siginit"
-define "sig_num" "$signums"
-define "sig_num_init" "$signumi"
-define "sig_size" "$sigsize"
+define sig_name "$signals"
+define sig_name_init "$siginit"
+define sig_num "$signums"
+define sig_num_init "$signumi"
+define sig_size "$sigsize"
 
 # try to get NSIG value
 mstart "Checking NSIG value"
