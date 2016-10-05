@@ -1,14 +1,3 @@
-# These hints *may* assume linux/glibc. Other libc implementations,
-# would they require different settings, should be added explicitly,
-# as linux-(something), or perhaps even arch-linux-(something).
-#
-# The reason for this is in cases like arm-*-linux-gnueabi, -gnueabihf
-# and so on which make it hard to guess libc type from the 4th component.
-# In the same vein, stuff like i586-alix-linux-uclibc requies some effort
-# to get when building toolchain, and if left to gcc configure, it is
-# very likely to end up as i586-pc-linux-gnu or something along those lines,
-# even if uClibc is used.
-
 # Linux syscalls
 d_voidsig='define'
 d_nanosleep='define'
