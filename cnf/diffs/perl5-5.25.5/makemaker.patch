@@ -8,7 +8,7 @@ upstream anyway.
 
 --- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
 +++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
-@@ -37,7 +37,7 @@
+@@ -36,7 +36,7 @@
      $Is{BSD}     = ($^O =~ /^(?:free|net|open)bsd$/ or
                     grep( $^O eq $_, qw(bsdos interix dragonfly) )
                    );
