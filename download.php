@@ -1,11 +1,11 @@
 <? include "_head.php" ?>
 
-<p>Current version of perl-cross is 1.1.<br>
-Supported perl versions: perl-5.24.0, perl-5.25.4, cperl-5.24.0, cperl-5.25.0.<br>
+<p>Current version of perl-cross is 1.1.1<br>
+Supported perl versions: perl-5.24.0, perl-5.25.5, cperl-5.24.0, cperl-5.25.0.<br>
 Download it here:</p>
 <div class="dllink">
-	<a href="https://github.com/arsv/perl-cross/releases/download/1.1/perl-cross-1.1.tar.gz"
-	 >https://github.com/arsv/perl-cross/releases/download/1.1/perl-cross-1.1.tar.gz</a>
+	<a href="https://github.com/arsv/perl-cross/releases/download/1.1.1/perl-cross-1.1.1.tar.gz"
+	 >https://github.com/arsv/perl-cross/releases/download/1.1.1/perl-cross-1.1.1.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
@@ -17,7 +17,16 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
-	<li>1.1 (2016-09-11)<ul>
+	<li>1.1.1 (2016-10-10)<ul>
+		<li>Fixed long double handling for targets without long doubles</li>
+		<li>Restored CCFLAGS and LDFLAGS capture from environment</li>
+		<li>config.sh values cleanup to pass all tests<li>
+		<li>Changes in installed perl binary names: versioned binaries
+		like <tt>perl5.24.0</tt> are not installed anymore;
+		for cperl builds, <tt>perl -&gt; cperl</tt> symlink added.</li>
+	</ul></li>
+
+	<li>1.1.0 (2016-09-12)<ul>
 		<li>Major code cleanup</li>
 		<li>Package name changed to <tt>perl-cross-N.M.tar.gz</tt></li>
 		<li>Support for multiple perl versions</li>
