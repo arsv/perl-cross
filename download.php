@@ -20,7 +20,7 @@ branch</a>.</p>
 	<li>1.1.1 (2016-10-10)<ul>
 		<li>Fixed long double handling for targets without long doubles</li>
 		<li>Restored CCFLAGS and LDFLAGS capture from environment</li>
-		<li>config.sh values cleanup to pass all tests<li>
+		<li>config.sh values cleanup to pass all tests</li>
 		<li>Changes in installed perl binary names: versioned binaries
 		like <tt>perl5.24.0</tt> are not installed anymore;
 		for cperl builds, <tt>perl -&gt; cperl</tt> symlink added.</li>
