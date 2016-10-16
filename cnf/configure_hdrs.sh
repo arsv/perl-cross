@@ -51,6 +51,7 @@ checkhdr i_niin 'netinet/in.h'
 checkhdr i_netinet_ip 'netinet/ip.h'	 # cperl
 checkhdr i_netinet_ip6 'netinet/ip6.h'	 # cperl
 checkhdr i_netinet6_in6 'netinet6/in6.h' # cperl
+checkhdr i_netinet_in_systm 'netinet/in_systm.h' # cperl
 checkhdr i_poll 'poll.h'
 checkhdr i_prot 'prot.h'
 checkhdr i_pthread 'pthread.h'

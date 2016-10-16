@@ -318,3 +318,18 @@ define cppsymbols
 
 define nm_opt
 define nm_so_opt
+
+# cperl wants to know this for some reason
+mstart "Checking whether address sanitizer is enabled"
+if not hinted sanitize_address 'yes' 'no'; then
+	case "$ccflags" in
+		*-fsanitize=address*|*-faddress-sanitizer*)
+			define sanitize_address 'define'
+			result 'yes'
+			;;
+		*)
+			define sanitize_address 'undef'
+			result 'no'
+			;;
+	esac
+fi
