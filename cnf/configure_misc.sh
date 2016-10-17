@@ -79,8 +79,8 @@ define usevfork 'false'
 define d_libname_unique 'undef'
 define d_vms_case_sensitive_symbols 'undef'
 define dl_so_eq_ext 'define'
-# not used but tested for in ext/Config/t/XSConfig.t!
-define hash_func ''
+# tested for in several places (ext/Config/t/XSConfig.t, t/op/hashflood)
+define hash_func 'FNV1A' # cperl
 define c ''
 define d_bsd 'undef'
 define d_eunice 'undef'
