@@ -24,6 +24,19 @@ case ":$d_semctl:$d_semget:$d_semop:" in
 		;;
 esac
 
+mstart "Checking whether you have the full msg*(2) library"
+log "d_msgctl=$d_msgctl d_msgget=$d_msgget d_msgsnd=$d_msgsnd d_msgrcv=$d_msgrcv"
+case ":$d_msgctl:$d_msgget:$d_msgsnd:$d_msgrcv" in
+	*::*|*:undef:*)
+		define d_msg 'undef'
+		result 'no'
+		;;
+	*)
+		define d_msg 'define'
+		result 'yes'
+		;;
+esac
+
 mstart "Looking how to get error messages"
 log "d_strerror=$d_strerror d_sys_errlist=$d_sys_errlist"
 # Configure has quite a long piece on strerror, which basically means just this:
