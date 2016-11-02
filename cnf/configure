@@ -122,6 +122,7 @@ if [ "$mode" = 'native' -o "$mode" = 'buildmini' -o "$mode" = "target" ]; then
 	. $base/configure_attr.sh
 	. $base/configure_path.sh
 	. $base/configure_thrd.sh
+	. $base/configure_pfmt.sh
 	. $base/configure_mods.sh
 	. $base/configure_misc.sh
 fi
