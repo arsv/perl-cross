@@ -247,3 +247,6 @@ for k in $alist; do
 done
 
 unset -v i a k v x n
+
+# use64bitint must be passed to miniperl
+test "$use64bitint" = 'define' && hco="$hco -Duse64bitint"

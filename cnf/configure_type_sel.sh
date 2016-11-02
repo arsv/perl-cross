@@ -101,7 +101,7 @@ fi
 mstart "Guessing byte order"
 if not hinted 'byteorder'; then
 	try_start
-	try_includes "sys/types.h"
+	try_includes "stdint.h" "sys/types.h"
 	if [ "$uvsize" = 8 ]; then
 		try_add "$uvtype foo = 0x8877665544332211;"
 	elif [ "$uvsize" = 4 ]; then
