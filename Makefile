@@ -266,19 +266,13 @@ cpan/Devel-PPPort/PPPort.pm: cpan/Devel-PPPort/pm_to_blib
 cpan/Devel-PPPort/ppport.h: cpan/Devel-PPPort/PPPort.pm | miniperl$X
 	cd cpan/Devel-PPPort && ../../miniperl -I../../lib ppport_h.PL
 
-UNICORE = lib/unicore
-UNICOPY = cpan/Unicode-Normalize/unicore
-
-cpan/Unicode-Normalize/Makefile: cpan/Unicode-Normalize/unicore/CombiningClass.pl
+cpan/Unicode-Normalize/Makefile: lib/unicore/CombiningClass.pl
+dist/Unicode-Normalize/Makefile: lib/unicore/CombiningClass.pl
 
 # mktables does not touch the files unless they need to be rebuilt,
 # which confuses make.
-$(UNICORE)/%.pl: uni.data
-	touch $@
-$(UNICOPY)/%.pl: $(UNICORE)/%.pl | $(UNICOPY)
-	cp -a $< $@
-$(UNICOPY):
-	mkdir -p $@
+lib/unicore/CombiningClass.pl pod/perluniprops.pod:
+	./miniperl_top lib/unicore/mktables -w -C lib/unicore -P pod -maketest -makelist -p
 
 # The following rules ensure that modules listed in mkppport.lst get
 # their ppport.h installed.
@@ -311,11 +305,6 @@ $(dynamic_tgt): | dist/ExtUtils-CBuilder/pm_to_blib
 
 dist/ExtUtils-CBuilder/pm_to_blib: | cpan/Perl-OSType/pm_to_blib cpan/Text-ParseWords/pm_to_blib
 
-uni.data: $(CONFIGPM) lib/unicore/mktables | miniperl$X dist/base/pm_to_blib
-	./miniperl_top lib/unicore/mktables -w -C lib/unicore -P pod -maketest -makelist -p
-
-unidatafiles $(unidatafiles) pod/perluniprops.pod: uni.data
-
 # ---[ modules cleanup & rebuilding ] ------------------------------------------
 
 modules-reset:
@@ -335,7 +324,7 @@ utilities: miniperl$X $(CONFIGPM)
 	$(MAKE) -C utils all
 
 # ---[ modules lists ]----------------------------------------------------------
-modules.done: modules.list | uni.data
+modules.done: modules.list
 	echo -n > modules.done
 	-cat $< | (while read i; do $(MAKE) -C $$i && echo $$i >> modules.done; done)
 
@@ -445,7 +434,6 @@ clean-generated-files:
 	-rm -f git_version.h lib/re.pm lib/Config_git.pl
 	-rm -f perlmini.c perlmain.c
 	-rm -f config.h xconfig.h
-	-rm -f $(UNICOPY)/*
 	-rm -f pod/perlmodlib.pod
 	-rm -f ext.libs static.list
 	-rm -f $(patsubst %,%/ppport.h,$(mkppport_lst))
