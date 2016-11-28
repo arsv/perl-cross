@@ -152,3 +152,39 @@ enddef longdblinfbytes
 enddef longdblnanbytes
 
 define alignbytes 8
+
+# perl-5.25.7+; not tested atm, we do not support platforms where
+# any of these values are different.
+
+define d_double_has_inf 'define'
+define d_double_has_nan 'define'
+define d_double_has_negative_zero 'define'
+define d_double_has_subnormals 'define'
+
+define d_double_style_ieee 'define'
+define d_double_style_cray 'undef'
+define d_double_style_ibm 'undef'
+define d_double_style_vax 'undef'
+
+predef d_long_double_style_ieee 'undef'
+predef d_long_double_style_ieee_std 'undef'
+predef d_long_double_style_ieee_extended 'undef'
+predef d_long_double_style_ieee_doubledouble 'undef'
+predef d_long_double_style_vax 'undef'
+
+case "$longdblkind" in
+	1|2|3|4|5|6|7|8) d_long_double_style_ieee='define' ;;
+esac
+
+case "$longdblkind" in
+	1|2) d_long_double_style_ieee_std='define' ;;
+	3|4) d_long_double_style_ieee_extended='define' ;;
+	5|6|7|8) d_long_double_style_ieee_doubledouble='define' ;;
+	9) d_long_double_style_vax='define' ;;
+esac
+
+enddef d_long_double_style_ieee
+enddef d_long_double_style_ieee_std
+enddef d_long_double_style_ieee_extended
+enddef d_long_double_style_ieee_doubledouble
+enddef d_long_double_style_vax
