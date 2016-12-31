@@ -53,6 +53,10 @@ extadd() {
 		msg "    non-xs $2"
 		nonxs_ext="$nonxs_ext$2 "
 	fi
+	# See also: findext.patch
+	if [ "$2" = "cpan/Scalar-List-Utils" ]; then
+		shadow_ext="${shadow_ext}cpan/List-Util "
+	fi
 }
 
 extadddisabled() {
@@ -117,6 +121,7 @@ known_extensions=
 dynamic_ext=
 static_ext=
 nonxs_ext=
+shadow_ext=
 
 for d in ext cpan dist; do
 	msg "Looking for extensions recursively under $d/"
@@ -152,4 +157,4 @@ fi
 # and does the conversion in configpm. This keeps things simple when writing
 # Makefiles and so on, and at the same time doesn't break tests later.
 
-definetrimspaces extensions "$static_ext $dynamic_ext $nonxs_ext"
+definetrimspaces extensions "$static_ext $dynamic_ext $nonxs_ext $shadow_ext"
