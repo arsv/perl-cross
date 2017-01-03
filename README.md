@@ -4,12 +4,12 @@ with the primary emphasis on cross-compiling the source.
 
     # Get perl and perl-cross sources
     curl -L -O http://www.cpan.org/src/5.0/perl-5.24.0.tar.gz
-    curl -L -o perl-cross.tar.gz https://github.com/arsv/perl-cross/archive/master.tar.gz
+    curl -L -O https://github.com/arsv/perl-cross/releases/download/1.1.2/perl-cross-1.1.2.tar.gz
 
     # Unpack perl-cross over perl, overwriting Makefile
     tar -zxf perl-5.24.0.tar.gz
     cd perl-5.24.0
-    tar --strip-components=1 -zxf ../perl-cross.tar.gz
+    tar --strip-components=1 -zxf ../perl-cross-1.1.2.tar.gz
 
     # Proceed as usual with most autoconfed packages
     ./configure --target=arm-linux-gnueabi --prefix=/usr -Duseshrplib
