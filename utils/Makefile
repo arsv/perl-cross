@@ -4,10 +4,8 @@ TOP = ..
 include $(TOP)/Makefile.config
 PERL = $(TOP)/miniperl_top
 
-plextract = c2ph corelist cpan encguess h2ph h2xs instmodsh json_pp\
-	pl2pm prove ptar ptardiff ptargrep shasum\
-	splain libnetcfg piconv enc2xs xsubpp pod2html zipdetails\
-	$(perlname)bug $(perlname)doc $(perlname)ivp
+plextract = $(patsubst %.PL,%,\
+	        $(filter-out Makefile.PL,$(wildcard *.PL)) )
 
 all: $(plextract)
 
