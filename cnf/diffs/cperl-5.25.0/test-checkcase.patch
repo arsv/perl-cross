@@ -1,14 +1,1 @@
-perl-cross tree has both Configure and configure, which causes
-checkcase.t to fail. Skip them.
-
---- a/t/porting/checkcase.t
-+++ b/t/porting/checkcase.t
-@@ -25,6 +25,8 @@
- 
- 	   # Special exemption for Makefile, makefile
- 	   return if $name =~ m!\A[Mm]akefile\z!;
-+	   # same for Configure, configure in perl-cross
-+	   return if $name =~ m!\A[Cc]onfigure\z!;
- 
- 	   if ($name eq '.git') {
- 	       # Don't scan the .git directory, as its contents are outside
+../perl5-5.24.0/test-checkcase.patch

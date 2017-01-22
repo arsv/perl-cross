@@ -16,6 +16,7 @@
 
 V=1.1.2
 
+
 tar -zcf perl-cross-$V.tar.gz\
 	--exclude README.md\
 	--exclude LICENSE\
@@ -25,5 +26,5 @@ tar -zcf perl-cross-$V.tar.gz\
 	--exclude perl-cross.tar\
 	--exclude perl-cross\*.tar.gz\
 	--exclude tags\
-	--xform "s!^!perl-cross-$V/!"\
+	--xform "s!^!perl-cross-$V/!S"\
 	*

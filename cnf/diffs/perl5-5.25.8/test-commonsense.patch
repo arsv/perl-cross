@@ -1,13 +1,1 @@
-In perl-cross it's File-Glob not File/Glob.
-
---- a/t/lib/commonsense.t
-+++ b/t/lib/commonsense.t
-@@ -18,7 +18,7 @@
-   BAIL_OUT("Perl configured without IO module");
- }
- # hey, DOS users do not need this kind of common sense ;-)
--if ($^O ne 'dos' && ($Config{'extensions'} !~ /\bFile\/Glob\b/) ){
-+if ($^O ne 'dos' && ($Config{'extensions'} !~ /\bFile.Glob\b/) ){
-   BAIL_OUT("Perl configured without File::Glob module");
- }
- 
+../perl5-5.25.7/test-commonsense.patch
