@@ -18,14 +18,18 @@ export PERL_CORE=1
 POD1 = $(wildcard pod/*.pod)
 MAN1 = $(patsubst pod/%.pod,man/man1/%$(man1ext),$(POD1))
 
-obj += $(madlyobj) $(mallocobj) gv$o toke$o perly$o pad$o regcomp$o dump$o
-obj += dquote$o util$o mg$o reentr$o mro_core$o hv$o av$o run$o pp_hot$o
-obj += sv$o pp$o scope$o pp_ctl$o pp_sys$o doop$o doio$o regexec$o utf8$o
-obj += taint$o deb$o universal$o globals$o perlio$o perlapi$o numeric$o
-obj += mathoms$o locale$o pp_pack$o pp_sort$o keywords$o caretx$o time64$o
+# Different perl version come with slightly different source lists.
+# Only pick files actually present in the source tree.
+# perl.c, perlmain.c, op.c, miniperl.c should not be in this list
+src = av.c scope.c doop.c doio.c dump.c gv.c hv.c mg.c reentr.c mro_core.c
+src += perly.c pp.c pp_hot.c pp_ctl.c pp_sys.c regcomp.c regexec.c
+src += utf8.c sv.c taint.c toke.c util.c deb.c run.c universal.c
+src += pad.c globals.c keywords.c perlio.c perlapi.c numeric.c
+src += mathoms.c locale.c pp_pack.c pp_sort.c caretx.c dquote.c $(time64.c)
+src += pp_type.c xsutils.c # cperl
+src += $(mallocsrc)
 
-obj-cperl += pp_type$o xsutils$o
-obj += $(obj-$(package))
+obj = $(patsubst %.c,%$o,$(wildcard $(src)))
 
 static_tgt = $(patsubst %,%/pm_to_blib,$(static_ext))
 dynamic_tgt = $(patsubst %,%/pm_to_blib,$(dynamic_ext))

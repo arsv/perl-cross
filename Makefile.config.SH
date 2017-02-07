@@ -163,3 +163,11 @@ else
 perldeltapod=perl${vertag}delta.pod
 END
 fi
+
+# Before 5.24, time64.c was included from pp_sys.c and could not be built
+# separately. From 5.24 on, it's a regular standalone file. Ugly but there
+# is probably no better way to handle this.
+case "$version" in
+	5.22.*) ;;
+	*) echo "time64.c = time64.c" >> Makefile.config ;;
+esac
