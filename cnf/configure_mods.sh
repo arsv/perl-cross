@@ -149,12 +149,11 @@ if [ "$disabledmods" != 'define' ]; then
 fi
 
 # Some of the tests use $Config{'extensions'} to decide whether to do their
-# thing or not. The original Configure has neither directory nor module names
-# there. Instead, it uses weird old mid-road format, "File/Glob", for what
-# should have been either File::Glob or ext/File-Glob.
+# thing or not. The original Configure uses weird old format for module names,
+# "File/Glob" for what should have been either File::Glob or ext/File-Glob.
 #
 # perl-cross keeps full directory names in ${...}_ext and $extensions,
 # and does the conversion in configpm. This keeps things simple when writing
-# Makefiles and so on, and at the same time doesn't break tests later.
+# Makefiles, and does not break tests later.
 
 definetrimspaces extensions "$static_ext $dynamic_ext $nonxs_ext $shadow_ext"

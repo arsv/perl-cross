@@ -4,11 +4,11 @@
 
 # We want to see
 #	var=value
-# in hint files, but this will break things (say, overwrite variables
-# set by user). So we use sed to make those lines look like
+# in hint files, but this would break things (overwrite argv variables
+# for instance). So we use sed to turn those lines into
 #	hint "var" "value"
-# Unlike pretty much any other place in cnf/, the last assignment is
-# effective here.
+# Unlike pretty much any other place in cnf/, the last assignment
+# is effective here, not the first.
 
 tryhints() {
 	hintfile="$base/hints/$1"

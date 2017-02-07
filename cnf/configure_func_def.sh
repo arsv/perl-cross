@@ -1,5 +1,5 @@
 # Prototype checks. We supply a clearly bogus prototype,
-# and make sure the compiler throws an error.
+# and check whether the compiler throws an error.
 
 # It's probably safe to assume declared prototypes in all cases,
 # systems with K&R compilers are not likely to run perl-cross.

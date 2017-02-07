@@ -1,8 +1,9 @@
 # Path may only be set once we know version *and* archname.
 # So this must be called after _version and _tool.
 
-# $(something)exp were meant to be "expanded" values, but we don't
-# expand anything and just set them to $(something).
+# $(something)exp were meant to be "expanded" values, as in
+# "~alex" and "/home/alex", but perl-cross does not do that,
+# so the values always match $(something).
 
 log
 msg "Deciding installation paths"

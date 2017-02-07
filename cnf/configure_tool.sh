@@ -59,11 +59,11 @@ whichprog ranlib RANLIB ranlib
 whichprog readelf READELF readelf || die "Cannot find readelf"
 whichprog objdump OBJDUMP objdump || die "Cannot find objdump"
 
-# XXX: this looks wrong, but the code usemmldlt depends on $ld being able
+# XXX: this looks wrong, but the usemmldlt code depends on $ld being able
 # to compile try.c. What kind of moron could have written that. Oh wait.
 #
-# But, there was probably a reason to assume that, probably becase mainline
-# Configure does the same. So, ugh, leaving it as is for now.
+# But, there was probably a reason to assume this, likely becase mainline
+# Configure did and still does the same. So, ugh, leaving it as is for now.
 # Speak of backward bug compatibility.
 define ld "$cc"
 

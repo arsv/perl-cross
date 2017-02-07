@@ -1,4 +1,4 @@
-# Check which signals we have defined.
+# Check which signals are defined.
 # This may seem a little barbaric, but the whole procedure
 # doesn't require running any compiled executables.
 

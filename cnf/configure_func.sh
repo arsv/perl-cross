@@ -1,4 +1,4 @@
-# Tests for availability of libc functions.
+# Tests for libc functions availability.
 
 checkfunc() {
 	require 'cc'

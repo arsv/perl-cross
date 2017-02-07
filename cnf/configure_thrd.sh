@@ -50,9 +50,9 @@ free_type_letters='T S D R'
 # Types for these are specified for each test separately (usually that's
 # a pointer to some struct)
 
-# The function is only usable if it links *and* the prototype is know.
-# And if threads are disabled we still have to put all those symbols
-# into config.sh, without testing them.
+# The function is only usable if it links and its prototype is known.
+# Also, even if threads are disabled, we still have to put all those
+# symbols into config.sh.
 #
 # Hinting anything here is not a good idea.
 # Unless it's both d_func_r and func_r_proto.
