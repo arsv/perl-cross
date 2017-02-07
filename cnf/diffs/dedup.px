@@ -1,0 +1,42 @@
+#!/usr/bin/perl
+
+@files = (glob("perl*/*.patch"), glob("cperl*/*.patch"));
+
+print "#!/bin/sh\n\n";
+
+%map = ( );
+
+foreach(@files) {
+	$hash = `sha1sum $_`;
+	$hash =~ s/\s.*//s;
+
+	if(!defined($map{$hash})) {
+		$map{$hash} = $_;
+		deref($_) if -l $_;
+	} elsif(-l $_) {
+		$old = inode($map{$hash});
+		$new = inode($_);
+		lnsf($map{$hash}, $_) unless $old eq $new;
+	} else {
+		lnsf($map{$hash}, $_);
+	}
+}
+
+sub lnsf
+{
+	my ($orig,$link) = @_;
+	print "ln -sf ../$orig $link\n";
+}
+
+sub deref
+{
+	my $name = shift;
+	print "cp $name $name.tmp && rm $name && mv $name.tmp $name\n";
+}
+
+sub inode
+{
+	my $name = shift;
+	my @stat = stat $name or die "stat $name: $!";
+	return @stat[0].':'.@stat[1];
+}
