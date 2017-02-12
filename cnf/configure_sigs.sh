@@ -29,7 +29,7 @@ for sig in HUP INT QUIT ILL TRAP ABRT BUS FPE KILL USR1\
 		num=`grep 'number ' try.out | sed -e 's/[^0-9]//g'`
 		if [ -n "$num" -a "$num" != 0 ]; then
 			msg "   got SIG$sig = $num" >&2
-			signals="$signals SIG$sig"
+			signals="$signals $sig"
 			siginit="$siginit, \"$sig\""
 			signums="$signums $num"
 			signumi="$signumi, $num"
