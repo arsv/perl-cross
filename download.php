@@ -1,11 +1,11 @@
 <? include "_head.php" ?>
 
-<p>Current version of perl-cross is 1.1.3<br>
-Supported perl versions: perl-5.24.1, perl-5.25.9, cperl-5.24.2, cperl-5.25.1.<br>
+<p>Current version of perl-cross is 1.1.4<br>
+Supported perl versions: perl-5.22.3, perl-5.24.1, perl-5.25.8, cperl-5.24.2, cperl-5.25.1.<br>
 Download it here:</p>
 <div class="dllink">
-	<a href="https://github.com/arsv/perl-cross/releases/download/1.1.3/perl-cross-1.1.3.tar.gz"
-	 >https://github.com/arsv/perl-cross/releases/download/1.1.3/perl-cross-1.1.3.tar.gz</a>
+	<a href="https://github.com/arsv/perl-cross/releases/download/1.1.4/perl-cross-1.1.4.tar.gz"
+	 >https://github.com/arsv/perl-cross/releases/download/1.1.4/perl-cross-1.1.4.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
@@ -17,6 +17,11 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
+	<li>1.1.4 (2017-02-13)<ul>
+		<li>perl-5.22.3</li>
+		<li>signal names fix</li>
+	</ul></li>
+
 	<li>1.1.3 (2017-01-23)<ul>
 		<li>perl-5.24.1, perl-5.25.9, cperl-5.25.1</li>
 		<li>common patches in cnf/diffs/ are now symlinked to a single copy</li>
