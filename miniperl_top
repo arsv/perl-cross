@@ -33,6 +33,7 @@ exec $top/miniperl\
 	-I$top/cpan/ExtUtils-Command/lib\
 	-I$top/cpan/ExtUtils-Install/lib\
 	-I$top/cpan/ExtUtils-MakeMaker/lib\
+	-I$top/dist/ExtUtils-MakeMaker/lib\
 	-I$top/cpan/ExtUtils-Manifest/lib\
 	-I$top/cpan/File-Path/lib\
 	-I$top/ext/File-Find/lib\
@@ -46,4 +47,5 @@ exec $top/miniperl\
 	-I$top/cpan/podlators/lib\
 	-I$top/cpan/parent/lib\
 	-I$top/cpan/version/lib\
+	-I$top/dist/Pod-Simple/lib\
 	"$@"
