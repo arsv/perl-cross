@@ -57,6 +57,10 @@ define version "$PERL_REVISION.$PERL_VERSION.$PERL_SUBVERSION"
 packver="$package-$version"
 result "$packver"
 
+if [ "$package" = "cperl" ]; then
+	define 'fake_signatures' 'define'
+fi
+
 # Check for patches. Missing patchset indicates unsupported version,
 # and almost certain build failure.
 

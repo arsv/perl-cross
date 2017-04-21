@@ -62,6 +62,11 @@ checkattr d_attribute_warn_unused_result 'warn_unused_result' <<END
 int I_will_not_be_ignored(void) __attribute__((warn_unused_result));
 END
 
+checkattr d_attribute_always_inline 'always_inline' <<END
+#include <stdio.h>
+int square(int n) __attribute__((always_inline));
+END
+
 # volatile check also here, it's quite similar to __attribute__ checks
 
 mstart "Checking to see if your C compiler knows about volatile"
