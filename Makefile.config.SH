@@ -154,9 +154,13 @@ vertag=$PERL_REVISION$PERL_VERSION$PERL_SUBVERSION
 echo >> Makefile.config
 if [ "$package" = 'cperl' ]; then
 	# The version they diverged from mainline perl? Yikes
+	case "$version" in
+		5.26.*) pcpver=5260 ;;
+		*)      pcpver=5240 ;;
+	esac
 	cat >> Makefile.config << END
 perlcdeltapod=perl${vertag}cdelta.pod
-perldeltapod=perl5240delta.pod
+perldeltapod=perl${pcpver}delta.pod
 END
 else
 	cat >> Makefile.config << END
