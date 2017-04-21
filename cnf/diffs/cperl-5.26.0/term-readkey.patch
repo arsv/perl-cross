@@ -1,0 +1,30 @@
+Term::ReadKey wants to load its XS part to check its blockoptions()
+value, which actually comes down to availability of poll() and select().
+
+--- a/cpan/Term-ReadKey/ReadKey_pm.PL
++++ b/cpan/Term-ReadKey/ReadKey_pm.PL
+@@ -503,15 +503,18 @@
+ !FIRSTPART
+ 
+ close OUT;
+-# preload the XS module needed for the blockoptions() expansions below
+-# does not work with miniperl
+-package Term::ReadKey;
+-eval { require DynaLoader; };
+-our @ISA = qw(DynaLoader);
++
++require Config;
++
++sub blockoptions {
++	my $ret = 1; # host has fcntl O_NDELAY
++	$ret |= 2 if $Config{'d_poll'} eq 'define';
++	$ret |= 4 if $Config{'d_select'} eq 'define';
++	return $ret;
++}
+ 
+ print "Bootstrapping the XS for blockoptions: ";
+ my $blockoptions;
+-eval { bootstrap Term::ReadKey };
+ if (!$@) {
+   $blockoptions = blockoptions();
+ } elsif ($^ eq 'MSWin32') {
