@@ -57,8 +57,14 @@ define version "$PERL_REVISION.$PERL_VERSION.$PERL_SUBVERSION"
 packver="$package-$version"
 result "$packver"
 
+# These should have been in _misc but the setting differ between
+# mainline perl and cperl.
+
 if [ "$package" = "cperl" ]; then
-	define 'fake_signatures' 'define'
+	define fake_signatures 'define'
+	define default_inc_excludes_dot 'define'
+else
+	define default_inc_excludes_dot 'undef'
 fi
 
 # Check for patches. Missing patchset indicates unsupported version,
