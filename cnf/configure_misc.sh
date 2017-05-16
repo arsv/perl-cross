@@ -351,6 +351,9 @@ define to ':'
 define usrinc
 define versiononly 'undef'
 define xlibpth ''
+# cperl
+define sysincpth ''
+define syslibpth ''
 
 # Deprecated symbols
 define exe_ext ''
