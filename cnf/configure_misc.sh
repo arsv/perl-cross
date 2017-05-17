@@ -3,7 +3,9 @@
 # Configured-by; disabled, no point in leaking usernames
 define cf_by ''
 define cf_email ''
-define cf_time ''
+define cf_time 'undisclosed-time'
+# cpan/Config-Perl-V/t/10_base.t does check cf_time indirectly
+# *and* cannot handle empty value there.
 
 # No need to leak these either
 define perladmin 'nobody@nowhere.land'
