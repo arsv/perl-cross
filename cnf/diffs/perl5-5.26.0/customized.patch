@@ -6,12 +6,11 @@ Separated from other patches to avoid dependence on patch ordering.
 
 --- a/t/porting/customized.dat
 +++ b/t/porting/customized.dat
-@@ -3,7 +3,7 @@
- CPAN cpan/CPAN/scripts/cpan 22610ed0301d48a269d1739afd2f7f84359d956f
+@@ -1,6 +1,6 @@
  Digest cpan/Digest/Digest.pm 43f7f544cb11842b2f55c73e28930da50774e081
- Encode cpan/Encode/Encode.xs dba310bf3d362b1ade421b1a741875511d84809a
+ Encode cpan/Encode/Unicode/Unicode.pm 9749692c67f7d69083034de9184a93f070ab4799
 -ExtUtils::Constant cpan/ExtUtils-Constant/t/Constant.t a0369c919e216fb02767a637666bb4577ad79b02
 +ExtUtils::Constant cpan/ExtUtils-Constant/t/Constant.t 5cddb9664c43e53a4ce7a213601d6cff53e09d2d
  File::Path cpan/File-Path/lib/File/Path.pm fd8ce4420a0c113d3f47dd3223859743655c1da8
  File::Path cpan/File-Path/t/Path_win32.t 94b9276557ce7f80b91f6fd9bfa7a0cd9bf9683e
- IO-Compress cpan/IO-Compress/bin/zipdetails 381ba2a6ae5bd21c8d2e994316e3e13f2f0a4f41
+ JSON::PP cpan/JSON-PP/bin/json_pp a7b8de6c201ef177ee82624ee4ca6a47cc1a3b4f
