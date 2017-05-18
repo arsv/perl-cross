@@ -1,4 +1,5 @@
 See https://github.com/perl11/cperl/pull/278
+and https://github.com/perl11/cperl/pull/287
 
 diff --git a/dist/ExtUtils-MakeMaker/t/INSTALL_BASE.t b/dist/ExtUtils-MakeMaker/t/INSTALL_BASE.t
 index fc31611..2f44b7a 100644
@@ -117,5 +118,32 @@ index 4753541..f7534ff 100644
      ? (skip_all => "cross-compiling and make not available")
      : (tests => 20);
  use File::Path;
+diff --git a/dist/ExtUtils-MakeMaker/t/unicode.t b/dist/ExtUtils-MakeMaker/t/unicode.t
+index 2bb56aa..8087c2a 100644
+--- a/dist/ExtUtils-MakeMaker/t/unicode.t
++++ b/dist/ExtUtils-MakeMaker/t/unicode.t
+@@ -6,16 +6,19 @@ BEGIN {
+ chdir 't';
+ 
+ use strict;
++use ExtUtils::MM;
++use MakeMaker::Test::Setup::Unicode;
++use MakeMaker::Test::Utils qw(makefile_name make make_run run);
+ use Test::More;
+ use Config;
+ BEGIN {
+   plan skip_all => 'Need perlio and perl 5.8+.'
+     if $] < 5.008 or !$Config{useperlio};
++  plan skip_all => 'cross-compiling and make not available'
++    if !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'};
++
+   plan tests => 9;
+ }
+-use ExtUtils::MM;
+-use MakeMaker::Test::Setup::Unicode;
+-use MakeMaker::Test::Utils qw(makefile_name make_run run);
+ use TieOut;
+ 
+ my $MM = bless { DIR => ['.'] }, 'MM';
 -- 
 
