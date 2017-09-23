@@ -9,6 +9,27 @@ log
 msg "Deciding installation paths"
 
 define prefix "/usr"
+
+defrel() {
+	if [ "$userelocatableinc" = 'define' ]; then
+		v=`echo "$2" | sed -e "s@^$prefix@.../..@"`
+	else
+		v="$2"
+	fi
+
+	define "$1" "$v"
+}
+
+definst() {
+	if [ "$userelocatableinc" = 'define' ]; then
+		v=`echo "$2" | sed -e "s@^\.\.\./\.\.@$prefix@"`
+	else
+		v="$2"
+	fi
+
+	define "$1" "$installpath$v"
+}
+
 define sharedir "$prefix/share"
 define html1dir "$sharedir/doc/$perlname/html"
 define html3dir "$sharedir/doc/$perlname/html"
@@ -20,14 +41,15 @@ define bin "$prefix/bin"
 define lib "$prefix/lib"
 define scriptdir "$prefix/bin"
 define libsdirs ' '
-define privlib "$prefix/lib/$package/$version"
-define archlib "$prefix/lib/$package/$version/$archname"
+defrel privlib "$prefix/lib/$package/$version"
+defrel archlib "$prefix/lib/$package/$version/$archname"
 define perlpath "$prefix/bin/$perlname"
 define d_archlib 'define'
 
 define sitebin	"$prefix/bin"
-define sitelib_stem "$prefix/lib/$package/site_perl"
+defrel sitelib_stem "$prefix/lib/$package/site_perl"
 define sitelib "$sitelib_stem/$version"
+define sitearch "$sitelib_stem/$version/$archname"
 define siteprefix "$prefix"
 define sitescript "$prefix/bin"
 
@@ -35,8 +57,6 @@ define sitebinexp "$sitebin"
 define sitelibexp "$sitelib"
 define siteprefixexp "$siteprefix"
 define sitescriptexp "$sitescript"
-
-define sitearch "$sitelib_stem/$version/$archname"
 define sitearchexp "$sitearch"
 define d_sitearch 'define'
 
@@ -53,23 +73,23 @@ define sitehtml1dir "$html1dir"
 define sitehtml3dir "$html3dir"
 
 define installprefix ''
-define installhtml1dir "$installpath$html1dir"
-define installhtml3dir "$installpath$html3dir"
-define installman1dir "$installpath$man1dir"
-define installman3dir "$installpath$man3dir"
-define installarchlib "$installpath$archlib"
-define installbin "$installpath$bin"
-define installlib "$installpath$lib"
-define installprivlib "$installpath$privlib"
-define installscript "$installpath$scriptdir"
-define installsitearch "$installpath$sitearch"
-define installsitebin "$installpath$sitebin"
-define installsitehtml1dir  "$installpath$sitehtml1dir"
-define installsitehtml3dir "$installpath$sitehtml3dir"
-define installsitelib  "$installpath$sitelib"
-define installsiteman1dir "$installpath$siteman1dir"
-define installsiteman3dir "$installpath$siteman3dir"
-define installsitescript "$installpath$sitescript"
+definst installhtml1dir "$html1dir"
+definst installhtml3dir "$html3dir"
+definst installman1dir "$man1dir"
+definst installman3dir "$man3dir"
+definst installarchlib "$archlib"
+definst installbin "$bin"
+definst installlib "$lib"
+definst installprivlib "$privlib"
+definst installscript "$scriptdir"
+definst installsitearch "$sitearch"
+definst installsitebin "$sitebin"
+definst installsitehtml1dir "$sitehtml1dir"
+definst installsitehtml3dir "$sitehtml3dir"
+definst installsitelib "$sitelib"
+definst installsiteman1dir "$siteman1dir"
+definst installsiteman3dir "$siteman3dir"
+definst installsitescript "$sitescript"
 define installstyle lib/perl5
 define installusrbinperl define
 
