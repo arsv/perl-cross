@@ -40,7 +40,7 @@ if [ "$d_closedir" = 'define' ]; then
 	if not hinted d_void_closedir 'yes' 'no'; then
 		try_start
 		try_includes 'sys/types.h' 'dirent.h'
-		try_add "int main() { return $1($2); }"
+		try_add "int main() { return closedir(NULL); }"
 		try_compile
 		resdef d_void_closedir 'yes' 'no'
 	fi
