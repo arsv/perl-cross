@@ -18,7 +18,7 @@ branch</a>.</p>
 
 <ul>
 	<li>1.1.7 (2017-09-26)<ul>
-		<li>perl-5.27.4, perl-26.1, perl-5.24.3</li>
+		<li>perl-5.27.4, perl-5.26.1, perl-5.24.3</li>
 		<li>cperl-5.26.1</li>
 		<li>support for -Duserelocatableinc</li>
 	</ul></li>
