@@ -192,8 +192,6 @@ endif
 
 perl.o: git_version.h
 
-preplibrary: | miniperl$X $(CONFIGPM) lib/re.pm
-
 configpod: $(CONFIGPOD)
 $(CONFIGPM_FROM_CONFIG_SH) $(CONFIGPOD): config.sh Porting/Glossary lib/Config_git.pl | miniperl$X configpm
 	./miniperl_top configpm
@@ -202,9 +200,6 @@ $(CONFIGPM_FROM_CONFIG_SH) $(CONFIGPOD): config.sh Porting/Glossary lib/Config_g
 # by make_patchnum.pl.
 git_version.h lib/Config_git.pl: make_patchnum.pl | miniperl$X
 	./miniperl_top make_patchnum.pl
-
-lib/re.pm: ext/re/re.pm
-	cp -f ext/re/re.pm lib/re.pm
 
 # NOT used by this Makefile, replaced by miniperl_top
 # Avoid building.
@@ -234,11 +229,23 @@ $(static_tgt): %/pm_to_blib: | %/Makefile $(nonxs_tgt)
 $(dynamic_tgt) $(disabled_dynamic_tgt): %/pm_to_blib: | %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=dynamic
 
+lib/re.pm: ext/re/re.pm
+	cp -f ext/re/re.pm lib/re.pm
+
+lib/lib.pm: dist/lib/pm_to_blib
+
+preplibrary: | miniperl$X $(CONFIGPM) lib/re.pm lib/lib.pm
+
+dist/lib/Makefile: dist/lib/Makefile.PL cflags config.h | miniperl$X
+	$(eval top=$(shell echo $(dir $@) | sed -re 's![^/]+!..!g'))
+	cd $(dir $@) && $(top)miniperl_top -I$(top)lib Makefile.PL \
+	 PERL_CORE=1 LIBPERL_A=$(LIBPERL) PERL="$(top)miniperl_top"
+
 %/Makefile: %/Makefile.PL preplibrary cflags config.h | $(XSUBPP) miniperl$X
 	$(eval top=$(shell echo $(dir $@) | sed -re 's![^/]+!..!g'))
 	cd $(dir $@) && $(top)miniperl_top -I$(top)lib Makefile.PL \
 	 INSTALLDIRS=perl INSTALLMAN1DIR=none INSTALLMAN3DIR=none \
-	 PERL_CORE=1 LIBPERL_A=$(LIBPERL) PERL_CORE=1 PERL="$(top)miniperl_top"
+	 PERL_CORE=1 LIBPERL_A=$(LIBPERL) PERL="$(top)miniperl_top"
 
 # Allow building modules by typing "make cpan/Module-Name"
 $(static_ext) $(dynamic_ext) $(nonxs_ext) $(disabled_dynamic_ext) $(disabled_nonxs_ext): %: %/pm_to_blib
