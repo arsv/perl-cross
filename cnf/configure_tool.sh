@@ -249,6 +249,10 @@ if not hinted 'osname'; then
 	test -z "$_ct" && _ct="$targetarch"
 
 	case "$_ct" in
+		*-mingw32)
+			define osname "MSWin32"
+			result "MSWin32"
+			;;
 		*-android|*-androideabi)
 			define osname "android"
 			result "Android"

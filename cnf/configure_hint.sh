@@ -11,7 +11,10 @@
 # is effective here, not the first.
 
 tryhints() {
-	hintfile="$base/hints/$1"
+	# win32 hints are mixed-case
+	_hint=`echo "$1" | tr A-Z a-z`
+	hintfile="$base/hints/$_hint"
+
 	if [ -f "$hintfile" ]; then
 		msg "	using $hintfile"
 		sed -r -e "/^([A-Za-z0-9_]+)=/s//hint \1 /"\
@@ -19,7 +22,7 @@ tryhints() {
 		. ./config.hint.tmp
 		rm -f config.hint.tmp
 	else
-		log "	no hints for $1"
+		log "	no hints for $_hint"
 	fi
 }
 
@@ -27,11 +30,45 @@ hint() {
 	define "$1" "$2" 'hinted'
 }
 
+set_win32_archname() {
+	if [ "$arch" = 'x86_64' ]; then
+		architecture='x64'
+	else
+		architecture="$arch"
+	fi
+
+	if [ "$usemulti" = 'define' ]; then
+		archname="MSWin32-$architecture-multi"
+	elif [ "$useperlio" = 'define' ]; then
+		archname="MSWin32-$architecture-perlio"
+	else
+		archname="MSWin32-$architecture"
+	fi
+
+	if [ "$useithreads" = 'define' ]; then
+		archname="$archname-thread"
+	fi
+
+	if [ "$arch" != 'x86_64' -a "$use64bitint" = 'define' ]; then
+		archname="$archname-64bit"
+	fi
+
+	if [ "$uselongdouble" = 'define' ]; then
+		archname="$archname-ld"
+	fi
+}
+
 msg "Checking which hints to use"
 
-# For i686-pc-linux-gnu, try linux and i686-linux
 arch=`echo "$targetarch" | cut -d - -f 1`
-archname="$arch-$osname"
+
+if [ "$osname" = "MSWin32" ]; then
+	# Win32 archnames do not follow the simple scheme below
+	set_win32_archname
+else
+	# For i686-pc-linux-gnu, try linux and i686-linux
+	archname="$arch-$osname"
+fi
 
 if [ -n "$userhints" ]; then
 	for h in `echo "$userhints" | sed -e 's/,/ /g'`; do
