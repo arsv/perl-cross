@@ -1,5 +1,3 @@
-# For reference only, not really usable atm
-
 charsize=1
 doublesize=8
 fpossize=16
@@ -31,3 +29,15 @@ ssizetsize=4
 fpostsize=8
 cccdlflags=''
 d_attribute_malloc='undef'
+d_longdbl='undef'
+useperlio='define'
+uselargefiles='define'
+usemultiplicity='define'
+sizetype='uint32_t'
+sizesize=4
+ssizetype='int32_t'
+d_atoll='undef'
+d_strtoll='undef'
+d_strtoull='undef'
+timetype='time_t'
+timesize=64
