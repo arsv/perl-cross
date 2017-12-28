@@ -270,12 +270,12 @@ makefiles: $(ext:pm_to_blib=Makefile)
 
 dynaloader: $(dynaloader_o)
 
-cpan/Devel-PPPort/pm_to_blib: dynaloader
+$(ppport)/pm_to_blib: dynaloader
 
-cpan/Devel-PPPort/PPPort.pm: cpan/Devel-PPPort/pm_to_blib
+$(ppport)/PPPort.pm: $(ppport)/pm_to_blib
 
-cpan/Devel-PPPort/ppport.h: cpan/Devel-PPPort/PPPort.pm | miniperl$X
-	cd cpan/Devel-PPPort && ../../miniperl -I../../lib ppport_h.PL
+$(ppport)/ppport.h: $(ppport)/PPPort.pm | miniperl$X
+	cd $(ppport) && ../../miniperl -I../../lib ppport_h.PL
 
 cpan/Unicode-Normalize/Makefile: lib/unicore/CombiningClass.pl
 dist/Unicode-Normalize/Makefile: lib/unicore/CombiningClass.pl
@@ -294,7 +294,7 @@ $(patsubst %,%/pm_to_blib,$(mkppport_lst)): %/pm_to_blib: %/ppport.h
 cpan/YAML-LibYAML/pm_to_blib: cpan/YAML-LibYAML/LibYAML/ppport.h
 # Having %/ppport.h here isn't a very good idea since the initial ppport.h matches
 # the pattern too
-$(patsubst %,%/ppport.h,$(mkppport_lst)): cpan/Devel-PPPort/ppport.h
+$(patsubst %,%/ppport.h,$(mkppport_lst)): $(ppport)/ppport.h
 	cp -f $< $@
 
 lib/ExtUtils/xsubpp: dist/ExtUtils-ParseXS/lib/ExtUtils/xsubpp
@@ -448,7 +448,7 @@ clean-generated-files:
 	-rm -f pod/perlmodlib.pod
 	-rm -f ext.libs static.list
 	-rm -f $(patsubst %,%/ppport.h,$(mkppport_lst))
-	-rm -f cpan/Devel-PPPort/ppport.h cpan/Devel-PPPort/PPPort.pm
+	-rm -f $(ppport)/ppport.h $(ppport)/PPPort.pm
 
 clean-testpack:
 	-rm -fr TESTPACK

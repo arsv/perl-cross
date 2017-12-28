@@ -175,3 +175,10 @@ case "$version" in
 	5.22.*) ;;
 	*) echo "time64.c = time64.c" >> Makefile.config ;;
 esac
+
+# Before 5.27.7, PPPort was in cpan/. From that version on, it's in dist/
+case "$version" in
+	5.27.7) ppport="dist/Devel-PPPort" ;;
+	*)      ppport="cpan/Devel-PPPort" ;;
+esac
+echo "ppport = $ppport" >> Makefile.config
