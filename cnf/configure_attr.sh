@@ -1,10 +1,10 @@
 # Checking compiler support for __attribute__s.
 
-# checkattr attr <<END
+# checkattr key "attr" <<END
 #    test file goes here
 # END
-checkattr() {
-	mstart "Checking if compiler supports __attribute__($2)"
+checkddash() {
+	mstart "Checking if compiler supports $2"
 	hinted $1 "yes" "no" && return
 
 	try_start
@@ -14,6 +14,9 @@ checkattr() {
 	resdef $1 'yes' 'no'
 }
 
+checkattr() {
+	checkddash "$1" "__attribute__(($2))"
+}
 
 checkattr d_attribute_format 'format' <<END
 #include <stdio.h>
@@ -67,6 +70,36 @@ checkattr d_attribute_always_inline 'always_inline' <<END
 int square(int n) __attribute__((always_inline));
 END
 
+# Compiler builtins. Should be gcc/clang only, but it's not like we support
+# any other compilers atm.
+define d_builtin_arith_overflow 'define'
+define d_builtin_choose_expr 'define'
+define d_builtin_ctz 'define'
+define d_builtin_expect 'define'
+define d_builtin_prefetch 'define'
+
+# add_overflow and sub_overflow only appear in gcc 5+
+checkddash d_builtin_add_overflow '__builtin_add_overflow' <<END
+int add_overflow(int a, long b, long* c)
+{
+	return __builtin_add_overflow(a, b, c);
+}
+END
+
+checkddash d_builtin_sub_overflow '__builtin_sub_overflow' <<END
+int sub_overflow(int a, long b, long* c)
+{
+	return __builtin_sub_overflow(a, b, c);
+}
+END
+
+checkddash d_builtin_mul_overflow '__builtin_mul_overflow' <<END
+int mul_overflow(int a, long b, long* c)
+{
+	return __builtin_mul_overflow(a, b, c);
+}
+END
+
 # volatile check also here, it's quite similar to __attribute__ checks
 
 mstart "Checking to see if your C compiler knows about volatile"
@@ -102,11 +135,3 @@ if not hinted d_c99_variadic_macros 'supported' 'missing'; then
 	try_compile
 	resdef d_c99_variadic_macros 'supported' 'missing'
 fi
-
-# Compiler builtins. Should be gcc/clang only, but it's not like we support
-# any other compilers atm.
-define d_builtin_arith_overflow 'define'
-define d_builtin_choose_expr 'define'
-define d_builtin_ctz 'define'
-define d_builtin_expect 'define'
-define d_builtin_prefetch 'define'

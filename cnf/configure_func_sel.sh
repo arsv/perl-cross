@@ -96,3 +96,6 @@ if [ "$d_times" = 'define' ]; then
 else
 	result "irrelevant"
 fi
+
+# Assume nl_langinfo_l is threadsafe if available
+define d_thread_safe_nl_langinfo_l "$d_nl_langinfo_l"
