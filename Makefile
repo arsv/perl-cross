@@ -219,12 +219,12 @@ DynaLoader$o: | ext/DynaLoader/pm_to_blib
 	cp ext/DynaLoader/DynaLoader$o $@
 
 ext/DynaLoader/pm_to_blib: %/pm_to_blib: | %/Makefile
-	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static $(STATIC_LDFLAGS)
+	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static static
 
 ext/DynaLoader/Makefile: config.h | dist/lib/pm_to_blib
 
 $(static_tgt): %/pm_to_blib: | %/Makefile $(nonxs_tgt)
-	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static $(STATIC_LDFLAGS)
+	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static static
 
 $(dynamic_tgt) $(disabled_dynamic_tgt): %/pm_to_blib: | %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=dynamic
