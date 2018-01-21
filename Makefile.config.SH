@@ -177,8 +177,9 @@ case "$version" in
 esac
 
 # Before 5.27.7, PPPort was in cpan/. From that version on, it's in dist/
-case "$version" in
-	5.27.7) ppport="dist/Devel-PPPort" ;;
-	*)      ppport="cpan/Devel-PPPort" ;;
-esac
+if [ -d "dist/Devel-PPPort" ]; then
+	ppport="dist/Devel-PPPort"
+else
+	ppport="cpan/Devel-PPPort"
+fi
 echo "ppport = $ppport" >> Makefile.config
