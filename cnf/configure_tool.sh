@@ -27,6 +27,38 @@ tryfromenv() {
 	return 1
 }
 
+# This is only a function for easy access to return-s
+# try.out contains `$cc --version` output.
+#
+# Figuring out gcc is necessary to make sure -fwrapv fix gets applied.
+
+detect_cc_version() {
+	_v=`sed -ne '/^gcc version \([0-9][0-9.]*\).*/s//\1/p' try.out`
+
+	if [ -n "$_v" ]; then
+		define cctype 'gcc'
+		define ccversion "$_v"
+		define gccversion "$_v"
+		result "gcc $_v"
+		return
+	fi
+
+	_v=`sed -ne '/^clang version \([0-9][0-9.]*\).*/s//\1/p' try.out`
+
+	if [ -n "$_v" ]; then
+		define cctype 'clang'
+		define ccversion "$_v"
+		define gccversion "0.0"
+		result "clang $_v"
+		return
+	fi
+
+	define cctype 'cc'
+	define ccversion ''
+	define gccversion '0.0'
+	result 'unknown'
+}
+
 # whichprog symbol VAR prog1 prog2
 whichprog() {
 	mstart "Checking for $1"
@@ -71,40 +103,9 @@ log
 
 mstart "Trying $cc"
 if not hinted 'cctype'; then
-	if run $cc --version >try.out 2>&1; then
-		_cl=`head -1 try.out`
-	elif run $cc -V >try.out 2>&1; then
-		_cl=`head -1 try.out`
-	else
-		_cl=''
-	fi
-
+	run $cc -v >try.out 2>&1
 	try_dump_out
-	if [ -z "$_cl" ]; then
-		result 'unknown'
-	else case "$_cl" in
-		*gcc*)
-			_cv=`echo "$_cl" | sed -e 's/.*) //' -e 's/ .*//g'`
-			test -n "$_cv" || _cv='0.0'
-			define cctype 'gcc'
-			define ccversion "$_cv"
-			define gccversion "$_cv"
-			result "gcc $_cv"
-			;;
-		clang*)
-			_cv=`echo "$_cl" | sed -e 's/.*version //' -e 's/ .*//'`
-			define cctype 'clang'
-			define ccversion "$_cv"
-			define gccversion '0.0'
-			result "clang $_cv"
-			;;
-		*)
-			define cctype 'cc'
-			define ccversion ''
-			define gccversion '0.0'
-			result 'unknown'
-			;;
-	esac; fi
+	detect_cc_version
 fi
 
 mstart "Checking whether $cc is a C++ compiler"
@@ -298,13 +299,16 @@ case "$DEBUGGING" in
 		result "no" ;;
 esac
 
-# gcc 4.9 by default does some optimizations that break perl.
+# gcc 4.9 and above does some optimizations that break perl.
 # see perl ticket 121505.
-case "$cctype-$ccversion" in
-	gcc-4.9*|gcc-5.*|gcc-6.*)
-		append 'optimize' '-fwrapv -fno-strict-aliasing'
-		;;
-esac
+if [ "$cctype" = 'gcc' ]; then
+	case "$ccversion" in
+		1.*|2.*|3.*) ;;
+		4.9*) append 'optimize' '-fwrapv -fno-strict-aliasing' ;;
+		4.*) ;;
+		*) append 'optimize' '-fwrapv -fno-strict-aliasing' ;;
+	esac
+fi
 enddef optimize
 
 # These are kind-of part of toolchain, but we do not test them
