@@ -1,0 +1,20 @@
+Brain bleach please.
+
+I hope I will never come upon a code that actually depends on this.
+
+No no no.
+
+
+--- a/win32/FindExt.pm
++++ b/win32/FindExt.pm
+@@ -115,10 +115,6 @@
+         $this_ext =~ s!-!/!g;
+         $leaf =~ s/.*-//;
+ 
+-        # List/Util.xs lives in Scalar-List-Utils, Cwd.xs lives in PathTools
+-        $this_ext = 'List/Util' if $this_ext eq 'Scalar/List/Utils';
+-        $this_ext = 'Cwd'       if $this_ext eq 'PathTools';
+-
+ 	# Temporary hack to cope with smokers that are not clearing directories:
+         next if $ext{$this_ext};
+ 
