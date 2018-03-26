@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-@files = (glob("perl*/*.patch"), glob("cperl*/*.patch"));
+@files = (ls("perl*/*.patch"), ls("cperl*/*.patch"));
 
 print "#!/bin/sh\n\n";
 
@@ -20,6 +20,24 @@ foreach(@files) {
 	} else {
 		lnsf($map{$hash}, $_);
 	}
+}
+
+# Version-aware glob; sorts 5.27.10 after 5.27.9
+
+sub ls {
+	return sort {
+		my @a = split /\./, $a;
+		my @b = split /\./, $b;
+		while(@a && @b) {
+			my $ai = shift @a;
+			my $bi = shift @b;
+			my $r = $ai <=> $bi;
+			return $r if $r;
+		}
+		return 1 if @a;
+		return -1 if $b;
+		return 0;
+	} glob(shift);
 }
 
 sub lnsf
