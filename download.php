@@ -1,11 +1,11 @@
 <? include "_head.php" ?>
 
-<p>Current version of perl-cross is 1.1.8<br>
-Supported perl versions: perl-5.22.4, perl-5.24.3, perl-5.26.1, cperl-5.24.3, cperl-5.26.1.<br>
+<p>Current version of perl-cross is 1.1.9<br>
+Supported perl versions: perl-5.22.4, perl-5.24.4, perl-5.26.2, cperl-5.24.3, cperl-5.26.1.<br>
 Download it here:</p>
 <div class="dllink">
-	<a href="https://github.com/arsv/perl-cross/releases/download/1.1.8/perl-cross-1.1.8.tar.gz"
-	 >https://github.com/arsv/perl-cross/releases/download/1.1.8/perl-cross-1.1.8.tar.gz</a>
+	<a href="https://github.com/arsv/perl-cross/releases/download/1.1.9/perl-cross-1.1.9.tar.gz"
+	 >https://github.com/arsv/perl-cross/releases/download/1.1.9/perl-cross-1.1.9.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
@@ -17,6 +17,12 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
+	<li>1.1.9 (2018-04-16)<ul>
+		<li>perl-5.27.{7,8,9,10}, 5.26.2, 5.24.4</li>
+		<li>fixed gcc-7 detection</li>
+		<li>fix for static modules building as dynamic in some perl versions</li>
+	</ul></li>
+
 	<li>1.1.8 (2017-10-29)<ul>
 		<li>perl-5.27.5</li>
 		<li>fix for lib.pm dependency issue potentially affecting all
