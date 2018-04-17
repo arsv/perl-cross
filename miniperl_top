@@ -36,6 +36,8 @@ exec $top/miniperl\
 	-I$top/dist/ExtUtils-MakeMaker/lib\
 	-I$top/cpan/ExtUtils-Manifest/lib\
 	-I$top/cpan/File-Path/lib\
+	-I$top/cpan/Pod-Simple/lib\
+	-I$top/cpan/Pod-Escapes/lib\
 	-I$top/ext/File-Find/lib\
 	-I$top/ext/re\
 	-I$top/cpan/ExtUtils-Constant/lib\
