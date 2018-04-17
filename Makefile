@@ -2,8 +2,7 @@ default: all
 
 include Makefile.config
 
-CONFIGPM_FROM_CONFIG_SH = lib/Config.pm lib/Config_heavy.pl
-CONFIGPM = $(CONFIGPM_FROM_CONFIG_SH) lib/Config_git.pl
+CONFIGPM = lib/Config.pm lib/Config_git.pl
 CONFIGPOD = lib/Config.pod
 STATIC = static
 # Note: MakeMaker will look for xsubpp only in specific locations
@@ -81,8 +80,6 @@ config.h: config.sh config_h.SH
 
 xconfig.h: xconfig.sh config_h.SH
 	CONFIG_H=$@ CONFIG_SH=$< ./config_h.SH
-
-config-pm: $(CONFIGPM)
 
 # Prevent the following rule from overwriting Makefile by running Makefile.SH
 Makefile:
@@ -192,14 +189,17 @@ endif
 
 perl.o: git_version.h
 
+config-pm: $(CONFIGPM)
 configpod: $(CONFIGPOD)
-$(CONFIGPM_FROM_CONFIG_SH) $(CONFIGPOD): config.sh Porting/Glossary lib/Config_git.pl | miniperl$X configpm
-	./miniperl_top configpm
 
 # Both git_version.h and lib/Config_git.pl are built
 # by make_patchnum.pl.
 git_version.h lib/Config_git.pl: make_patchnum.pl | miniperl$X
 	./miniperl_top make_patchnum.pl
+
+lib/Config.pm lib/Config_heavy.pl lib/Config.pod: config.sh \
+		lib/Config_git.pl Porting/Glossary | miniperl$X
+	./miniperl_top configpm
 
 # NOT used by this Makefile, replaced by miniperl_top
 # Avoid building.
@@ -234,9 +234,9 @@ lib/re.pm: ext/re/re.pm
 
 lib/lib.pm: dist/lib/pm_to_blib
 
-preplibrary: | miniperl$X $(CONFIGPM) lib/re.pm lib/lib.pm
+preplibrary: $(CONFIGPM) | miniperl$X lib/re.pm lib/lib.pm
 
-dist/lib/Makefile: dist/lib/Makefile.PL cflags config.h | miniperl$X
+dist/lib/Makefile: dist/lib/Makefile.PL cflags config.h $(CONFIGPM) | miniperl$X
 	$(eval top=$(shell echo $(dir $@) | sed -re 's![^/]+!..!g'))
 	cd $(dir $@) && $(top)miniperl_top -I$(top)lib Makefile.PL \
 	 PERL_CORE=1 LIBPERL_A=$(LIBPERL) PERL="$(top)miniperl_top"
@@ -282,7 +282,7 @@ dist/Unicode-Normalize/Makefile: lib/unicore/CombiningClass.pl
 
 # mktables does not touch the files unless they need to be rebuilt,
 # which confuses make.
-lib/unicore/CombiningClass.pl pod/perluniprops.pod:
+lib/unicore/CombiningClass.pl pod/perluniprops.pod: $(CONFIGPM)
 	./miniperl_top lib/unicore/mktables -w -C lib/unicore -P pod -maketest -makelist -p
 
 # The following rules ensure that modules listed in mkppport.lst get
