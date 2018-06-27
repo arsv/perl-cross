@@ -1,15 +1,15 @@
 <? include "_head.php" ?>
 
 <p>Current version of perl-cross is 1.1.9<br>
-Supported perl versions: perl-5.22.4, perl-5.24.4, perl-5.26.2, cperl-5.24.3, cperl-5.26.1.<br>
+Supported perl versions: perl-5.22.4, perl-5.24.4, perl-5.26.2, perl-5.28.0 cperl-5.24.3, cperl-5.26.1.<br>
 Download it here:</p>
 <div class="dllink">
-	<a href="https://github.com/arsv/perl-cross/releases/download/1.1.9/perl-cross-1.1.9.tar.gz"
-	 >https://github.com/arsv/perl-cross/releases/download/1.1.9/perl-cross-1.1.9.tar.gz</a>
+	<a href="https://github.com/arsv/perl-cross/releases/download/1.2/perl-cross-1.2.tar.gz"
+	 >https://github.com/arsv/perl-cross/releases/download/1.2/perl-cross-1.2.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
-Use one of supported perl versions; the are version-specific patches inside.</p>
+Use one of supported perl versions; there are version-specific patches inside.</p>
 
 <p>For older releases, check <a href="https://github.com/arsv/perl-cross/tree/releases">GitHub releases
 branch</a>.</p>
@@ -17,6 +17,11 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
+	<li>1.2 (2018-06-27)<ul>
+		<li>perl-5.28.0, perl-5.29.0</li>
+		<li>fixed Config.pl dependencies affecting some parallel builds</li>
+	</ul></li>
+
 	<li>1.1.9 (2018-04-16)<ul>
 		<li>perl-5.27.{7,8,9,10}, 5.26.2, 5.24.4</li>
 		<li>fixed gcc-7 detection</li>
