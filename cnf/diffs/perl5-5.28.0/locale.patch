@@ -1,0 +1,31 @@
+Fix conditional compilation
+
+See https://rt.perl.org/Public/Bug/Display.html?id=133321
+
+--- a/locale.c
++++ b/locale.c
+@@ -4625,11 +4625,12 @@
+                             && wc == (wchar_t) UNICODE_REPLACEMENT);
+         }
+ 
++#    endif
++
+         restore_switched_locale(LC_CTYPE, original_ctype_locale);
+         goto finish_and_return;
+     }
+ 
+-#    endif
+ #  else
+ 
+         /* Here, we must have a C89 compiler that doesn't have mbtowc().  Next
+@@ -4861,9 +4862,9 @@
+             is_utf8 = TRUE;
+             goto finish_and_return;
+         }
+-    }
+ 
+ #      endif
++    }
+ #    endif
+ 
+     /* Other common encodings are the ISO 8859 series, which aren't UTF-8.  But
