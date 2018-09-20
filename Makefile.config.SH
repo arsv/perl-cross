@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ ! -f config.sh ]; then
 	echo "config.sh not found" >&2
@@ -19,7 +19,7 @@ if [ "$usecrosscompile" = 'define' ]; then
 		echo 'xconfig.sh not found' >&2
 		exit -1
 	fi
-	
+
 	. ./xconfig.sh
 	hostcc="$cc"
 	hostccflags="$ccflags $optimize"

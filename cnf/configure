@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 base=${0%/*}; test -z "$base" && base=.
 
@@ -62,7 +62,7 @@ if [ "$mode" = "buildmini" -o "$mode" = "native" ]; then
 fi
 
 if [ -n "$target" -a -z "$targetarch" ]; then
-	mstart "Guessing target architecture"	
+	mstart "Guessing target architecture"
 	targetarch=`$base/config.sub "$target" 2>>$cfglog`
 	if [ -n "$targetarch" ]; then
 		result "$targetarch"
@@ -94,7 +94,7 @@ elif [ "$mode" = "target" ]; then
 	setconfig "config.sh"
 	targetlabel=`archlabel "$target" "$targetarch"`
 	msg "Configuring primary perl executable for $targetlabel"
-elif [ "$mode" = "native" ]; then 
+elif [ "$mode" = "native" ]; then
 	setconfig "config.sh"
 	msg "Configuring for a native build"
 fi
