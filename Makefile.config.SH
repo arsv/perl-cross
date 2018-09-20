@@ -8,7 +8,7 @@ fi
 disabledmods=''
 
 . ./config.sh
-echo -n > Makefile.config
+true > Makefile.config
 if [ "$usecrosscompile" = 'define' ]; then
 	unset cc
 	unset ccflags

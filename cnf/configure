@@ -3,7 +3,7 @@
 base=${0%/*}; test -z "$base" && base=.
 
 cfglog="config.log.$$"
-echo -n > "$cfglog"
+true > "$cfglog"
 newcfglog() { mv "$cfglog" "$1"; cfglog="$1"; }
 appendlog() { cat "$cfglog" >> "$1"; rm -f "$cfglog"; cfglog="$1"; }
 

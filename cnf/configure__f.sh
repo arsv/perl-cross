@@ -24,6 +24,18 @@ run() {
 	"$@"
 }
 
+# Darwin (OSX) shell lacks echo -n. Pretty much nything running on Darwin
+# should be expected to support printf though.
+
+case "`uname -s`" in
+	Darwin)
+		nonl() { printf "%s" "$1"; }
+		;;
+	*)
+		nonl() { echo -n "$1"; }
+		;;
+esac
+
 # Each test starts with mstart and ends with a (possibly branched) result
 #
 #    mstart "Checking foo"
@@ -36,7 +48,7 @@ run() {
 
 mstart() {
 	echo "$@" >> $cfglog
-	echo -n "$* ... " >& 2
+	nonl "$* ... " >& 2
 }
 
 result() {
@@ -184,7 +196,7 @@ gethint() {
 # along with the command used to compile it.
 
 try_start() {
-	echo -n > try.c
+	true > try.c
 }
 
 try_includes() {

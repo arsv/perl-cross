@@ -38,13 +38,13 @@ checksize() {
 		return
 	fi
 
-	if not try_readelf -s > try.out 2>>$cfglog; then
+	if not try_readelf --syms > try.out 2>>$cfglog; then
 		result 'unknown'
 		die "Cannot determine sizeof($2), use -D${1}size="
 		return
 	fi
 
-	result=`grep foo try.out | sed -r -e 's/.*: [0-9]+ +//' -e 's/ .*//'`
+	result=`grep foo try.out | sed -r -e 's/.*: [0-9]+ +//' -e 's/ .*//' -e 's/^0+//g'`
 	if [ -z "$result" -o "$result" -le 0 ]; then
 		result "unknown"
 		die "Cannot determine sizeof($2)"
