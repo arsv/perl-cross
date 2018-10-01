@@ -35,8 +35,8 @@ run() {
 # To make nice logs, any define()s should precede result()s.
 
 mstart() {
-	echo "$@" >> $cfglog
-	echo -n "$* ... " >& 2
+	env echo "$@" >> $cfglog
+	env echo -n "$* ... " >& 2
 }
 
 result() {
@@ -184,7 +184,7 @@ gethint() {
 # along with the command used to compile it.
 
 try_start() {
-	echo -n > try.c
+	env echo -n > try.c
 }
 
 try_includes() {

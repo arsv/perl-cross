@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ ! -f config.sh ]; then
 	echo "config.sh not found" >&2
@@ -8,7 +8,7 @@ fi
 disabledmods=''
 
 . ./config.sh
-echo -n > Makefile.config
+env echo -n > Makefile.config
 if [ "$usecrosscompile" = 'define' ]; then
 	unset cc
 	unset ccflags
