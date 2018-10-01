@@ -8,7 +8,7 @@ fi
 disabledmods=''
 
 . ./config.sh
-echo -n > Makefile.config
+env echo -n > Makefile.config
 if [ "$usecrosscompile" = 'define' ]; then
 	unset cc
 	unset ccflags
@@ -19,7 +19,7 @@ if [ "$usecrosscompile" = 'define' ]; then
 		echo 'xconfig.sh not found' >&2
 		exit -1
 	fi
-	
+
 	. ./xconfig.sh
 	hostcc="$cc"
 	hostccflags="$ccflags $optimize"
