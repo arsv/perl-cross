@@ -86,7 +86,8 @@ copyfile('lib/unicore/PropValueAliases.txt');
 copyrec('cpan/Test-Harness/t/lib/TAP/Harness') if $extensions{'cpan/Test-Harness'};
 
 makedir("cpan/Digest-SHA/src");
-makedir("cpan/List-Util/blib") if $extensions{'cpan/List-Util'};
+makedir("cpan/List-Util/blib") if $extensions{'cpan/List-Util'} && -d 'cpan/List-Util';
+makedir("cpan/Scalar-List-Utils/blib") if $extensions{'cpan/Scalar-List-Utils'} && -d 'cpan/Scalar-List-Utils';
 unlink("$DIR/t/perl");
 makelink($perlpath, "t/perl");
 makelink('t/perl', "perl");
@@ -166,7 +167,7 @@ sub writefile
 	my $test = "$DIR/$orig";
 	my $mode = shift;
 	my $data = shift;
-	
+
 	open(FILE, '>', $test) || die;
 	print FILE $data;
 	close(FILE);
