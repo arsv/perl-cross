@@ -155,7 +155,7 @@ while [ $i -le $# -o -n "$n" ]; do
 		help) mode="help" ;;
 		regen|regenerate) mode="regen" ;;
 		keeplog) defuser "$a" 1 ;;
-		prefix|html[13]dir|libsdir)	defuser $a "$v" ;;
+		prefix|html[13]dir|libsdir|libdir)	defuser $a "$v" ;;
 		man[13]dir|otherlibsdir)	defuser $a "$v" ;;
 		siteprefix|sitehtml[13]dir)	defuser $a "$v" ;;
 		siteman[13]dir|vendorman[13]dir)defuser $a "$v" ;;

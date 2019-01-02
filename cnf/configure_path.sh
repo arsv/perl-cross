@@ -30,6 +30,7 @@ definst() {
 	define "$1" "$installpath$v"
 }
 
+define libdir "$prefix/lib"
 define sharedir "$prefix/share"
 define html1dir "$sharedir/doc/$perlname/html"
 define html3dir "$sharedir/doc/$perlname/html"
@@ -38,16 +39,16 @@ define man1ext "1"
 define man3dir "$sharedir/man/man3"
 define man3ext "3"
 define bin "$prefix/bin"
-define lib "$prefix/lib"
+define lib "$libdir"
 define scriptdir "$prefix/bin"
 define libsdirs ' '
-defrel privlib "$prefix/lib/$package/$version"
-defrel archlib "$prefix/lib/$package/$version/$archname"
+defrel privlib "$libdir/$package/$version"
+defrel archlib "$libdir/$package/$version/$archname"
 define perlpath "$prefix/bin/$perlname"
 define d_archlib 'define'
 
 define sitebin	"$prefix/bin"
-defrel sitelib_stem "$prefix/lib/$package/site_perl"
+defrel sitelib_stem "$libdir/$package/site_perl"
 define sitelib "$sitelib_stem/$version"
 define sitearch "$sitelib_stem/$version/$archname"
 define siteprefix "$prefix"
@@ -145,7 +146,7 @@ vendortest() {
 }
 
 vendorpath vendorbin "$vendorprefix/bin"
-vendorpath vendorlib_stem "$vendorprefix/lib/$package/vendor_perl"
+vendorpath vendorlib_stem "$libdir/$package/vendor_perl"
 vendorpath vendorlib "$vendorlib_stem/$version"
 vendorpath vendorarch "$vendorlib_stem/$version/$archname"
 vendorpath vendorscript "$vendorprefix/bin"
