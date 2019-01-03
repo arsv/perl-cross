@@ -71,9 +71,13 @@ $(CROSSPATCHED): %.applied: %.patch
 # (mostly Makefile.PLs, but others can be annoying too)
 .SECONDARY:
 
-# Force early building of miniperl -- not really necessary, but makes
-# the build process more logical. No reason to try CC if HOSTCC fails.
-all: crosspatch miniperl$X dynaloader perl$x nonxs_ext utilities extensions pods
+# Force full patching before any building starts. Als, force early building
+# of miniperl -- not really necessary, but makes the build process more logical.
+# No reason to try CC if HOSTCC fails.
+all:
+	$(MAKE) crosspatch
+	$(MAKE) miniperl$X
+	$(MAKE) dynaloader perl$x nonxs_ext utilities extensions pods
 
 config.h: config.sh config_h.SH
 	CONFIG_H=$@ CONFIG_SH=$< ./config_h.SH
