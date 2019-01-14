@@ -74,10 +74,13 @@ $(CROSSPATCHED): %.applied: %.patch
 # Force full patching before any building starts. Als, force early building
 # of miniperl -- not really necessary, but makes the build process more logical.
 # No reason to try CC if HOSTCC fails.
+#
+# Dynaloader is also built separately as race failures have been observed.
 all:
 	$(MAKE) crosspatch
 	$(MAKE) miniperl$X
-	$(MAKE) dynaloader perl$x nonxs_ext utilities extensions pods
+	$(MAKE) dynaloader
+	$(MAKE) perl$x nonxs_ext utilities extensions pods
 
 config.h: config.sh config_h.SH
 	CONFIG_H=$@ CONFIG_SH=$< ./config_h.SH
