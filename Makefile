@@ -404,23 +404,24 @@ test:
 META.yml: Porting/makemeta Porting/Maintainers.pl Porting/Maintainers.pm miniperl$X
 	./miniperl_top $<
 
-install: install.perl install.sym install.man
+install:
+	$(MAKE) install.perl
+	$(MAKE) install.man
 
 install.perl: installperl | miniperl$X
 	./miniperl_top installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
 	-@test ! -s extras.lst || $(MAKE) extras.install
-
-install.man: installman pod/perltoc.pod | miniperl$X
-	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
-
 ifneq ($(perlname),perl)
-install.sym:
 	-rm -f $(DESTDIR)$(installbin)/$(perlname)$(version)
 	ln -sf $(perlname) $(DESTDIR)$(installbin)/perl
 else
-install.sym:
 	-rm -f $(DESTDIR)$(installbin)/$(perlname)$(version)
 endif
+
+install.sym: # deprecated
+
+install.man: installman pod/perltoc.pod | miniperl$X
+	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
 
 # ---[ testpack ]---------------------------------------------------------------
 .PHONY: testpack
