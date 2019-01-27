@@ -289,7 +289,10 @@ dist/Unicode-Normalize/Makefile: lib/unicore/CombiningClass.pl
 
 # mktables does not touch the files unless they need to be rebuilt,
 # which confuses make.
-lib/unicore/CombiningClass.pl pod/perluniprops.pod: $(CONFIGPM)
+
+pod/perluniprops.pod: lib/unicore/CombiningClass.pl
+
+lib/unicore/CombiningClass.pl: $(CONFIGPM)
 	./miniperl_top lib/unicore/mktables -w -C lib/unicore -P pod -maketest -makelist -p
 
 # The following rules ensure that modules listed in mkppport.lst get
