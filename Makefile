@@ -71,9 +71,16 @@ $(CROSSPATCHED): %.applied: %.patch
 # (mostly Makefile.PLs, but others can be annoying too)
 .SECONDARY:
 
-# Force early building of miniperl -- not really necessary, but makes
-# the build process more logical. No reason to try CC if HOSTCC fails.
-all: crosspatch miniperl$X dynaloader perl$x nonxs_ext utilities extensions pods
+# Force full patching before any building starts. Als, force early building
+# of miniperl -- not really necessary, but makes the build process more logical.
+# No reason to try CC if HOSTCC fails.
+#
+# Dynaloader is also built separately as race failures have been observed.
+all:
+	$(MAKE) crosspatch
+	$(MAKE) miniperl$X
+	$(MAKE) dynaloader
+	$(MAKE) perl$x nonxs_ext utilities extensions pods
 
 config.h: config.sh config_h.SH
 	CONFIG_H=$@ CONFIG_SH=$< ./config_h.SH
@@ -397,23 +404,24 @@ test:
 META.yml: Porting/makemeta Porting/Maintainers.pl Porting/Maintainers.pm miniperl$X
 	./miniperl_top $<
 
-install: install.perl install.sym install.man
+install:
+	$(MAKE) install.perl
+	$(MAKE) install.man
 
 install.perl: installperl | miniperl$X
 	./miniperl_top installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
 	-@test ! -s extras.lst || $(MAKE) extras.install
-
-install.man: installman pod/perltoc.pod | miniperl$X
-	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
-
 ifneq ($(perlname),perl)
-install.sym:
 	-rm -f $(DESTDIR)$(installbin)/$(perlname)$(version)
 	ln -sf $(perlname) $(DESTDIR)$(installbin)/perl
 else
-install.sym:
 	-rm -f $(DESTDIR)$(installbin)/$(perlname)$(version)
 endif
+
+install.sym: # deprecated
+
+install.man: installman pod/perltoc.pod | miniperl$X
+	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
 
 # ---[ testpack ]---------------------------------------------------------------
 .PHONY: testpack

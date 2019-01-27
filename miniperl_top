@@ -25,7 +25,6 @@ top=$(cd $top; pwd)
 exec $top/miniperl\
 	-I$top/cnf/stub\
 	-I$top/cnf/cpan\
-	-I$top/lib\
 	-I$top/cpan/AutoLoader/lib\
 	-I$top/dist/Exporter/lib\
 	-I$top/dist/Cwd\
@@ -50,4 +49,5 @@ exec $top/miniperl\
 	-I$top/cpan/parent/lib\
 	-I$top/cpan/version/lib\
 	-I$top/dist/Pod-Simple/lib\
+	-I$top/lib\
 	"$@"
