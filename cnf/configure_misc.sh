@@ -167,6 +167,7 @@ define d_portable 'define'
 define d_voidtty 'define'
 define d_semctl_semid_ds 'define'
 define d_semctl_semun 'define'
+define d_setlocale_accepts_any_locale_name 'undef'
 
 define d_msg_ctrunc 'undef'
 define d_msg_dontroute 'undef'
