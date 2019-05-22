@@ -1,1 +1,75 @@
-../perl5-5.29.7/installscripts.patch
+These scripts are run by miniperl in perl-cross,
+and have the right @INC set up for them externally.
+
+The second chunk in installperl add -Dsoname support.
+
+--- a/installman
++++ b/installman
+@@ -1,8 +1,6 @@
+ #!./perl -w
+ 
+ BEGIN {
+-    @INC = qw(lib);
+-
+     # This needs to be at BEGIN time, before any use of Config
+     # install_lib itself loads and imports Config into main::
+     require './install_lib.pl';
+--- a/installperl
++++ b/installperl
+@@ -2,8 +2,6 @@
+ 
+ BEGIN {
+     chdir '..' if !-d 'lib' and -d '../lib';
+-    @INC = 'lib';
+-    $ENV{PERL5LIB} = 'lib';
+ 
+     # This needs to be at BEGIN time, before any use of Config
+     # install_lib itself loads and imports Config into main::
+@@ -194,6 +192,7 @@
+ 
+ # Fetch some frequently-used items from %Config
+ my $installbin = "$opts{destdir}$Config{installbin}";
++my $installlib = "$opts{destdir}$Config{installlib}";
+ my $installscript = "$opts{destdir}$Config{installscript}";
+ my $installprivlib = "$opts{destdir}$Config{installprivlib}";
+ my $installarchlib = "$opts{destdir}$Config{installarchlib}";
+@@ -378,7 +377,8 @@
+     @corefiles = <*.h>;
+ } else {
+     # [als] hard-coded 'libperl' name... not good!
+-    @corefiles = <*.h libperl*.* perl*$Config{lib_ext}>;
++    @corefiles = <*.h perl*$Config{lib_ext}>;
++    push(@corefiles, $Config{libperl}) if $Config{useshrplib} && !$Config{soname};
+ 
+     # AIX needs perl.exp installed as well.
+     push(@corefiles,'perl.exp') if $^O eq 'aix';
+@@ -404,6 +404,29 @@
+ 	chmod($NON_SO_MODE, $dest) foreach @corefiles;
+ }
+ 
++if($Config{useshrplib} && $Config{soname}) {
++    my $libperl = $Config{libperl};
++    my $soname = $Config{soname};
++    mkpath($installlib);
++    if (copy_if_diff($libperl, "$installlib/$libperl")) {
++        strip("-S", "$installlib/$libperl");
++        chmod(0555, "$installlib/$libperl");
++
++        # Normally this should be done by ldconfig.
++        safe_unlink("$installlib/$soname") unless $soname eq $libperl;
++        safe_unlink("$installlib/libperl.so") unless $soname eq 'libperl.so';
++        symlink($libperl, "$installlib/$soname") unless $soname eq $libperl;
++        symlink($libperl, "$installlib/libperl.so") unless $soname eq 'libperl.so';
++        # using $so here instead of .so hardly makes any sense,
++        # all systems supporting SONAME have $so=.so
++
++        # Backward compatibility: provide a symlink where people expect it
++        safe_unlink("$installarchlib/CORE/libperl.so");
++        symlink("$Config{installlib}/$libperl", "$installarchlib/CORE/libperl.so");
++        #        ^ without destdir here!
++    }
++}
++
+ # Install main perl executables
+ # Make links to ordinary names if installbin directory isn't current directory.
+ 
