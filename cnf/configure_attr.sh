@@ -74,6 +74,7 @@ END
 # any other compilers atm.
 define d_builtin_arith_overflow 'define'
 define d_builtin_choose_expr 'define'
+define d_builtin_clz 'define'
 define d_builtin_ctz 'define'
 define d_builtin_expect 'define'
 define d_builtin_prefetch 'define'

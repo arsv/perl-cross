@@ -62,6 +62,7 @@ define usemallocwrap 'define'
 define usemorebits 'undef'
 define usemultiplicity 'undef'
 define usemymalloc 'n'
+define usenamedanoncv 'undef'
 define usenm 'false'
 define usensgetexecutablepath 'undef'
 # define useopcode 'false'         # set in configure_mods
@@ -90,6 +91,7 @@ define d_xenix 'undef'
 define d_ftime 'undef'
 define d_oldsock 'undef'
 define extras ''
+define getcwdnull 'define' # both glibc and musl have this
 
 # These are important but we don't test them
 define startsh '#!/bin/sh'

@@ -156,6 +156,7 @@ if [ "$package" = 'cperl' ]; then
 	# The version they diverged from mainline perl? Yikes
 	case "$version" in
 		5.26.*) pcpver=5260 ;;
+		5.28.*) pcpver=${vertag} ;;
 		*)      pcpver=5240 ;;
 	esac
 	cat >> Makefile.config << END
