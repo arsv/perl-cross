@@ -1,0 +1,45 @@
+XSConfig.t checks for XS and non-XS Config.pm to match exactly.
+However, the script that makes the XS version (ext/Config/Config_xs.PL)
+is not meant to do exactly translation. It only writes keys expected
+for this particular perl version.
+
+Multi-version support in perl-cross does sometimes generate keys
+not meant for the perl version being compiled. This is probably
+harmless, and definitely much easier to support, so we relax the
+test to allow extra keys in non-XS module.
+
+XS module in never used at build time with perl-cross.
+
+--- a/ext/Config/t/XSConfig.t
++++ b/ext/Config/t/XSConfig.t
+@@ -52,7 +52,7 @@
+ Config->import();
+ require 'Config_heavy.pl';
+ require Test::More;
+-Test::More->import (tests => 4);
++Test::More->import (tests => 3);
+ 
+ ok(isXSUB($cv), 'XS Config:: is XS');
+ 
+@@ -187,12 +187,17 @@
+   for my $k (@cannedkeys) {
+     $Config_copy{$k} = '' unless exists $Config{$k};
+   }
+-  is (scalar keys %Config_copy, $klenXS, 'same adjusted key count');
+-} else {
+-  is (scalar(keys %Config), $klenXS, 'same key count');
+ }
+ 
+-is_deeply ($copy ? \%Config_copy : \%Config, \%XSConfig, "cmp PP to XS hashes");
++$Config = $copy ? \%Config_copy : \%Config;
++
++# Non-XS config *may* contain additional keys in perl-cross.
++# Remove them to avoid false positives with is_deeply.
++foreach(keys %$Config) {
++	delete $Config->{$_} unless exists $XSConfig{$_};
++}
++
++is_deeply ($Config, \%XSConfig, "cmp PP to XS hashes");
+ 
+ # old Test::Builders dont have is_passing
+ if ( Test::More->builder->can('is_passing')

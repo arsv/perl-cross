@@ -103,6 +103,7 @@ checkhdr i_time 'time.h'
 checkhdr i_unistd 'unistd.h'
 checkhdr i_ustat 'ustat.h'
 checkhdr i_utime 'utime.h'
+checkhdr i_valgrind 'valgrind/valgrind.h' # cperl
 checkhdr i_values 'values.h'
 # i_varargs is checked below
 # i_varhdr is checked below

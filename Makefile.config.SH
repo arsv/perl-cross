@@ -157,6 +157,7 @@ if [ "$package" = 'cperl' ]; then
 	case "$version" in
 		5.26.*) pcpver=5260 ;;
 		5.28.*) pcpver=${vertag} ;;
+		5.30.*) pcpver=${vertag} ;;
 		*)      pcpver=5240 ;;
 	esac
 	cat >> Makefile.config << END

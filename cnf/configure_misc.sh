@@ -92,6 +92,13 @@ define d_ftime 'undef'
 define d_oldsock 'undef'
 define extras ''
 define getcwdnull 'define' # both glibc and musl have this
+define useffi 'undef'
+
+if [ -f lib/hashiter.pm ]; then
+	define usesafehashiter 'define'
+else
+	define usesafehashiter 'undef'
+fi
 
 # These are important but we don't test them
 define startsh '#!/bin/sh'
