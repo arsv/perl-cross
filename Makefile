@@ -327,7 +327,7 @@ ext/Pod-Functions/pm_to_blib: | cpan/Pod-Simple/pm_to_blib
 
 cpan/Pod-Simple/pm_to_blib: | cpan/Pod-Escapes/pm_to_blib
 
-$(dynamic_modules): | dist/ExtUtils-CBuilder/pm_to_blib
+$(dynamic_modules): | $(dynaloader_o) dist/ExtUtils-CBuilder/pm_to_blib
 
 dist/ExtUtils-CBuilder/pm_to_blib: | cpan/Perl-OSType/pm_to_blib cpan/Text-ParseWords/pm_to_blib
 
@@ -365,7 +365,7 @@ modules.list: $(CONFIGPM) $(MODLISTS) cflags
 	./modconfig_all
 
 # ---[ pods ]-------------------------------------------------------------------
-pod/perltoc.pod: extra.pods \
+pod/perltoc.pod: modules extra.pods \
 	pod/perlapi.pod \
 	pod/perlintern.pod \
 	pod/perlmodlib.pod \
