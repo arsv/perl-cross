@@ -5,8 +5,6 @@ if [ ! -f config.sh ]; then
 	exit -1
 fi
 
-disabledmods=''
-
 . ./config.sh
 true > Makefile.config
 if [ "$usecrosscompile" = 'define' ]; then
@@ -138,17 +136,14 @@ LNS = $lns
 
 archlib = $archlib
 
-dynamic_ext = $dynamic_ext
-static_ext = $static_ext
-nonxs_ext = $nonxs_ext
-END
+fullpath_dynamic_ext = $fullpath_dynamic_ext
+fullpath_static_ext = $fullpath_static_ext
+fullpath_nonxs_ext = $fullpath_nonxs_ext
 
-if [ "$disabledmods" = 'define' ]; then
-	cat >> Makefile.config << END
 disabled_dynamic_ext=$disabled_dynamic_ext
 disabled_nonxs_ext=$disabled_nonxs_ext
 END
-fi
+
 
 vertag=$PERL_REVISION$PERL_VERSION$PERL_SUBVERSION
 echo >> Makefile.config

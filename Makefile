@@ -30,22 +30,18 @@ src += $(mallocsrc)
 
 obj = $(patsubst %.c,%$o,$(wildcard $(src)))
 
-static_tgt = $(patsubst %,%/pm_to_blib,$(static_ext))
-dynamic_tgt = $(patsubst %,%/pm_to_blib,$(dynamic_ext))
-nonxs_tgt = $(patsubst %,%/pm_to_blib,$(nonxs_ext))
-disabled_dynamic_tgt = $(patsubst %,%/pm_to_blib,$(disabled_dynamic_ext))
-disabled_nonxs_tgt = $(patsubst %,%/pm_to_blib,$(disabled_nonxs_ext))
+static_modules = $(patsubst %,%/pm_to_blib,$(fullpath_static_ext))
+dynamic_modules = $(patsubst %,%/pm_to_blib,$(fullpath_dynamic_ext))
+nonxs_modules = $(patsubst %,%/pm_to_blib,$(fullpath_nonxs_ext))
+disabled_dynamic = $(patsubst %,%/pm_to_blib,$(disabled_dynamic_ext))
+disabled_nonxs = $(patsubst %,%/pm_to_blib,$(disabled_nonxs_ext))
 # perl module names for static mods
-static_pmn = $(shell for e in $(static_ext) ; do grep '^NAME =' $$e/Makefile | cut -d' ' -f3 ; done)
+static_pmn = $(shell for e in $(fullpath_static_ext) ; do grep '^NAME =' $$e/Makefile | cut -d' ' -f3 ; done)
 
 dynaloader_o = $(patsubst %,%$o,$(dynaloader))
 
-ext = $(nonxs_ext) $(dynamic_ext) $(static_ext)
-tgt = $(nonxs_tgt) $(dynamic_tgt) $(static_tgt)
-disabled_ext = $(disabled_nonxs_ext) $(disabled_dynamic_ext)
-
-ext_makefiles = $(patsubst %,%/Makefile,$(ext))
-disabled_ext_makefiles = $(pathsubst %,%/Makefile,$(disabled_ext))
+modules = $(fullpath_nonxs_ext) $(fullpath_dynamic_ext) $(fullpath_static_ext)
+disabled = $(disabled_nonxs_ext) $(disabled_dynamic_ext)
 
 # ---[ perl-cross patches ]-----------------------------------------------------
 # Note: the files are patched in-place, and so do not make valid make-rules
@@ -53,6 +49,8 @@ disabled_ext_makefiles = $(pathsubst %,%/Makefile,$(disabled_ext))
 # if need be.
 CROSSPATCHES = $(shell find cnf/diffs/$(patchset) -name '*.patch')
 CROSSPATCHED = $(patsubst %.patch,%.applied,$(CROSSPATCHES))
+
+.PHONY: crosspatch
 
 crosspatch: $(CROSSPATCHED)
 
@@ -218,7 +216,7 @@ lib/buildcustomize.pl: write_buildcustomize.pl | miniperl$X
 # The rules below replace make_ext script used in the original
 # perl build chain. Some host-specific functionality is lost.
 # Check miniperl_top to see how it works.
-$(nonxs_tgt) $(disabled_nonxs_tgt): %/pm_to_blib: | %/Makefile
+$(nonxs_modules) $(disabled_nonxs): %/pm_to_blib: | %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL)
 
 DynaLoader$o: | ext/DynaLoader/pm_to_blib
@@ -230,16 +228,18 @@ ext/DynaLoader/pm_to_blib: %/pm_to_blib: | %/Makefile
 
 ext/DynaLoader/Makefile: config.h | dist/lib/pm_to_blib
 
-$(static_tgt): %/pm_to_blib: | %/Makefile $(nonxs_tgt)
+$(static_modules): %/pm_to_blib: | %/Makefile $(nonxs_tgt)
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static static
 
-$(dynamic_tgt) $(disabled_dynamic_tgt): %/pm_to_blib: | %/Makefile
+$(dynamic_modules) $(disabled_dynamic): %/pm_to_blib: | %/Makefile
 	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=dynamic
 
 lib/re.pm: ext/re/re.pm
 	cp -f ext/re/re.pm lib/re.pm
 
 lib/lib.pm: dist/lib/pm_to_blib
+
+.PHONY: preplibrary
 
 preplibrary: $(CONFIGPM) | miniperl$X lib/re.pm lib/lib.pm
 
@@ -255,12 +255,15 @@ dist/lib/Makefile: dist/lib/Makefile.PL cflags config.h $(CONFIGPM) | miniperl$X
 	 PERL_CORE=1 LIBPERL_A=$(LIBPERL) PERL="$(top)miniperl_top"
 
 # Allow building modules by typing "make cpan/Module-Name"
-$(static_ext) $(dynamic_ext) $(nonxs_ext) $(disabled_dynamic_ext) $(disabled_nonxs_ext): %: %/pm_to_blib
+.PHONY: $(modules) $(disabled)
+$(modules) $(disabled): %: %/pm_to_blib
 
-nonxs_ext: $(nonxs_tgt)
-dynamic_ext: $(dynamic_tgt)
-static_ext: $(static_tgt)
-extensions: cflags $(nonxs_tgt) $(dynamic_tgt) $(static_tgt)
+.PHONY: nonxs_ext dynamic_ext static_ext extensions modules
+
+nonxs_ext: $(nonxs_modules)
+dynamic_ext: $(dynamic_modules)
+static_ext: $(static_modules)
+extensions: cflags nonxs_ext dynamic_ext static_ext
 modules: extensions
 
 # Some things needed to make modules
@@ -270,10 +273,12 @@ modules: extensions
 cflags: cflags.SH
 	sh $<
 
+.PHONY: makeppport
+
 makeppport: $(CONFIGPM) | miniperl$X
 	./miniper_top mkppport
 
-makefiles: $(ext:pm_to_blib=Makefile)
+makefiles: $(patsubst %,%/Makefile,$(modules))
 
 dynaloader: $(dynaloader_o)
 
@@ -322,24 +327,28 @@ ext/Pod-Functions/pm_to_blib: | cpan/Pod-Simple/pm_to_blib
 
 cpan/Pod-Simple/pm_to_blib: | cpan/Pod-Escapes/pm_to_blib
 
-$(dynamic_tgt): | dist/ExtUtils-CBuilder/pm_to_blib
+$(dynamic_modules): | dist/ExtUtils-CBuilder/pm_to_blib
 
 dist/ExtUtils-CBuilder/pm_to_blib: | cpan/Perl-OSType/pm_to_blib cpan/Text-ParseWords/pm_to_blib
 
 # ---[ modules cleanup & rebuilding ] ------------------------------------------
 
-modules-reset:
-	$(if $(nonxs_ext),            rm -f $(patsubst %,%/pm_to_blib,$(nonxs_ext)))
-	$(if $(static_ext),           rm -f $(patsubst %,%/pm_to_blib,$(static_ext)))
-	$(if $(dynamic_ext),          rm -f $(patsubst %,%/pm_to_blib,$(dynamic_ext)))
-	$(if $(disabled_nonxs_ext),   rm -f $(patsubst %,%/pm_to_blib,$(disabled_nonxs_ext)))
-	$(if $(disabled_dynamic_ext), rm -f $(patsubst %,%/pm_to_blib,$(disabled_dynamic_ext)))
+.PHONY: modules-reset modules-makefiles modules-clean
 
-modules-makefiles: $(ext_makefiles)
+modules-reset:
+	$(if $(nonxs_modules),    rm -f $(nonxs_modules))
+	$(if $(static_modules),   rm -f $(static_modules))
+	$(if $(dynamic_modules),  rm -f $(dynamic_modules))
+	$(if $(disabled_nonxs),   rm -f $(disabled_nonxs))
+	$(if $(disabled_dynamic), rm -f $(disabled_dynamic))
+
+modules-makefiles: makefiles
 
 modules-clean: clean-modules
 
 # ---[ Misc ]-------------------------------------------------------------------
+
+.PHONY: utilities
 
 utilities: miniperl$X $(CONFIGPM)
 	$(MAKE) -C utils all
@@ -449,7 +458,12 @@ clean-subdirs:
 
 # assuming modules w/o Makefiles were never built and need no cleaning
 clean-modules: config.h
-	@for i in $(ext) $(disabled_ext); do test -f $$i/Makefile && touch $$i/Makefile && $(MAKE) -C $$i clean || true; done
+	@for i in $(modules disabled); do \
+		test -f $$i/Makefile && \
+		touch $$i/Makefile && \
+		$(MAKE) -C $$i clean \
+		|| true; \
+	done
 
 clean-generated-files:
 	-rm -f uudmap.h opmini.c generate_uudmap$X bitcount.h $(CONFIGPM)
