@@ -103,16 +103,14 @@ Generally configure tries to build all modules it can find in the source tree.
 Use the following options to alter modules list:
 
         --static-mod=mod1,mod2,...      Build specified modules statically
+
         --disable-mod=mod1,mod2,...     Do not build specified modules
                                         modX should be something like
                                         cpan/Archive-Extract
                                         static only applies to XS modules
+
         --only-mod=mod1,mod2,...        Build listed modules only
 
-        --disable-disabled-mods         Do not generate make rules for  
-                                        disabled modules. Without this option,
-                                        any module found by counfigure can be built
-                                        manually with "make cpan/Module-Name".
         --all-static                    Build all found XS modules as static
                                         unless specified otherwise
 

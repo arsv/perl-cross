@@ -213,7 +213,6 @@ while [ $i -le $# -o -n "$n" ]; do
 				defuser "onlyext" "$s $onlyext"
 			done
 			;;
-		disable-disabled-mods) defuser 'disabledmods' 'undef' ;;
 		all-static) defuser 'allstatic' 1 ;;
 		use) defuser "use$k" 'define' ;;
 		dont-use) defuser "use$k" 'undef' ;;
