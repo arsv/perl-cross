@@ -132,7 +132,7 @@ if not hinted d_c99_variadic_macros 'supported' 'missing'; then
 	try_start
 	try_add '#include <stdio.h>'
 	try_add '#define foo(fmt, ...) printf(fmt, __VA_ARGS__)'
-	try_add 'int main(void) { foo("%i\n", 1234); return 0; }'
+	try_add 'int main(void) { foo("%i", 1234); return 0; }'
 	try_compile
 	resdef d_c99_variadic_macros 'supported' 'missing'
 fi

@@ -308,7 +308,7 @@ define tee
 define test test
 define touch touch
 define tr tr
-define trnl '\n'
+define trnl tr
 define troff
 define uuname
 define vi
