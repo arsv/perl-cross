@@ -202,7 +202,7 @@ configpod: $(CONFIGPOD)
 git_version.h lib/Config_git.pl: make_patchnum.pl | miniperl$X
 	./miniperl_top make_patchnum.pl
 
-lib/Config.pm lib/Config_heavy.pl lib/Config.pod: config.sh \
+lib/Config.pm lib/Config_heavy.pl lib/Config.pod: config.sh cflags \
 		lib/Config_git.pl Porting/Glossary | miniperl$X
 	./miniperl_top configpm
 
