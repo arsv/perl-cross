@@ -1,11 +1,11 @@
 <? include "_head.php" ?>
 
 <p>Current version of perl-cross is 1.3.1<br>
-Supported perl versions: perl-5.22.4, perl-5.24.4, perl-5.26.2, perl-5.28.2 perl-5.30.1, cperl-5.24.3, cperl-5.26.1.<br>
+Supported perl versions: perl-5.22.4, perl-5.24.4, perl-5.26.2, perl-5.28.2 perl-5.30.2, cperl-5.24.3, cperl-5.26.1.<br>
 Download it here:</p>
 <div class="dllink">
-	<a href="https://github.com/arsv/perl-cross/releases/download/1.3.1/perl-cross-1.3.1.tar.gz"
-	 >https://github.com/arsv/perl-cross/releases/download/1.3.1/perl-cross-1.3.1.tar.gz</a>
+	<a href="https://github.com/arsv/perl-cross/releases/download/1.3.2/perl-cross-1.3.2.tar.gz"
+	 >https://github.com/arsv/perl-cross/releases/download/1.3.2/perl-cross-1.3.2.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
@@ -17,6 +17,12 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
+	<li>1.3.2 (2020-03-21)<ul>
+		<li>perl-5.30.2, perl-5.31.10</li>
+		<li>mainline perl compatible extensions lists in config.sh</li>
+		<li>Yocto related fixes</li>
+	</ul></li>
+
 	<li>1.3.1 (2019-11-22)<ul>
 		<li>perl-5.30.1, perl-5.31.6</li>
 		<li>updated config.sub and config.guess</li>
