@@ -142,7 +142,7 @@ endif
 endif # or should it be "else"?
 perl$x: LDFLAGS += -Wl,-E
 
-perl$x: perlmain$o $(LIBPERL) $(static_tgt) static.list ext.libs
+perl$x: perlmain$o $(LIBPERL) $(static_modules) static.list ext.libs
 	$(eval extlibs=$(shell cat ext.libs))
 	$(eval statars=$(shell cat static.list))
 	$(CC) $(LDFLAGS) -o $@ $(filter %$o,$^) $(LIBPERL) $(statars) $(LIBS) $(extlibs)
@@ -152,13 +152,13 @@ perl$x: perlmain$o $(LIBPERL) $(static_tgt) static.list ext.libs
 
 globals.o: uudmap.h
 
-perlmain.c: ext/ExtUtils-Miniperl/pm_to_blib $(patsubst %,%/Makefile,$(static_ext)) | miniperl$X
+perlmain.c: ext/ExtUtils-Miniperl/pm_to_blib $(patsubst %,%/Makefile,$(fullpath_static_ext)) | miniperl$X
 	./miniperl_top -MExtUtils::Miniperl -e 'writemain(\"$@", @ARGV)' $(dynaloader) $(static_pmn)
 
-ext.libs: Makefile.config $(patsubst %,%/Makefile,$(static_ext)) | $(static_tgt) miniperl$X
+ext.libs: Makefile.config $(patsubst %,%/Makefile,$(fullpath_static_ext)) | $(static_modules) miniperl$X
 	./miniperl_top extlibs $(static_pmn) > $@
 
-static.list: Makefile.config $(patsubst %,%/Makefile,$(static_ext)) | $(static_tgt) miniperl$X
+static.list: Makefile.config $(patsubst %,%/Makefile,$(fullpath_static_ext)) | $(static_modules) miniperl$X
 	./miniperl_top statars $(static_pmn) > $@
 
 # ---[ site/library ]-----------------------------------------------------------
