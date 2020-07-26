@@ -55,8 +55,8 @@ CROSSPATCHED = $(patsubst %.patch,%.applied,$(CROSSPATCHES))
 crosspatch: $(CROSSPATCHED)
 
 # A minor fix for buildroot, force crosspatching when running "make perl modules"
-# instead of "make all".
-miniperlmain$O: crosspatch
+# instead of "make all" (can't use a PHONY target here due to rebuilds).
+miniperlmain$O: $(CROSSPATCHED)
 
 # Original versions are not saved anymore; patch generally takes care of this,
 # and if that fails, reaching for the source tarball is the safest option.
