@@ -75,6 +75,7 @@ define usesfio 'false'
 define useshrplib 'false'
 define usesitecustomize 'undef'
 define usesocks 'undef'
+define usedefaultstrict 'undef'
 define useversionedarchname 'undef'
 define usevfork 'false'
 
