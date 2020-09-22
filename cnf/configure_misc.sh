@@ -43,6 +43,8 @@ define ldflags_uselargefiles ''
 define libs_uselargefiles ''
 define libswanted_uselargefiles ''
 
+define default_inc_excludes_dot 'define'
+
 # These are sometimes used in perl-cross, and sometimes also affect modules
 # Some *must* be "false" instead of "undef"! See configure_args.sh
 define use64bitall 'undef'
