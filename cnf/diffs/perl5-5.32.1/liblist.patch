@@ -26,7 +26,7 @@ Note this is a part of MakeMaker, and only applies to module Makefiles.
  }
  
  sub _unix_os2_ext {
-@@ -652,4 +653,51 @@
+@@ -656,4 +657,51 @@
      wantarray ? ( $lib, '', $ldlib, '', ( $give_libs ? \@flibs : () ) ) : $lib;
  }
  
