@@ -262,6 +262,10 @@ if not hinted 'osname'; then
 			define osname "linux"
 			result "Linux"
 			;;
+		*-netbsd*)
+			define osname "netbsd"
+			result "NetBSD"
+			;;
 		*-bsd*)
 			define osname "bsd"
 			result "BSD"
