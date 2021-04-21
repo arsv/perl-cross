@@ -1,0 +1,19 @@
+During the build, MakeMaker is run by miniperl, so $^O is the build
+platform; but for the code below, $Is{Android} means that the target
+platform is Android.
+
+Replacing $^O check altogether would probably be better,
+but there's already a double test like that, and it should be fixed
+upstream anyway.
+
+--- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
++++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm
+@@ -37,7 +37,7 @@
+     $Is{BSD}     = ($^O =~ /^(?:free|net|open)bsd$/ or
+                    grep( $^O eq $_, qw(bsdos interix dragonfly) )
+                   );
+-    $Is{Android} = $^O =~ /android/;
++    $Is{Android} = $^O =~ /android/ || $Config{osname} eq 'android';
+     if ( $^O eq 'darwin' && $^X eq '/usr/bin/perl' ) {
+       my @osvers = split /\./, $Config{osvers};
+       $Is{ApplCor} = ( $osvers[0] >= 18 );
