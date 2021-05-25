@@ -2,7 +2,7 @@
 
 tryprog() {
 	log "trying $1=$2"
-	if command -v "$2" 1>/dev/null 2>/dev/null; then
+	if command -v $2 1>/dev/null 2>/dev/null; then
 		define "$1" "$2"
 		result "$2"
 		return 0
