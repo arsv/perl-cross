@@ -97,5 +97,9 @@ else
 	result "irrelevant"
 fi
 
-# Assume nl_langinfo_l is threadsafe if available
-define d_thread_safe_nl_langinfo_l "$d_nl_langinfo_l"
+# thread_safe_nl_langinfo_l is not enabled by default
+# by upstream, and causes t/Langinfo.t to fail when it is
+# (starting from 5.34.0). This means the configuration is
+# either not well tested, or not at all tested, so we should
+# pick a safer option.
+define d_thread_safe_nl_langinfo_l "undef"
