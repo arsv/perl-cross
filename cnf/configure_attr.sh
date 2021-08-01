@@ -136,3 +136,15 @@ if not hinted d_c99_variadic_macros 'supported' 'missing'; then
 	try_compile
 	resdef d_c99_variadic_macros 'supported' 'missing'
 fi
+
+mstart "Checking non-int bitfields"
+if not hinted d_non_int_bitfields 'supported' 'missing'; then
+	try_start
+	try_add '#include <stdio.h>'
+	try_add 'struct foo {'
+	try_add '    unsigned char byte:1;'
+	try_add '    unsigned short halfword:1;'
+	try_add '} bar;'
+	try_compile
+	resdef d_non_int_bitfields 'supported' 'missing'
+fi
