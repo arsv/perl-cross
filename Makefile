@@ -217,22 +217,22 @@ lib/buildcustomize.pl: write_buildcustomize.pl | miniperl$X
 # perl build chain. Some host-specific functionality is lost.
 # Check miniperl_top to see how it works.
 $(nonxs_modules) $(disabled_nonxs): %/pm_to_blib: | %/Makefile
-	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL)
+	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL)
 
 DynaLoader$o: | ext/DynaLoader/pm_to_blib
 	@if [ ! -f ext/DynaLoader/DynaLoader$o ]; then rm $<; echo "Stale pm_to_blib, please re-run make"; false; fi
 	cp ext/DynaLoader/DynaLoader$o $@
 
 ext/DynaLoader/pm_to_blib: %/pm_to_blib: | %/Makefile
-	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static static
+	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static static
 
 ext/DynaLoader/Makefile: config.h | dist/lib/pm_to_blib
 
 $(static_modules): %/pm_to_blib: | %/Makefile $(nonxs_tgt)
-	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static static
+	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static static
 
 $(dynamic_modules) $(disabled_dynamic): %/pm_to_blib: | %/Makefile
-	$(MAKE) -C $(dir $@) all PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=dynamic
+	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=dynamic
 
 lib/re.pm: ext/re/re.pm
 	cp -f ext/re/re.pm lib/re.pm
