@@ -134,6 +134,8 @@ define selecttype 'fd_set *'
 define shmattype 'void *'
 define st_ino_sign 1
 define st_ino_size 4
+define st_dev_sign 1
+define st_dev_size 4
 define d_open3 'define'
 define d_safebcpy 'define'
 define d_safemcpy 'undef'
@@ -182,6 +184,7 @@ define d_semctl_semun 'define'
 define d_setlocale_accepts_any_locale_name 'undef'
 define d_getenv_preserves_other_thread 'undef'
 define xlocale_needed 'undef'
+define d_thread_local 'undef'
 
 define d_msg_ctrunc 'undef'
 define d_msg_dontroute 'undef'
