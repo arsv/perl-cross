@@ -213,6 +213,10 @@ lib/buildcustomize.pl: write_buildcustomize.pl | miniperl$X
 
 # ---[ Modules ]----------------------------------------------------------------
 
+targets-nxs = config pm_to_blib subdirs manifypods
+targets-sta = config pm_to_blib subdirs static manifypods
+targets-dyn = config pm_to_blib subdirs dynamic manifypods
+
 # The rules below replace make_ext script used in the original
 # perl build chain. Some host-specific functionality is lost.
 # Check miniperl_top to see how it works.
@@ -224,15 +228,15 @@ DynaLoader$o: | ext/DynaLoader/pm_to_blib
 	cp ext/DynaLoader/DynaLoader$o $@
 
 ext/DynaLoader/pm_to_blib: %/pm_to_blib: | %/Makefile
-	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static static
+	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static $(targets-sta)
 
 ext/DynaLoader/Makefile: config.h | dist/lib/pm_to_blib
 
 $(static_modules): %/pm_to_blib: | %/Makefile $(nonxs_tgt)
-	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static static
+	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static $(targets-sta)
 
 $(dynamic_modules) $(disabled_dynamic): %/pm_to_blib: | %/Makefile
-	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=dynamic
+	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=dynamic $(targets-dyn)
 
 lib/re.pm: ext/re/re.pm
 	cp -f ext/re/re.pm lib/re.pm
