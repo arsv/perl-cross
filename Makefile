@@ -185,7 +185,7 @@ endif
 
 ifeq ($(useshrplib),true)
 $(LIBPERL):
-	$(CC) $(LDFLAGS) $(LDDLFLAGS) -o $@ $(filter %$o,$^) $(LIBS)
+	$(CC) $(LDDLFLAGS) -o $@ $(filter %$o,$^) $(LIBS)
 else
 $(LIBPERL):
 	$(AR) cru $@ $(filter %$o,$^)
