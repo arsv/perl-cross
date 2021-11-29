@@ -189,15 +189,7 @@ fi
 # Use $ldflags as default value for $lddlflags, together with whatever
 # hints provided, but avoid re-setting anyting specified in the command line
 if [ -n "$ldflags" -a "$x_lddlflags" != "user" ]; then
-	msg "Checking which flags from \$ldflags to move to \$lddlflags"
-	for f in $ldflags; do
-		case "$f" in
-			-L*|-R*|-Wl,-R*)
-				msg "    added $f"
-				append lddlflags "$f"
-				;;
-		esac
-	done
+	append lddlflags "$ldflags"
 fi
 
 # enddef ccflags # done later in _hdrs because of LARGEFILE_SOURCE
