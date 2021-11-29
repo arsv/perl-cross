@@ -191,12 +191,8 @@ fi
 if [ -n "$ldflags" -a "$x_lddlflags" != "user" ]; then
 	msg "Checking which flags from \$ldflags to move to \$lddlflags"
 	for f in $ldflags; do
-		case "$f" in
-			-L*|-R*|-Wl,-R*)
-				msg "    added $f"
-				append lddlflags "$f"
-				;;
-		esac
+		msg "    added $f"
+		append lddlflags "$f"
 	done
 fi
 
