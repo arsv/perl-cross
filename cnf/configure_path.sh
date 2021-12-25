@@ -146,7 +146,8 @@ vendortest() {
 }
 
 vendorpath vendorbin "$vendorprefix/bin"
-vendorpath vendorlib_stem "$libdir/$package/vendor_perl"
+vendorpath vendorlibdir "$vendorprefix/lib"
+vendorpath vendorlib_stem "$vendorlibdir/$package/vendor_perl"
 vendorpath vendorlib "$vendorlib_stem/$version"
 vendorpath vendorarch "$vendorlib_stem/$version/$archname"
 vendorpath vendorscript "$vendorprefix/bin"
