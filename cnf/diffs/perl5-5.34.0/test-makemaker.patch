@@ -1,0 +1,17 @@
+The toolchain is not installed on the target when cross-compiling.
+When testing, PERL_CORE is defined, so we need a real compiler check by ExtUtils::Builder.
+
+Revert the commit https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/commit/5e55318a97616596447c336b9cb331a8dfdc62d5
+which was introduced by ExtUtils-MakeMaker 7.56 in perl 5.33.4
+
+--- a/cpan/ExtUtils-MakeMaker/t/lib/MakeMaker/Test/Utils.pm
++++ b/cpan/ExtUtils-MakeMaker/t/lib/MakeMaker/Test/Utils.pm
+@@ -359,8 +359,6 @@ Returns true if there is a compiler available for XS builds.
+ =cut
+ 
+ sub have_compiler {
+-    return 1 if $ENV{PERL_CORE};
+-
+     my $have_compiler = 0;
+ 
+     in_dir(sub {
