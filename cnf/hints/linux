@@ -1,0 +1,21 @@
+# Linux syscalls
+d_voidsig='define'
+d_nanosleep='define'
+d_clock_gettime='define'
+d_clock_getres='define'
+d_clock_nanosleep='define'
+d_clock='define'
+
+# From the original linux.sh
+usemallocwrap='define'
+
+# libraries to test
+libswanted='m crypt pthread nm ndbm gdbm dbm db dl gdbm_compat'
+
+d_procselfexe='define'
+procselfexe='"/proc/self/exe"'
+
+st_ino_sign=1
+st_ino_size=8
+
+d_fcntl_can_lock='define'

@@ -1,0 +1,8 @@
+use64bitint='define'
+ptrsize=8
+sizetype='uint64_t'
+ssizetype='int64_t'
+d_atoll='define'
+d_strtoll='define'
+d_strtoull='define'
+d_sizesize=8

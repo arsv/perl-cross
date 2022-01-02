@@ -1,0 +1,190 @@
+#!miniperl
+
+$LIST = shift || 'TESTPACK.list';
+$DIR = shift || 'TESTPACK';
+
+%exclude = map { $_ => 1 } (
+	'cpan/Pod-Parser/t/pod/find.t',
+	'dist/ExtUtils-Install',
+	'dist/ExtUtils-ParseXS',
+	'cpan/ExtUtils-MakeMaker',
+	'cpan/ExtUtils-Constant',
+	'cpan/File-CheckTree',
+	'ext/XS-Typemap',
+	'cpan/libnet',
+	'ext/XS-APItest',
+	't/lib/deprecate.t',
+	't/x2p/s2p.t',
+	't/porting',
+	't/porting/manifest.t',
+	't/porting/args_assert.t',
+	't/porting/test_bootstrap.t',
+	't/op/goto_xs.t'
+);
+
+open(CONFIG, '<', 'config.sh') || die;
+while(<CONFIG>) {
+	push(@extensions, split(/\s+/, $2))
+		if m!^extensions=(['"]?)\s*(.*\S)\s*\1!;
+	$perlpath = $1 if m!^perlpath='(.*)'!;
+}
+close(CONFIG);
+%extensions = map { $_ => 1 } @extensions;
+
+mkdir($DIR);
+open(LIST, '>', $LIST) || die;
+open(MOUT, '>', "$DIR/MANIFEST") || die;
+
+@test = ();
+open(MANI, '<', 'MANIFEST') || die;
+while(<MANI>) {
+	chomp;
+	if(m!^(((cpan|dist|ext)/([^/]+))(/\S+)?/[^/\s]+\.t|test\.pl)\s!) {
+		copytest($1) if ($extensions{$2} || ($2 eq 'ext/DynaLoader')) && !$exclude{$1} && !$exclude{$2};
+	} elsif(m!^(((cpan|dist|ext|lib)/(\S+))/t/\S+)\s!) {
+		copyfile($1) if $extensions{$2};
+	} elsif(m!^(lib/\S+/([^/\s]+\.t|test\.pl))\s!) {
+		copytest($1);
+	} elsif(m!^(.*CompTestUtils\.pm)\s*$!) {
+		copyfile($1);
+	}
+}
+close(MANI);
+
+copyrec('t');
+
+copyfile('TestInit.pm.testpack', "$DIR/TestInit.pm");
+copyfile('regen/keywords.pl');
+copyfile('regen/regen_lib.pl');
+copyfile('embed.fnc');
+copyfile('ext/Pod-Functions/Functions_pm.PL');
+copyfile('cpan/Filter-Util-Call/filter-util.pl') if $extensions{'cpan/Filter-Util-Call'};
+copyfile('config_h.SH');
+copyfile('EXTERN.h');
+copyfile('lib/dbm_filter_util.pl');
+copyfile('lib/unicore/TestProp.pl');
+copyfile('ext/Tie-Memoize/lib/Tie/Memoize.pm') if $extensions{'ext/Tie-Memoize'};
+copyfile('regen/opcodes');
+copyfile('dist/IO/Makefile.PL');
+copyfile('lib/XS');
+copyfile('ext/IPC-Open3/Makefile') if $extensions{'ext/IPC-Open3'};
+copyfile('cpan/Pod-Parser/podselect.PL') if $extensions{'cpan/Pod-Parser'};
+copyfile('ext/POSIX/POSIX.xs');
+unlink("$DIR/cpan/Test-Harness/MANIFEST.CUMMULATIVE");
+makelink('../../MANIFEST', "cpan/Test-Harness/MANIFEST.CUMMULATIVE");
+makelink('../../MANIFEST', "cpan/Test-Harness/MANIFEST");
+
+copyfile('ext/POSIX/Makefile.PL') if $extensions{'ext/POSIX'};
+copyfile('cpan/Digest-MD5/MD5.xs') if $extensions{'cpan/Digest-MD5'};
+
+makelink('../../t/test.pl', "ext/re/test.pl");
+makelink('../../t/test.pl', "ext/B/test.pl");
+
+copyfile('lib/unicore/PropertyAliases.txt');
+copyfile('lib/unicore/PropValueAliases.txt');
+
+copyrec('cpan/Test-Harness/t/lib/TAP/Harness') if $extensions{'cpan/Test-Harness'};
+
+makedir("cpan/Digest-SHA/src");
+makedir("cpan/List-Util/blib") if $extensions{'cpan/List-Util'} && -d 'cpan/List-Util';
+makedir("cpan/Scalar-List-Utils/blib") if $extensions{'cpan/Scalar-List-Utils'} && -d 'cpan/Scalar-List-Utils';
+unlink("$DIR/t/perl");
+makelink($perlpath, "t/perl");
+makelink('t/perl', "perl");
+
+print LIST "$DIR/MANIFEST\n";
+
+close(MOUT);
+close(LIST);
+
+sub mkdirname
+{
+	my @path = split m!/!, shift;
+	my $path = shift @path;
+	pop @path;
+	foreach(@path) {
+		$path .= "/$_";
+		next if -d $path;
+		mkdir($path) || return;
+	}
+}
+
+sub copytest
+{
+	my $orig = shift;
+	$test = "$DIR/$orig";
+	mkdirname($test);
+	open(TEST, '>', $test) || die "Can't write to $test: $!";
+	open(ORIG, '<', $orig) || die "Can't open $orig: $!";
+	while(<ORIG>) {
+		s!local \@INC\s*=!local \@INC = \@INC; \@INC = !;
+		s!\@INC\s*=\s*\((.+)\)!unshift(\@INC, $1)!;
+		s!\@INC\s*=\s*(qw\(.+\))!unshift(\@INC, $1)!;
+		s!\@INC\s*=\s*(qw\s*"[^"]+")!unshift(\@INC, $1)!;
+		s!\@INC\s*=\s*('[^']+')!unshift(\@INC, $1)!;
+		print TEST;
+	}
+	close(ORIG);
+	close(TEST);
+	print LIST "$test\n";
+	print MOUT "$orig\t-\n";
+}
+
+sub copyfile
+{
+	my $orig = shift;
+	my $out = shift;
+	$out = "$DIR/$orig" unless defined($out);
+	mkdirname($out);
+	open(ORIG, '<', $orig) || die "Can't open $orig";
+	open(OUT, '>', $out) || die "Can't write to $out";
+	print OUT while(<ORIG>);
+	chmod($stat[2] | 0200, \*OUT) if @stat = stat ORIG;
+	close(OUT);
+	close(ORIG);
+	print LIST "$out\n";
+	print MOUT "$orig\t-\n";
+}
+
+sub copyrec
+{
+	my $dir = shift;
+	my $excl = shift;
+	local *DIRH;
+	opendir(DIRH, $dir) || die("Can't open $dir: $!");
+	while(defined($_ = readdir(DIRH))) {
+		next if m!^\.!;
+		my $file = "$dir/$_";
+		next if $exclude{$file};
+		(-d $file ? \&copyrec : \&copytest)->($file);
+	};
+	closedir(DIRH);
+}
+
+sub writefile
+{
+	my $orig = shift;
+	my $test = "$DIR/$orig";
+	my $mode = shift;
+	my $data = shift;
+
+	open(FILE, '>', $test) || die;
+	print FILE $data;
+	close(FILE);
+	chmod $mode, $test;
+}
+
+sub makelink
+{
+	my $tgt = shift;
+	my $sym = shift;
+	print LIST "$DIR/$sym\n";
+	return symlink($tgt, "$DIR/$sym");
+}
+
+sub makedir
+{
+	my $dir = shift;
+	print LIST "$DIR/$dir\n";
+	return mkdir("$DIR/$dir");
+}

@@ -1,0 +1,54 @@
+#!/bin/sh
+
+# This script can be used to run Makefile.PL 
+# Note that is relies on $0 to tell where lib/ is; typically
+#   you should call it as ../../miniperl_top
+# This script replaces lib/buildcustomize.pl functionality
+# Check write_buildcustomize.pl for the list of modules to include here
+
+top=${0%/*}; test -z "$top" && top=.
+
+if [ ! -f $top/miniperl ]; then
+	echo "$0: no $top/miniperl found; build it before using miniperl_top"
+	exit 1
+fi
+if [ -f $top/lib/buildcustomize.pl ]; then
+	# buildcustomize.pl silently overrides all -I options below
+	echo "$0: remove $top/lib/buildcustomize.pl before running miniperl_top" >&2
+	exit 1
+fi
+
+# Some of the modules (cpan/podlators) fail to build when $top is relative.
+# This is unbelievably ugly and should be removed somehow.
+top=$(cd $top; pwd)
+
+exec $top/miniperl\
+	-I$top/cnf/stub\
+	-I$top/cnf/cpan\
+	-I$top/cpan/AutoLoader/lib\
+	-I$top/dist/Exporter/lib\
+	-I$top/dist/Cwd\
+	-I$top/dist/Cwd/lib\
+	-I$top/cpan/ExtUtils-Command/lib\
+	-I$top/cpan/ExtUtils-Install/lib\
+	-I$top/cpan/ExtUtils-MakeMaker/lib\
+	-I$top/dist/ExtUtils-MakeMaker/lib\
+	-I$top/cpan/ExtUtils-Manifest/lib\
+	-I$top/cpan/File-Path/lib\
+	-I$top/cpan/Pod-Simple/lib\
+	-I$top/cpan/Pod-Escapes/lib\
+	-I$top/ext/File-Find/lib\
+	-I$top/ext/re\
+	-I$top/cpan/ExtUtils-Constant/lib\
+	-I$top/dist/ExtUtils-ParseXS/lib\
+	-I$top/dist/constant/lib\
+	-I$top/cpan/Getopt-Long/lib\
+	-I$top/cpan/Text-Tabs/lib\
+	-I$top/dist/Carp/lib\
+	-I$top/cpan/podlators/lib\
+	-I$top/cpan/parent/lib\
+	-I$top/cpan/version/lib\
+	-I$top/dist/Pod-Simple/lib\
+	-I$top/dist/if\
+	-I$top/lib\
+	"$@"
