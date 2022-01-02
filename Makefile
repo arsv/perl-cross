@@ -26,7 +26,7 @@ src += utf8.c sv.c taint.c toke.c util.c deb.c run.c universal.c
 src += pad.c globals.c keywords.c perlio.c perlapi.c numeric.c
 src += mathoms.c locale.c pp_pack.c pp_sort.c caretx.c dquote.c $(time64.c)
 src += pp_type.c xsutils.c # cperl
-src += $(wildcard builtin.c)
+src += $(wildcard builtin.c mro.c)
 src += $(mallocsrc)
 
 obj = $(patsubst %.c,%$o,$(wildcard $(src)))
@@ -153,8 +153,11 @@ perl$x: perlmain$o $(LIBPERL) $(static_modules) static.list ext.libs
 
 globals.o: uudmap.h
 
-perlmain.c: ext/ExtUtils-Miniperl/pm_to_blib $(patsubst %,%/Makefile,$(fullpath_static_ext)) | miniperl$X
-	./miniperl_top -MExtUtils::Miniperl -e 'writemain(\"$@", @ARGV)' $(dynaloader) $(static_pmn)
+lib/ExtUtils/Miniperl.pm: miniperlmain.c $(MINIPERL_EXE) minimod.pl $(CONFIGPM)
+	./miniperl_top minimod.pl > lib/ExtUtils/Miniperl.pm
+
+perlmain.c: lib/ExtUtils/Miniperl.pm $(patsubst %,%/Makefile,$(fullpath_static_ext)) | miniperl$X
+	./miniperl_top -MExtUtils::Miniperl -e 'writemain(@ARGV)' DynaLoader $(static_pmn) > perlmain.c
 
 ext.libs: Makefile.config $(patsubst %,%/Makefile,$(fullpath_static_ext)) | $(static_modules) miniperl$X
 	./miniperl_top extlibs $(static_pmn) > $@

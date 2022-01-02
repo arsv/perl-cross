@@ -1,0 +1,14 @@
+perl-cross tree has both Configure and configure, which causes
+checkcase.t to fail. Skip them.
+
+--- a/t/porting/checkcase.t
++++ b/t/porting/checkcase.t
+@@ -20,6 +20,8 @@
+ 
+         # Special exemption for Makefile, makefile
+         return if $name =~ m!\A(?:x2p/)?[Mm]akefile\z!;
++        # same for Configure, configure in perl-cross
++        return if $name =~ m![Cc]onfigure\z!;
+ 
+         push @{$files{lc $name}}, $name;
+     }, '..');

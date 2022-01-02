@@ -1,0 +1,37 @@
+The toolchain is not installed on the target when cross-compiling.
+There are no sense to install this module on target, but EUC is
+a part of Perl distribution.
+
+https://rt.cpan.org/Public/Bug/Display.html?id=88645
+
+--- a/cpan/ExtUtils-Constant/t/Constant.t
++++ b/cpan/ExtUtils-Constant/t/Constant.t
+@@ -1,8 +1,18 @@
+ #!/usr/bin/perl -w
+ 
+ use Config;
++use IPC::Cmd qw(can_run);
++
+ unless ($Config{usedl}) {
+-    print "1..0 # no usedl, skipping\n";
++    print "1..0 # SKIP no usedl\n";
++    exit 0;
++}
++
++my $make = $Config{make};
++$make = $ENV{MAKE} if exists $ENV{MAKE};
++
++unless ( can_run($make) ) {
++    print "1..0 # SKIP make not available\n";
+     exit 0;
+ }
+ 
+@@ -34,8 +44,6 @@ $
+ # module from blib
+ @INC = map {File::Spec->rel2abs($_)} @INC if $] < 5.007 && $] >= 5.006;
+ 
+-my $make = $Config{make};
+-$make = $ENV{MAKE} if exists $ENV{MAKE};
+ if ($^O eq 'MSWin32' && $make eq 'nmake') { $make .= " -nologo"; }
+ 
+ # VMS may be using something other than MMS/MMK

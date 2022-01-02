@@ -382,3 +382,8 @@ define lib_ext .a
 define path_sep ':'
 define line
 define submit
+
+define d_sfio 'undef'
+define mad 'undef'
+define defvoidused 0
+define voidflags 15
