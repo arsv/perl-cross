@@ -48,7 +48,7 @@ Note this is a part of MakeMaker, and only applies to module Makefiles.
 +    warn "Potential libraries are '$potential_libs':\n" if $verbose;
 +
 +    my($ld)   = $Config{ld};
-+    my($lddlflags)   = $Config{lddlflags};
++    my($ldflags)   = $Config{ldflags};
 +    my($libs) = defined $Config{perllibs} ? $Config{perllibs} : $Config{libs};
 +
 +    my $try = 'try_mm.c';
@@ -65,7 +65,7 @@ Note this is a part of MakeMaker, and only applies to module Makefiles.
 +		push(@testlibs, $thislib);
 +		next
 +	};
-+	my $cmd = "$ld $lddlflags -o $tryx $try $testlibs $thislib >/dev/null 2>&1";
++	my $cmd = "$ld $ldflags -o $tryx $try $testlibs $thislib >/dev/null 2>&1";
 +	my $ret = system($cmd);
 +	warn "Warning (mostly harmless): " . "No library found for $thislib\n" if $ret;
 +	next if $ret;
