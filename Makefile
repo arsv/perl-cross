@@ -302,8 +302,11 @@ lib/unicore/CombiningClass.pl: $(CONFIGPM)
 	./miniperl_top lib/unicore/mktables -w -C lib/unicore -P pod -maketest -makelist -p
 
 # The following rules ensure that modules listed in mkppport.lst get
-# their ppport.h installed.
-mkppport_lst = $(shell cat mkppport.lst | grep '^[a-z]')
+# their ppport.h installed. There's a bunch of comments in that file,
+# which must be skipped.
+# 5.36.0: the list now includes Devel-PPPort itself which we have
+# a dedicated rule for, so that one must be excluded as well.
+mkppport_lst = $(shell cat mkppport.lst | grep '^[a-z]' | grep -v Devel-PPPort)
 
 $(patsubst %,%/pm_to_blib,$(mkppport_lst)): %/pm_to_blib: %/ppport.h
 # This one does not fit the above pattern
