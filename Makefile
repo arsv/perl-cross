@@ -462,7 +462,7 @@ clean-subdirs:
 
 # assuming modules w/o Makefiles were never built and need no cleaning
 clean-modules: config.h
-	@for i in $(modules disabled); do \
+	@for i in $(modules) $(disabled); do \
 		test -f $$i/Makefile && \
 		touch $$i/Makefile && \
 		$(MAKE) -C $$i clean \
