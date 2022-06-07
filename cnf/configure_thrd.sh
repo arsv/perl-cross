@@ -14,9 +14,12 @@ if [ "$usethreads" = 'define' ]; then
 		define use5005threads 'undef'
 		result 'yes, ithreads'
 	fi
+
+	define usemultiplicity "$useithreads"
 else
 	define useithreads 'undef'
 	define use5005threads 'undef'
+	define usemultiplicity 'undef'
 	result 'no'
 	msg "Disabling thread-related stuff"
 fi
