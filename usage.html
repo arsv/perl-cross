@@ -43,13 +43,28 @@ For a native build, use something like</p>
 
 <h2>Target-specific notes</h2>
 
-<p><b>Android</b>, assuming NDK is installed in <tt>/opt/android-ndk</tt>:</p>
+<p><b>Android</b>. Tested with NDK 24.0.8215888, Perl 5.36.0, and perl-cross 1.4. Installed on a Pixel 6 in /data/local/tmp/perl.</p>
 <pre>
-	ANDROID=/opt/android-ndk
-	TOOLCHAIN=arm-linux-androideabi-4.9/prebuilt/linux-x86_64
-	PLATFORM=$ANDROID/platforms/android-16/arch-arm
-	export PATH=$PATH:$ANDROID/toolchains/$TOOLCHAIN/bin
-	./configure --target=arm-linux-androideabi --sysroot=$PLATFORM
+	NDK=$HOME/Android/Sdk/ndk/24.0.8215888
+	TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/linux-x86_64
+	SYSROOT=$TOOLCHAIN/sysroot
+	export AR=$TOOLCHAIN/bin/llvm-ar
+	export CC=$TOOLCHAIN/bin/aarch64-linux-android21-clang
+	export RANLIB=$TOOLCHAIN/bin/llvm-ranlib
+	export STRIP=$TOOLCHAIN/bin/llvm-strip
+	export NM=$TOOLCHAIN/bin/llvm-nm
+	export READELF=$TOOLCHAIN/bin/llvm-readelf
+	export OBJDUMP=$TOOLCHAIN/bin/llvm-objdump
+	./configure --target=aarch64-linux-android --sysroot=$SYSROOT --prefix=/data/local/tmp/perl
+	make
+        make DESTDIR=&lt;local install dir&gt; install
+</pre>
+<p>Then, to install:</p>
+<pre>
+        cd &lt;local install dir&gt;/data/local/tmp
+        find perl -type d -exec adb shell mkdir /data/local/tmp/\{\} \;
+        adb push perl /data/local/tmp
+	adb shell '/data/local/tmp/perl/bin/perl -e "print qq{Hello, world!\n}";'
 </pre>
 <p>Adjust platform and compiler version to match your particular NDK.</p>
 
