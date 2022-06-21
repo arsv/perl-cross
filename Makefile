@@ -26,7 +26,7 @@ src += utf8.c sv.c taint.c toke.c util.c deb.c run.c universal.c
 src += pad.c globals.c keywords.c perlio.c perlapi.c numeric.c
 src += mathoms.c locale.c pp_pack.c pp_sort.c caretx.c dquote.c $(time64.c)
 src += pp_type.c xsutils.c # cperl
-src += $(wildcard builtin.c)
+src += $(wildcard builtin.c peep.c)
 src += $(mallocsrc)
 
 obj = $(patsubst %.c,%$o,$(wildcard $(src)))

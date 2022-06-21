@@ -70,6 +70,11 @@ checkattr d_attribute_always_inline 'always_inline' <<END
 int square(int n) __attribute__((always_inline));
 END
 
+checkattr d_attribute_visibility 'visibility' <<END
+#include <stdio.h>
+__attribute__((visibility("hidden"))) int square(void);
+END
+
 # Compiler builtins. Should be gcc/clang only, but it's not like we support
 # any other compilers atm.
 define d_builtin_arith_overflow 'define'
