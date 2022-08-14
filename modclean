@@ -1,0 +1,67 @@
+#!/bin/sh
+
+# Running `make clean` for perl modules is a major PITA.
+#
+# Module Makefiles are generated (using miniperl, which has to be configured
+# and built for this purpose) and also somewhat unreliable. We might get lucky
+# and find a usable Makefile in the module directory, but we must be ready to
+# handle cases when it's either not there or fails to work.
+#
+# As far as perl-cross is concerned, the point of `make clean` is not so much
+# to remove all the temp files but to force the modules to be re-built during
+# the next `make`.
+
+run() {
+	echo "$@"
+	"$@"
+}
+
+mod_clean() {
+	f="$1/Makefile"
+	test -f "$f" && run $MAKE -C $1 clean
+	# would be better to `make realclean` instead of just `make clean`
+	# but it does sometimes remove too much
+	test -f "$f" -a -f "$f.PL" && run rm -f "$f"
+
+	f="$1/Makefile.old"
+	test -f "$f" && run rm -f "$f"
+
+	f="$1/blib"
+	test -d "$f" && run rm -fr "$f"
+
+	f="$1/pm_to_blib"
+	test -f "$f" && run rm -f "$f"
+}
+
+clean_subdirs_in() {
+	for i in $1/*; do
+		test -d "$i" || continue
+		(mod_clean "$i")
+	done
+}
+
+clean_named_mods() {
+	for i in "$@"; do
+		if [ -d "$i" ]; then
+			mod_clean "$i"
+		else
+			echo "Not a directory: $i" >& 2
+			exit 1
+		fi
+	done
+}
+
+if [ -z "$MAKE" ]; then
+	MAKE=make
+	export MAKE
+fi
+
+if [ -n "$1" ]; then
+	clean_named_mods "$@"
+else
+	clean_subdirs_in ext
+	clean_subdirs_in dist
+	clean_subdirs_in cpan
+fi
+
+exit 0

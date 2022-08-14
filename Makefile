@@ -217,8 +217,13 @@ lib/buildcustomize.pl: write_buildcustomize.pl | miniperl$X
 # The rules below replace make_ext script used in the original
 # perl build chain. Some host-specific functionality is lost.
 # Check miniperl_top to see how it works.
+#
+# note make -C mod-dir does not always update pm_to_blib which we use
+# as the completion stamp; that's why `touch $@`.
+#
 $(nonxs_modules) $(disabled_nonxs): %/pm_to_blib: | %/Makefile
 	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL)
+	@touch $@
 
 DynaLoader$o: | ext/DynaLoader/pm_to_blib
 	@if [ ! -f ext/DynaLoader/DynaLoader$o ]; then rm $<; echo "Stale pm_to_blib, please re-run make"; false; fi
@@ -226,30 +231,32 @@ DynaLoader$o: | ext/DynaLoader/pm_to_blib
 
 ext/DynaLoader/pm_to_blib: %/pm_to_blib: | %/Makefile
 	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static
+	@touch $@
 
 ext/DynaLoader/Makefile: config.h | dist/lib/pm_to_blib
 
 $(static_modules): %/pm_to_blib: | %/Makefile $(nonxs_tgt)
 	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=static static
+	@touch $@
 
 $(dynamic_modules) $(disabled_dynamic): %/pm_to_blib: | %/Makefile
 	$(MAKE) -C $(dir $@) PERL_CORE=1 LIBPERL=$(LIBPERL) LINKTYPE=dynamic
+	@touch $@
 
+# Make sure re.pm and lib.pm are available for Makefile.PLs to use
 lib/re.pm: ext/re/re.pm
 	cp -f ext/re/re.pm lib/re.pm
 
 lib/lib.pm: dist/lib/pm_to_blib
-
-.PHONY: preplibrary
-
-preplibrary: $(CONFIGPM) | miniperl$X lib/re.pm lib/lib.pm
 
 dist/lib/Makefile: dist/lib/Makefile.PL cflags config.h $(CONFIGPM) | miniperl$X
 	$(eval top=$(shell echo $(dir $@) | sed -re 's![^/]+!..!g'))
 	cd $(dir $@) && $(top)miniperl_top -I$(top)lib Makefile.PL \
 	 PERL_CORE=1 LIBPERL_A=$(LIBPERL) PERL="$(top)miniperl_top"
 
-%/Makefile: %/Makefile.PL preplibrary cflags config.h | $(XSUBPP) miniperl$X
+preplibrary = miniperl$X lib/re.pm lib/lib.pm
+
+%/Makefile: %/Makefile.PL cflags config.h $(CONFIGPM) | $(XSUBPP) $(preplibrary)
 	$(eval top=$(shell echo $(dir $@) | sed -re 's![^/]+!..!g'))
 	cd $(dir $@) && $(top)miniperl_top -I$(top)lib Makefile.PL \
 	 INSTALLDIRS=perl INSTALLMAN1DIR=none INSTALLMAN3DIR=none \
@@ -274,21 +281,12 @@ modules: extensions
 cflags: cflags.SH
 	sh $<
 
-.PHONY: makeppport
-
-makeppport: $(CONFIGPM) | miniperl$X
-	./miniper_top mkppport
-
 makefiles: $(patsubst %,%/Makefile,$(modules))
 
 dynaloader: $(dynaloader_o)
 
-$(ppport)/pm_to_blib: dynaloader
-
-$(ppport)/PPPort.pm: $(ppport)/pm_to_blib
-
-$(ppport)/ppport.h: $(ppport)/PPPort.pm | miniperl$X
-	cd $(ppport) && ../../miniperl -I../../lib ppport_h.PL
+$(ppport)/ppport.h: $(ppport)/pm_to_blib
+	@test -f $@
 
 cpan/Unicode-Normalize/Makefile: lib/unicore/CombiningClass.pl
 dist/Unicode-Normalize/Makefile: lib/unicore/CombiningClass.pl
@@ -311,8 +309,7 @@ mkppport_lst = $(shell cat mkppport.lst | grep '^[a-z]' | grep -v Devel-PPPort)
 $(patsubst %,%/pm_to_blib,$(mkppport_lst)): %/pm_to_blib: %/ppport.h
 # This one does not fit the above pattern
 cpan/YAML-LibYAML/pm_to_blib: cpan/YAML-LibYAML/LibYAML/ppport.h
-# Having %/ppport.h here isn't a very good idea since the initial ppport.h matches
-# the pattern too
+
 $(patsubst %,%/ppport.h,$(mkppport_lst)): $(ppport)/ppport.h
 	cp -f $< $@
 
@@ -321,17 +318,17 @@ lib/ExtUtils/xsubpp: dist/ExtUtils-ParseXS/lib/ExtUtils/xsubpp
 
 # No ExtUtils dependencies here because that's where they come from
 cpan/ExtUtils-ParseXS/Makefile cpan/ExtUtils-Constant/Makefile: \
-		%/Makefile: %/Makefile.PL preplibrary cflags | miniperl$X miniperl_top
+		%/Makefile: %/Makefile.PL cflags $(CONFIGPM) | $(preplibrary)
 	$(eval top=$(shell echo $(dir $@) | sed -re 's![^/]+!..!g'))
 	cd $(dir $@) && $(top)miniperl_top Makefile.PL PERL_CORE=1 PERL=$(top)miniperl_top
 
-cpan/List-Util/pm_to_blib: | dynaloader
+cpan/List-Util/pm_to_blib: | ext/DynaLoader/pm_to_blib
 
 ext/Pod-Functions/pm_to_blib: | cpan/Pod-Simple/pm_to_blib
 
 cpan/Pod-Simple/pm_to_blib: | cpan/Pod-Escapes/pm_to_blib
 
-$(dynamic_modules): | $(dynaloader_o) dist/ExtUtils-CBuilder/pm_to_blib
+$(dynamic_modules): | ext/DynaLoader/pm_to_blib dist/ExtUtils-CBuilder/pm_to_blib
 
 dist/ExtUtils-CBuilder/pm_to_blib: | cpan/Perl-OSType/pm_to_blib cpan/Text-ParseWords/pm_to_blib
 
@@ -378,6 +375,8 @@ pod/perltoc.pod: modules extra.pods \
 
 pods: pod/perltoc.pod
 
+# This is done on every build; the results depends on all installed pod files
+# and the exact list of dependencies is difficult to obtain.
 pod/perltoc.pod: pod/buildtoc | miniperl$X
 	./miniperl_top -f pod/buildtoc -q
 
@@ -461,13 +460,13 @@ clean-subdirs:
 	$(MAKE) -C utils clean
 
 # assuming modules w/o Makefiles were never built and need no cleaning
-clean-modules: config.h
-	@for i in $(modules disabled); do \
-		test -f $$i/Makefile && \
-		touch $$i/Makefile && \
-		$(MAKE) -C $$i clean \
-		|| true; \
-	done
+clean-modules: clean-ppport
+	./modclean
+
+# Cleaning Devel-PPPort but leaving ppport.h in other places messes up
+# dependency tracking for that file.
+clean-ppport:
+	rm -f $(patsubst %,%/ppport.h,$(mkppport_lst))
 
 clean-generated-files:
 	-rm -f uudmap.h opmini.c generate_uudmap$X bitcount.h $(CONFIGPM)
