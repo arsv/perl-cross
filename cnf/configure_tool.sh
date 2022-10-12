@@ -266,6 +266,10 @@ if not hinted 'osname'; then
 			define osname "gnu"
 			result "GNU"
 			;;
+		*-midipix*)
+			define osname "midipix"
+			result "Midipix"
+			;;
 		*)
 			result "no"
 			;;

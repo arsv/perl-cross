@@ -1,0 +1,34 @@
+# syscalls
+d_voidsig='define'
+d_nanosleep='define'
+d_clock_gettime='define'
+d_clock_getres='undef'
+d_clock_nanosleep='define'
+d_clock='define'
+
+# 64-bit
+charsize='1'
+shortsize='2'
+intsize='4'
+longsize='8'
+doublesize='8'
+ptrsize='8'
+longdblsize='16'
+longlongsize='8'
+sizesize='8'
+fpossize='16'
+lseeksize='8'
+uidsize='8'
+gidsize='8'
+timesize='8'
+
+d_procselfexe='define'
+procselfexe='"/proc/self/exe"'
+
+st_ino_sign=1
+st_ino_size=8
+
+d_fcntl_can_lock='define'
+
+# workaround?
+libswanted='ndbm gdbm gdbm_compat'
