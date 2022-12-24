@@ -21,12 +21,13 @@ MAN1 = $(patsubst pod/%.pod,man/man1/%$(man1ext),$(POD1))
 # Only pick files actually present in the source tree.
 # perl.c, perlmain.c, op.c, miniperl.c should not be in this list
 src = av.c scope.c doop.c doio.c dump.c gv.c hv.c mg.c reentr.c mro_core.c
-src += perly.c pp.c pp_hot.c pp_ctl.c pp_sys.c regcomp.c regexec.c
+src += perly.c pp.c pp_hot.c pp_ctl.c pp_sys.c regexec.c
 src += utf8.c sv.c taint.c toke.c util.c deb.c run.c universal.c
 src += pad.c globals.c keywords.c perlio.c perlapi.c numeric.c
 src += mathoms.c locale.c pp_pack.c pp_sort.c caretx.c dquote.c $(time64.c)
 src += pp_type.c xsutils.c # cperl
 src += $(wildcard builtin.c peep.c)
+src += $(wildcard regcomp.c regcomp_*.c)
 src += $(mallocsrc)
 
 obj = $(patsubst %.c,%$o,$(wildcard $(src)))
