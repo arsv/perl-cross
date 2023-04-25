@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="author" content="Alex Suykov">
-	<meta name="revised" content="2022-05-28 12:30 UTC">
+	<meta name="revised" content="2023-04-25 20:39 UTC">
 	<title>Cross-compiling perl</title>
 	<link rel="stylesheet" href="style.css">
 </head>
@@ -21,13 +21,13 @@
 	<a href="testing.html">Testing</a>
 </div>
 
-<p>Current version of perl-cross is 1.4<br>
-Most recent supported perl version: perl-5.36.0<br>
+<p>Current version of perl-cross is 1.4.1<br>
+Most recent supported perl version: perl-5.36.1<br>
 Most recent supported cperl version: cperl-5.26.1</p>
 
 <div class="dllink">
-	<a href="https://github.com/arsv/perl-cross/releases/download/1.4/perl-cross-1.4.tar.gz"
-	 >https://github.com/arsv/perl-cross/releases/download/1.4/perl-cross-1.4.tar.gz</a>
+	<a href="https://github.com/arsv/perl-cross/releases/download/1.4.1/perl-cross-1.4.1.tar.gz"
+	 >https://github.com/arsv/perl-cross/releases/download/1.4.1/perl-cross-1.4.1.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
@@ -39,6 +39,13 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
+	<li>1.4.1 (2023-04-25)<ul>
+		<li>perl-5.36.1, perl-5.37.11</li>
+		<li>reworked modules-clean targets</li>
+		<li>enable multiplicity whenever ithreads are enabled</li>
+		<li>minor fixes</li>
+	</ul></li>
+
 	<li>1.4 (2022-05-28)<ul>
 		<li>perl-5.36.0</li>
 	</ul></li>
