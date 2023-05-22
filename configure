@@ -1,58 +1,54 @@
 #!/bin/sh
 
-earlydie() { echo "$@" >&2; exit 1; }
+# This chunk of code handles out-of-tree builds:
+#
+#     mkdir perl-build
+#     cd perl-build
+#     ../perl-5.x.y/configure ...
+#     make
+#
+# It does nothing for regular builds and should be removed.
+#
+# Perl is not meant to be built out-of-tree. All this code
+# does is a crude implementation of a git workdir using symlinks.
+#
+# Avoid relying on this.
+# For multiple builds, just unpack the same source several times.
 
-root=${0%/*}; test -z "$root" && root=. # dirname($0)
+root=${0%/*}
 
-test -f "$root/MANIFEST" || earlydie "Can't find MANIFEST, perl-cross is not deployed properly."
-
-abs=`echo "$root" | sed -e 's!^\(.\).*!\1!'`
-test "$abs" != '/' && unset abs
-
-if [ -n "$root" -a "$root" != "." -a ! -f "MANIFEST" ]; then
+if [ "$root" != "$0" -a ! -f "MANIFEST" ]; then
 	echo "No MANIFEST found. Assuming out-of-source build."
 	echo "Symlinking source files..."
 
-	# perl distribution files are all listed in MANIFEST
-	cat "$root/MANIFEST" | sed -e 's/\s.*//' | while read i; do
-		d=${i%/*}; test -z "$d" && d=. # dirname($i)
-		mkdir -p "$d"
-		test "$d" != "." && u=`echo "$d" | sed -e 's![^/]\+!..!g' -e 's!$!/!'` || u=''
-		test -n "$abs" && relroot="$root" || relroot="$u$root"
-		ln -sf "$relroot/$i" "$i" || earlydie "Symlinking failed."
-	done
-	
-	# perl-cross files are not in MANIFEST
-	for i in TESTPACK.px extlibs statars TestInit.pm.testpack \
-			make_ext_Makefile.pl miniperl_top Makefile.config.SH \
-			Makefile configure; do
-		ln -sf "$root/$i" "./$i" || earlydie "Symlinking failed."
-	done
+	if [ ! -f "$root/MANIFEST" ]; then
+		echo "No $root/MANIFEST either." >&2
+		echo "perl-cross is not deployed properly." >&2
+		exit 1
+	fi
 
-	for i in x2p/Makefile utils/Makefile; do
-		test -n "$abs" && relroot="$root" || relroot="../$root"
-		ln -sf "$relroot/$i" "$i" || earlydie "Symlinking failed."
-	done
+	(cd "$root" && find -type d) | while read d; do
+		dir="${d#./}" # ./foo/bar -> foo/bar
 
-	# cnf is a special case because we need cnf/diffs to be
-	# a proper directory to store locks there
-	mkdir cnf
-	for i in "$root/cnf/"*; do
-		bn=${i##*/}
-		test -n "$abs" && rel="" || rel="../"
-		test "$bn" != 'diffs' && ln -s "$rel$i" "cnf/$bn"
-	done
-	cp -a "$root/cnf/diffs" cnf/
+		if [ "$d" = "." ]; then
+			dp=""
+			back="$root"
+		else
+			mkdir -p "$dir"
+			dp="$dir/"
+			up=`echo "$dir" | sed -e 's![^/]\+!..!g'`
+			back="$up/$root"
+		fi
 
-	# Make extra sure MANIFEST gets symlinked
-	test -f "MANIFEST" || ln -sf "$root/MANIFEST" "./MANIFEST"
+		(cd "$root/$dir" && find -maxdepth 1 -type f) | while read i; do
+			name="${i#./}"
+			ln -s "$back/$dp$name" "$dp$name"
+		done
 
-	# Dereference any files that will be patched with crosspatch.
-	# A better alternative is patch --follow-symlinks,
-	# but --follow-symlinks is not widely supported and even when it is,
-	# man page discourages its use.
-	sed -ne '/^+++ /{s/^+++ //;s/\s.*//;s@^[^/]\+/@@;p}' cnf/diffs/* | while read i; do
-		cp -a "$i" "$i.tmp" && rm -f "$i" && cp "$i.tmp" "$i" && rm -f "$i.tmp"
+		(cd "$root/$dir" && find -maxdepth 1 -type l) | while read i; do
+			name="${i#./}"
+			ln -s "$back/$dp$name" "$dp$name"
+		done
 	done
 
 	echo "Symlinking done, proceeding with configure."

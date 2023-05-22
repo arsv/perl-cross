@@ -51,6 +51,10 @@ disabled = $(disabled_nonxs_ext) $(disabled_dynamic_ext)
 # if need be.
 CROSSPATCHES = $(shell find cnf/diffs/$(patchset) -name '*.patch')
 CROSSPATCHED = $(patsubst %.patch,%.applied,$(CROSSPATCHES))
+# Use `patch --follow-symlinks` for out-of-tree builds. Regular builds should
+# stick with just `patch` as --follow-symlinks is a GNU option that is not
+# supported by other implementations.
+cpatch = $(shell test -h MANIFEST && echo patch --follow-symlinks || echo patch)
 
 .PHONY: crosspatch
 
@@ -63,7 +67,7 @@ miniperlmain$O: $(CROSSPATCHED)
 # Original versions are not saved anymore; patch generally takes care of this,
 # and if that fails, reaching for the source tarball is the safest option.
 $(CROSSPATCHED): %.applied: %.patch
-	patch -p1 -i $< && touch $@
+	$(cpatch) -p1 -i $< && touch $@
 
 # ---[ common ]-----------------------------------------------------------------
 
