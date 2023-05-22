@@ -15,7 +15,7 @@ if [ -r patchlevel.h ]; then
 	verpart api_version PERL_API_VERSION
 	verpart api_subversion PERL_API_SUBVERSION
 
-	q=`egrep ',"(MAINT|SMOKE)[0-9][0-9]*"' patchlevel.h|tail -1|sed 's/[^0-9]//g'`
+	q=`grep -E ',"(MAINT|SMOKE)[0-9][0-9]*"' patchlevel.h|tail -1|sed 's/[^0-9]//g'`
 	define perl_patchlevel "$q"
 else
 	result "unknown"
