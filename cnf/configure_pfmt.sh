@@ -52,3 +52,9 @@ else
 	define uvxformat '"lx"'
 	define uvXUformat '"lX"'
 fi
+
+define i32dformat 'PRId32'
+define u32uformat 'PRIu32'
+define u32oformat 'PRIo32'
+define u32xformat 'PRIx32'
+define u32XUformat 'PRIX32'
