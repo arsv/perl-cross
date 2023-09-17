@@ -1,5 +1,10 @@
 # Thread support
 
+# If enabled, these should be 'define' and '__thread' for GNU systems.
+# Not tested for, and not used in perl-cross atm.
+define d_thread_local 'undef'
+define perl_thread_local ""
+
 mstart 'Looking whether to enable threads'
 # $usethreads gets decided in configure_libs
 if [ "$usethreads" = 'define' ]; then

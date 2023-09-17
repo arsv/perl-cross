@@ -183,7 +183,6 @@ define d_semctl_semun 'define'
 define d_setlocale_accepts_any_locale_name 'undef'
 define d_getenv_preserves_other_thread 'undef'
 define xlocale_needed 'undef'
-define d_thread_local 'undef'
 
 define d_msg_ctrunc 'undef'
 define d_msg_dontroute 'undef'
@@ -240,9 +239,12 @@ define stdio_filbuf
 define stdio_ptr
 define stdio_stream_array
 define d_lc_monetary_2008 'undef'
+
 define d_perl_lc_all_uses_name_value_pairs 'define'
 define d_perl_lc_all_category_positions_init 'undef'
 define d_perl_lc_all_separator 'undef'
+define perl_lc_all_separator ''
+define perl_lc_all_category_positions_init ''
 
 define sharpbang '#!'
 define startperl "$sharpbang$perlpath"
