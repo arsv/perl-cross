@@ -50,5 +50,6 @@ exec $top/miniperl\
 	-I$top/cpan/version/lib\
 	-I$top/dist/Pod-Simple/lib\
 	-I$top/dist/if\
+	-I$top/dist/base/lib\
 	-I$top/lib\
 	"$@"
