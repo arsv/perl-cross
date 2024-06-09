@@ -14,7 +14,7 @@
 # in the package name. In most cases, the bundle will be unpacked
 # with --strip-compontents=1 anyway.
 
-V=1.5.2
+V=1.5.3
 
 tar -zcf perl-cross-$V.tar.gz\
 	--exclude README.md\
