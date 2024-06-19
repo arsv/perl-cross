@@ -5,7 +5,7 @@ checkfunc() {
 	mstart "Checking for $2"
 	if not hinted $1 'found' 'missing'; then
 		try_start
-    try_add '#define _GNU_SOURCE'
+		try_add '#define _GNU_SOURCE'
 		funcincludes "$3" "$4" "$includes"
 		try_add "int main(void) { $2($3); return 0; }"
 		try_link -O0 -fno-builtin
