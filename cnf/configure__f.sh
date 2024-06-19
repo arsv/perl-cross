@@ -199,18 +199,60 @@ try_start() {
 	true > try.c
 }
 
-try_includes() {
-	for i in "$@"; do
-		echo "#include <${i##*:}>" >> try.c
-	done
-}
-
 try_add() {
 	echo "$@" >> try.c
 }
 
 try_cat() {
 	cat "$@" >> try.c
+}
+
+# Includes in try.c:
+#
+#     try_includes stdio.h stdlib.h unistd.h sys/types.h
+#
+# Dedicated command to make it a bit easier and save a few lines,
+# and also to avoid including headers that are known to be missing
+# (which might otherwise cause false negatives).
+#
+# The missing-header test here is very soft, the point is only to
+# catch the most obvious ones. The code runs quite often, so sed etc
+# should be avioded. There are very few cases where it does anything,
+# most of the time all the headers are passed straight to try.c.
+
+try_includes() {
+	unset i v d
+
+	for i in "$@"; do
+		v="$i"
+
+		case "$v" in
+			*:*)                    # foobar.h:i_foob
+				i=${v%:*}         # i=foobar.h
+				v=${v##*:}        # v=i_foob
+				;;
+			*/*)                    # sys/foo.h
+				d=${v%/*}         # d=sys
+				v=${v##*/}        # v=foo.h
+				v=${v%.h}         # v=foo
+				v="i_${d}_$v"     # v=i_sys_foo
+				;;
+			*)                      # foo.h
+				v=${v%.h}         # v=foo
+				v="i_$v"          # v=i_foo
+				;;
+		esac
+
+		getenv d "$v"
+
+		if [ "$d" = 'undef' ]; then
+			echo "/* <$i> is missing */" >> try.c
+		else
+			echo "#include <$i>" >> try.c
+		fi
+	done
+
+	unset i v d
 }
 
 try_dump() {
