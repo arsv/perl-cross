@@ -14,12 +14,24 @@ checkfunc() {
 }
 
 funcincludes() {
+	r="x"
+
+	case "$2 $3" in
+		*stdlib.h*) r="s$r" ;;
+	esac
+
 	case "$1" in
-		*NULL*) try_includes "stdlib.h" ;;
+		*NULL*) r="n$r" ;;
+	esac
+
+	case "$r" in
+		*nx) try_includes "stdlib.h" ;;
 	esac
 
 	test -n "$3" && try_includes $3
 	test -n "$2" && try_includes $2
+
+	unset r
 }
 
 # The naming scheme looks regular but it isn't!
