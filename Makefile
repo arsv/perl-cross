@@ -477,7 +477,6 @@ clean-generated-files:
 	-rm -f uudmap.h opmini.c generate_uudmap$X bitcount.h $(CONFIGPM)
 	-rm -f git_version.h lib/re.pm lib/Config_git.pl
 	-rm -f perlmini.c perlmain.c
-	-rm -f config.h xconfig.h
 	-rm -f pod/perlmodlib.pod
 	-rm -f ext.libs static.list
 	-rm -f $(patsubst %,%/ppport.h,$(mkppport_lst))
