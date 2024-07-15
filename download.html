@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="author" content="Alex Suykov">
-	<meta name="revised" content="2024-06-10 00:00 UTC">
+	<meta name="revised" content="2024-07-15 12:00 UTC">
 	<title>Cross-compiling perl</title>
 	<link rel="stylesheet" href="style.css">
 </head>
@@ -21,13 +21,12 @@
 	<a href="testing.html">Testing</a>
 </div>
 
-<p>Current version of perl-cross is 1.5.3<br>
+<p>Current version of perl-cross is 1.6<br>
 Most recent supported perl version: perl-5.40.0<br>
-Most recent supported cperl version: cperl-5.26.1</p>
 
 <div class="dllink">
-	<a href="https://github.com/arsv/perl-cross/raw/releases/perl-cross-1.5.3.tar.gz"
-	 >https://github.com/arsv/perl-cross/raw/releases/perl-cross-1.5.3.tar.gz</a>
+	<a href="https://github.com/arsv/perl-cross/raw/releases/perl-cross-1.6.tar.gz"
+	 >https://github.com/arsv/perl-cross/raw/releases/perl-cross-1.6.tar.gz</a>
 </div>
 
 <p>To use, unpack over an appropriate perl distribution, overwriting the original Makefile.<br>
@@ -39,6 +38,11 @@ branch</a>.</p>
 <h2>Changelog</h2>
 
 <ul>
+	<li>1.6 (2024-07-15)<ul>
+		<li>perl-5.40.0, perl-5.41.1</li>
+		<li>fix config.h/xconfig.h discrepancy in miniperl</li>
+	</ul></li>
+
 	<li>1.5.3 (2024-06-10)<ul>
 		<li>perl-5.40.0</li>
 	</ul></li>
