@@ -45,14 +45,16 @@ checksize() {
 	fi
 
 	result=`grep foo try.out | sed -r -e 's/.*: [0-9]+ +//' -e 's/ .*//' -e 's/^0+//g'`
-	if [ -z "$result" -o "$result" -le 0 ]; then
+	if [ -z "$result" ]; then
 		result "unknown"
 		die "Cannot determine sizeof($2)"
-		return
+	elif [ "$result" -gt 0 ]; then
+		define $1 "$result"
+		result $result\ `bytes $result`
+	else
+		result "unknown"
+		die "Cannot determine sizeof($2)"
 	fi
-
-	define $1 "$result"
-	result $result\ `bytes $result`
 }
 
 # usetypesize typesym sizesym type 'includes'
