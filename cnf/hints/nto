@@ -1,0 +1,13 @@
+# Linux syscalls
+d_voidsig='define'
+d_nanosleep='define'
+d_clock_gettime='define'
+d_clock_getres='define'
+d_clock_nanosleep='define'
+d_clock='define'
+
+# From the original linux.sh
+usemallocwrap='define'
+
+# libraries to test
+libswanted='m crypt pthread sfio socket inet nsl nm ndbm gdbm dbm db malloc dl dld ld sun sec util c cposix posix ucb BSD gdbm_compat'
