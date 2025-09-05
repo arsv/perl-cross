@@ -1,0 +1,70 @@
+diff --git a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm
+index fbdc79aea2..976fd268aa 100644
+--- a/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm
++++ b/cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm
+@@ -20,9 +20,10 @@ use File::Basename;
+ use File::Spec;
+ 
+ sub ext {
+-    if    ( $^O eq 'VMS' )     { goto &_vms_ext; }
+-    elsif ( $^O eq 'MSWin32' ) { goto &_win32_ext; }
+-    else                       { goto &_unix_os2_ext; }
++    if    ( $Config{usemmldlt} ){ goto &_ld_ext;       }
++    elsif ( $^O eq 'VMS' )      { goto &_vms_ext;      }
++    elsif ( $^O eq 'MSWin32' )  { goto &_win32_ext;    }
++    else                        { goto &_unix_os2_ext; }
+ }
+ 
+ sub _space_dirs_split {
+@@ -643,4 +644,51 @@ sub _vms_ext {
+     wantarray ? ( $lib, '', $ldlib, '', ( $give_libs ? \@flibs : () ) ) : $lib;
+ }
+ 
++# A direct test for -l validity.
++# Because guessing real file names for -llib options when dealing
++# with a cross compiler is generally a BAD IDEA^tm.
++sub _ld_ext {
++    my($self,$potential_libs, $verbose, $give_libs) = @_;
++    $verbose ||= 0;
++
++    if ($^O =~ 'os2' and $Config{perllibs}) { 
++	# Dynamic libraries are not transitive, so we may need including
++	# the libraries linked against perl.dll again.
++
++	$potential_libs .= " " if $potential_libs;
++	$potential_libs .= $Config{perllibs};
++    }
++    return ("", "", "", "", ($give_libs ? [] : ())) unless $potential_libs;
++    warn "Potential libraries are '$potential_libs':\n" if $verbose;
++
++    my($ld)   = $Config{ld};
++    my($ldflags)   = $Config{ldflags};
++    my($libs) = defined $Config{perllibs} ? $Config{perllibs} : $Config{libs};
++
++    my $try = 'try_mm.c';
++    my $tryx = 'try_mm.x';
++    open(TRY, '>', $try) || die "Can't create MakeMaker test file $try: $!\n";
++    print TRY "int main(void) { return 0; }\n";
++    close(TRY);
++
++    my $testlibs = '';
++    my @testlibs = ();
++    foreach my $thislib (split ' ', $potential_libs) {
++        $testlibs = join(' ', @testlibs);
++	if($thislib =~ /^-L/) {
++		push(@testlibs, $thislib);
++		next
++	};
++	my $cmd = "$ld $ldflags -o $tryx $try $testlibs $thislib >/dev/null 2>&1";
++	my $ret = system($cmd);
++	warn "Warning (mostly harmless): " . "No library found for $thislib\n" if $ret;
++	next if $ret;
++	push @testlibs, $thislib;
++    }
++    unlink($try);
++    unlink($tryx);
++
++    return (join(' ', @testlibs), '', join(' ', @testlibs), '');
++}
++
+ 1;
