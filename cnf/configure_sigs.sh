@@ -18,15 +18,15 @@ for sig in HUP INT QUIT ILL TRAP ABRT BUS FPE KILL USR1\
 
 	# OH SHI--
 	try_add "#if SIG$sig == 0"
-	try_add "number 0"
+	try_add "perl_cross_configure_sig_number 0"
 	for num in `seq 1 100`; do
 		try_add "#elif SIG$sig == $num"
-		try_add "number $num"
+		try_add "perl_cross_configure_sig_number $num"
 	done
 	try_add "#endif"
 
 	if try_preproc; then
-		num=`grep 'number ' try.out | sed -e 's/[^0-9]//g'`
+		num=`grep 'perl_cross_configure_sig_number ' try.out | sed -e 's/[^0-9]//g'`
 		if [ -n "$num" -a "$num" != 0 ]; then
 			msg "   got SIG$sig = $num" >&2
 			signals="$signals $sig"
