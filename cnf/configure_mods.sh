@@ -108,7 +108,7 @@ extonlyif() {
 }
 
 definetrimspaces() {
-	v=`echo "$2" | sed -r -e 's/\s+/ /g' -e 's/^\s+//' -e 's/\s+$//'`
+	v=`echo "$2" | sed -r -e 's/\s+/ /g' -e 's/^\s+//' -e 's/\s+$//' | xargs -n1 | LANG=C sort | xargs`
 	define $1 "$v"
 }
 
