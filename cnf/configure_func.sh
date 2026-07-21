@@ -104,6 +104,7 @@ checkfunc d_getaddrinfo 'getaddrinfo' "NULL,NULL,NULL,NULL" 'sys/types.h sys/soc
 checkfunc d_get_current_dir_name 'get_current_dir_name' "" 'unistd.h'
 checkfunc d_getcwd 'getcwd' 'NULL,0' 'unistd.h'
 checkfunc d_getespwnam 'getespwnam'
+checkfunc d_getentropy 'getentropy' 'NULL,0' 'unistd.h'
 checkfunc d_getfsstat 'getfsstat' "NULL,0,0" 'sys/types.h sys/mount.h'
 checkfunc d_getgrent 'getgrent' "" 'sys/types.h grp.h'
 checkfunc d_getgrps 'getgroups' "0,NULL" 'unistd.h'
