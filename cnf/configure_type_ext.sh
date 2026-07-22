@@ -7,11 +7,9 @@ checkfield() {
 	
 	try_start
 	try_includes $4
-	try_add 'void foo();'
-	try_add 'void bar()'
-        try_add "{"
+	try_add 'void bar(void) {'
 	try_add "	$2 value;"
-	try_add "	foo(value.$3);"
+	try_add "	(void)value.$3;"
 	try_add "}"
 	try_compile
 
