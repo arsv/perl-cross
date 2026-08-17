@@ -16,15 +16,9 @@ define d_SCNfldbl 'undef'
 define sPRIEUldbl '"LE"'
 define sPRIFUldbl '"LF"'
 define sPRIGUldbl '"LG"'
-define sPRIXU64 '"LX"'
-define sPRId64 '"Ld"'
 define sPRIeldbl '"Le"'
 define sPRIfldbl '"Lf"'
 define sPRIgldbl '"Lg"'
-define sPRIi64 '"Li"'
-define sPRIo64 '"Lo"'
-define sPRIu64 '"Lu"'
-define sPRIx64 '"Lx"'
 define sSCNfldbl '"Lf"'
 define nvEUformat '"E"'
 define nvFUformat '"F"'
@@ -35,22 +29,36 @@ define nvgformat '"g"'
 define uidformat '"lu"'
 define gidformat '"lu"'
 
-# 64 ints on 32 host should get %Ld instead of %ld.
+# 64 ints on 32 host should get %lld instead of %ld.
 # 32 on 32, or 64 on 64, must get regular %ld.
 # This matters for use64bitint builds.
 
 if [ "$ivsize" -gt "$longsize" ]; then
-	define ivdformat '"Ld"'
-	define uvoformat '"Lo"'
-	define uvuformat '"Lu"'
-	define uvxformat '"Lx"'
-	define uvXUformat '"LX"'
+	define ivdformat '"lld"'
+	define uvoformat '"llo"'
+	define uvuformat '"llu"'
+	define uvxformat '"llx"'
+	define uvXUformat '"llX"'
+	# unused, set for consistency only
+	define sPRId64 '"lld"'
+	define sPRIi64 '"lli"'
+	define sPRIo64 '"llo"'
+	define sPRIu64 '"llu"'
+	define sPRIx64 '"llx"'
+	define sPRIXU64 '"llX"'
 else
 	define ivdformat '"ld"'
 	define uvoformat '"lo"'
 	define uvuformat '"lu"'
 	define uvxformat '"lx"'
 	define uvXUformat '"lX"'
+	# unused, set for consistency only
+	define sPRId64 '"ld"'
+	define sPRIi64 '"li"'
+	define sPRIo64 '"lo"'
+	define sPRIu64 '"lu"'
+	define sPRIx64 '"lx"'
+	define sPRIXU64 '"lX"'
 fi
 
 define i32dformat 'PRId32'
