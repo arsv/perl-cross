@@ -89,3 +89,23 @@ if not hinted d_gnulibc 'yes' 'no'; then
 	try_compile
 	resdef d_gnulibc 'yes' 'no'
 fi
+
+mstart "Guessing setlocale output format"
+case "$arch" in
+	*-musl-*)
+		result "musl (positional)"
+		define d_perl_lc_all_uses_name_value_pairs 'undef'
+		define d_perl_lc_all_category_positions_init 'define'
+		define d_perl_lc_all_separator 'define'
+		define perl_lc_all_separator '";"'
+		define perl_lc_all_category_positions_init '{ 0, 1, 2, 3, 4, 5 }'
+		;;
+	*)
+		result "glibc (name-value)"
+		define d_perl_lc_all_uses_name_value_pairs 'define'
+		define d_perl_lc_all_category_positions_init 'undef'
+		define d_perl_lc_all_separator 'undef'
+		define perl_lc_all_separator ''
+		define perl_lc_all_category_positions_init ''
+		;;
+esac

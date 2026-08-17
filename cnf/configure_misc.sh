@@ -240,11 +240,6 @@ define stdio_ptr
 define stdio_stream_array
 define d_lc_monetary_2008 'undef'
 
-define d_perl_lc_all_uses_name_value_pairs 'define'
-define d_perl_lc_all_category_positions_init 'undef'
-define d_perl_lc_all_separator 'undef'
-define perl_lc_all_separator ''
-define perl_lc_all_category_positions_init ''
 
 define sharpbang '#!'
 define startperl "$sharpbang$perlpath"
